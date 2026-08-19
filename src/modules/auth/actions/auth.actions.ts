@@ -48,8 +48,10 @@ export async function loginAction(
     return actionError(parsed.error.issues[0]?.message ?? 'Invalid login data')
   }
 
+  let result: LoginResponse
+
   try {
-    const result = await login(parsed.data)
+    result = await login(parsed.data)
 
     const cookieStore = await cookies()
 
@@ -59,11 +61,11 @@ export async function loginAction(
       sameSite: 'lax',
       path: '/',
     })
-
-    return actionSuccess(result)
   } catch (error) {
     return actionError(error instanceof Error ? error.message : 'Login failed')
   }
+
+  redirect('/dashboard')
 }
 
 // ===================

@@ -38,11 +38,8 @@ export const UserSchema = z.object({
 
 export const UpdateUserRequestSchema = z.object({
   name: requiredString('El nombre es obligatorio'),
-
   lastName: z.string().trim().nullable(),
-
   secondLastName: z.string().trim().nullable(),
-
   email: requiredString('El correo es obligatorio').email(
     'El correo no es válido',
   ),
@@ -54,7 +51,6 @@ export const UpdateUserRequestSchema = z.object({
 
 export const ChangePasswordRequestSchema = z.object({
   currentPassword: requiredString('La contraseña actual es obligatoria'),
-
   newPassword: StrongPasswordSchema,
 })
 

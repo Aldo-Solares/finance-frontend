@@ -3,7 +3,7 @@
 import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
 import { fetchServer } from '@/core/api/api-server'
 
-import { UserSchema, type User } from '@/modules/auth/schemas/user.schema'
+import { UserSchema, type User } from '@/modules/user/schemas/user.schema'
 
 // ===================
 // CURRENT USER

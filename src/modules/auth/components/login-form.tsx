@@ -3,7 +3,7 @@
 
 import { useActionState } from 'react';
 import Link from 'next/link';
-import { Mail } from 'lucide-react';
+import { ArrowRight, Mail, Sparkles } from 'lucide-react';
 
 import { loginAction } from '@/modules/auth/actions/auth.actions';
 import { FormInput } from '@/shared/components/inputs/form-input';
@@ -22,22 +22,69 @@ export function LoginForm() {
   );
 
   return (
-    <section className="w-full">
-      <div className="mb-8 text-center">
-        <p className="text-sm font-medium tracking-[0.2em] text-neutral-500">
-          FINANCE
-        </p>
+    <section className="relative w-full overflow-hidden rounded-[2rem]">
+      {/* ===================
+      BACKGROUND EFFECTS
+      =================== */}
 
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-neutral-950">
-          Iniciar sesión
-        </h1>
+      <div className="pointer-events-none absolute -left-20 -top-20 h-48 w-48 rounded-full bg-neutral-300/40 blur-3xl animate-pulse" />
 
-        <p className="mt-2 text-sm text-neutral-500">
-          Ingresa a tu cuenta para administrar tus finanzas.
-        </p>
-      </div>
+      <div className="pointer-events-none absolute -bottom-24 -right-16 h-56 w-56 rounded-full bg-neutral-400/30 blur-3xl animate-pulse [animation-delay:700ms]" />
 
-      <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
+      {/* ===================
+      CARD
+      =================== */}
+
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 p-7 shadow-[0_30px_100px_-45px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-9">
+        {/* ===================
+        TOP DETAIL
+        =================== */}
+
+        <div className="absolute right-6 top-6 flex items-center gap-1.5 rounded-full border border-neutral-200 bg-white/80 px-3 py-1.5 text-xs font-medium text-neutral-500 shadow-sm backdrop-blur">
+          <Sparkles className="h-3.5 w-3.5" />
+          Finanzas personales
+        </div>
+
+        {/* ===================
+        HEADER
+        =================== */}
+
+        <div className="mb-10 pt-8">
+          <div className="mb-5 flex items-center gap-3">
+            <div className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-neutral-950 text-white shadow-lg">
+              <span className="text-sm font-semibold">I</span>
+
+              <span className="absolute bottom-1 right-1 h-2 w-2 rounded-full bg-white/60 animate-pulse" />
+            </div>
+
+            <div>
+              <p className="text-base font-semibold tracking-[0.18em] text-neutral-950">
+                ISHA
+              </p>
+
+              <p className="text-xs text-neutral-400">
+                Finance
+              </p>
+            </div>
+          </div>
+
+          <h1 className="max-w-sm text-4xl font-semibold leading-[1.05] tracking-tight text-neutral-950 sm:text-[2.7rem]">
+            Tu dinero,
+            <span className="block text-neutral-400">
+              bajo control.
+            </span>
+          </h1>
+
+          <p className="mt-4 max-w-sm text-sm leading-6 text-neutral-500">
+            Inicia sesión para consultar tus deudas, inversiones y movimientos
+            desde un solo lugar.
+          </p>
+        </div>
+
+        {/* ===================
+        FORM
+        =================== */}
+
         <form action={formAction} className="space-y-5">
           <FormInput
             id="email"
@@ -63,42 +110,83 @@ export function LoginForm() {
             <div className="flex justify-end">
               <Link
                 href="/auth/forgot-password"
-                className="text-sm font-medium text-neutral-600 transition hover:text-neutral-950"
+                className="relative text-sm font-medium text-neutral-500 transition-colors duration-200 hover:text-neutral-950"
               >
                 ¿Olvidaste tu contraseña?
               </Link>
             </div>
           </div>
 
+          {/* ===================
+          ERROR
+          =================== */}
+
           {state.message && !state.success && (
             <div
               role="alert"
-              className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"
+              className="animate-in fade-in slide-in-from-top-1 rounded-xl border border-red-200 bg-red-50/90 px-4 py-3 text-sm text-red-700"
             >
               {state.message}
             </div>
           )}
 
+          {/* ===================
+          BUTTON
+          =================== */}
+
           <button
             type="submit"
             disabled={pending}
-            className="h-11 w-full rounded-lg bg-neutral-950 px-4 text-sm font-medium text-white transition hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl bg-neutral-950 px-4 text-sm font-medium text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800 hover:shadow-xl active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {pending ? 'Iniciando sesión...' : 'Iniciar sesión'}
+            <span className="relative z-10 flex items-center gap-2">
+              {pending ? (
+                'Iniciando sesión...'
+              ) : (
+                <>
+                  Iniciar sesión
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </>
+              )}
+            </span>
+
+            <span className="absolute inset-y-0 -left-1/3 w-1/3 skew-x-[-20deg] bg-white/10 transition-all duration-700 group-hover:left-[120%]" />
           </button>
         </form>
 
-        <div className="mt-6 border-t border-neutral-100 pt-6 text-center">
-          <p className="text-sm text-neutral-500">
-            ¿No tienes una cuenta?{' '}
-            <Link
-              href="/auth/register"
-              className="font-medium text-neutral-950 transition hover:text-neutral-600"
-            >
-              Crear cuenta
-            </Link>
-          </p>
+        {/* ===================
+        FOOTER
+        =================== */}
+
+        <div className="mt-8 flex items-center gap-4">
+          <div className="h-px flex-1 bg-neutral-200" />
+
+          <span className="text-xs text-neutral-400">
+            o
+          </span>
+
+          <div className="h-px flex-1 bg-neutral-200" />
         </div>
+
+        <p className="mt-6 text-center text-sm text-neutral-500">
+          ¿Aún no tienes cuenta?{' '}
+          <Link
+            href="/auth/register"
+            className="font-semibold text-neutral-950 transition-colors hover:text-neutral-600"
+          >
+            Crear cuenta
+          </Link>
+        </p>
+
+          <p className="mt-6 text-center text-sm text-neutral-500">
+          ¿Olvidaste la contraseña?{' '}
+          <Link
+            href="/auth/forgot-password"
+            className="font-semibold text-neutral-950 transition-colors hover:text-neutral-600"
+          >
+            Recuperar contraseña
+          </Link>
+        </p>
       </div>
     </section>
   );

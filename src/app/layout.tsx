@@ -1,13 +1,14 @@
-// @/app/auth/layout.tsx
+// @/app/layout.tsx
 
 import "./globals.css";
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="es"
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="es"suppressHydrationWarning >
+      <title>ISHA</title>
+      <body>
+        {children}
+      </body>
     </html>
   );
 }

@@ -3,24 +3,29 @@
 import { z } from 'zod'
 
 import { fetchPublic } from '@/core/api/api-public'
-import { extractErrorMessage } from '@/core/utils/extract-error-message'
 import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { extractErrorMessage } from '@/core/utils/extract-error-message'
 
 import {
-  ForgotPasswordRequest,
-  LoginRequest,
-  LoginResponse,
+  type ForgotPasswordRequest,
+  type LoginRequest,
+  type LoginResponse,
   LoginResponseSchema,
-  RegisterRequest,
-  RegisterResponse,
+  type RegisterRequest,
+  type RegisterResponse,
   RegisterResponseSchema,
-  ResetPasswordRequest,
-  VerifyEmailRequest,
+  type ResendVerificationRequest,
+  type ResetPasswordRequest,
+  type VerifyEmailRequest,
 } from '@/modules/auth/schemas/auth.schema'
 
 const JSON_HEADERS = {
   'Content-Type': 'application/json',
 }
+
+// ===================
+// LOGIN
+// ===================
 
 export async function login(request: LoginRequest): Promise<LoginResponse> {
   const response = await fetchPublic('/auth/login', {
@@ -47,6 +52,10 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
 
   return result.data
 }
+
+// ===================
+// REGISTER
+// ===================
 
 export async function register(
   request: RegisterRequest,
@@ -76,6 +85,10 @@ export async function register(
   return result.data
 }
 
+// ===================
+// VERIFY EMAIL
+// ===================
+
 export async function verifyEmail(request: VerifyEmailRequest): Promise<void> {
   const response = await fetchPublic('/auth/verify-email', {
     method: 'POST',
@@ -96,9 +109,39 @@ export async function verifyEmail(request: VerifyEmailRequest): Promise<void> {
   }
 }
 
+// ===================
+// RESEND VERIFICATION
+// ===================
+
+export async function resendVerification(
+  request: ResendVerificationRequest,
+): Promise<void> {
+  const response = await fetchPublic('/auth/resend-verification', {
+    method: 'POST',
+    headers: JSON_HEADERS,
+    body: JSON.stringify(request),
+  })
+
+  if (!response.ok) {
+    throw new Error(await extractErrorMessage(response))
+  }
+
+  const json: unknown = await response.json()
+
+  const result = createApiResponseSchema(z.null()).parse(json)
+
+  if (!result.success) {
+    throw new Error(result.message ?? 'Verification email could not be sent')
+  }
+}
+
+// ===================
+// FORGOT PASSWORD
+// ===================
+
 export async function forgotPassword(
   request: ForgotPasswordRequest,
-): Promise<string> {
+): Promise<void> {
   const response = await fetchPublic('/auth/forgot-password', {
     method: 'POST',
     headers: JSON_HEADERS,
@@ -111,18 +154,16 @@ export async function forgotPassword(
 
   const json: unknown = await response.json()
 
-  const result = createApiResponseSchema(z.string()).parse(json)
+  const result = createApiResponseSchema(z.null()).parse(json)
 
   if (!result.success) {
     throw new Error(result.message ?? 'Password recovery request failed')
   }
-
-  if (result.data === null) {
-    throw new Error('Password recovery token is missing')
-  }
-
-  return result.data
 }
+
+// ===================
+// RESET PASSWORD
+// ===================
 
 export async function resetPassword(
   request: ResetPasswordRequest,

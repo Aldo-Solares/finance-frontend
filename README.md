@@ -167,6 +167,7 @@ Instalación:
 
 ```bash
 npm install lucide-react
+npm install tailwindcss-animate
 ```
 
 Cada nueva librería externa utilizada en el proyecto debe agregarse a esta sección indicando:

@@ -2,6 +2,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { AUTH_TOKEN_COOKIE } from '@/core/constants/auth.constants'
 
 import {
   actionError,
@@ -13,6 +14,7 @@ import {
   ForgotPasswordRequestSchema,
   LoginRequestSchema,
   RegisterRequestSchema,
+  ResendVerificationRequestSchema,
   ResetPasswordRequestSchema,
   VerifyEmailRequestSchema,
   type LoginResponse,
@@ -23,9 +25,15 @@ import {
   forgotPassword,
   login,
   register,
+  resendVerification,
   resetPassword,
   verifyEmail,
 } from '@/modules/auth/services/auth.service'
+import { redirect } from 'next/navigation'
+
+// ===================
+// LOGIN
+// ===================
 
 export async function loginAction(
   _previousState: ActionState<LoginResponse>,
@@ -45,7 +53,7 @@ export async function loginAction(
 
     const cookieStore = await cookies()
 
-    cookieStore.set('finance_token', result.token, {
+    cookieStore.set(AUTH_TOKEN_COOKIE, result.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -57,6 +65,10 @@ export async function loginAction(
     return actionError(error instanceof Error ? error.message : 'Login failed')
   }
 }
+
+// ===================
+// REGISTER
+// ===================
 
 export async function registerAction(
   _previousState: ActionState<RegisterResponse>,
@@ -87,6 +99,10 @@ export async function registerAction(
   }
 }
 
+// ===================
+// VERIFY EMAIL
+// ===================
+
 export async function verifyEmailAction(
   _previousState: ActionState<null>,
   formData: FormData,
@@ -112,10 +128,43 @@ export async function verifyEmailAction(
   }
 }
 
-export async function forgotPasswordAction(
-  _previousState: ActionState<string>,
+// ===================
+// RESEND VERIFICATION
+// ===================
+
+export async function resendVerificationAction(
+  _previousState: ActionState<null>,
   formData: FormData,
-): Promise<ActionState<string>> {
+): Promise<ActionState<null>> {
+  const parsed = ResendVerificationRequestSchema.safeParse({
+    email: formData.get('email'),
+  })
+
+  if (!parsed.success) {
+    return actionError(parsed.error.issues[0]?.message ?? 'Invalid email')
+  }
+
+  try {
+    await resendVerification(parsed.data)
+
+    return actionSuccess(null)
+  } catch (error) {
+    return actionError(
+      error instanceof Error
+        ? error.message
+        : 'Verification email could not be sent',
+    )
+  }
+}
+
+// ===================
+// FORGOT PASSWORD
+// ===================
+
+export async function forgotPasswordAction(
+  _previousState: ActionState<null>,
+  formData: FormData,
+): Promise<ActionState<null>> {
   const parsed = ForgotPasswordRequestSchema.safeParse({
     email: formData.get('email'),
   })
@@ -125,9 +174,9 @@ export async function forgotPasswordAction(
   }
 
   try {
-    const token = await forgotPassword(parsed.data)
+    await forgotPassword(parsed.data)
 
-    return actionSuccess(token)
+    return actionSuccess(null)
   } catch (error) {
     return actionError(
       error instanceof Error
@@ -136,6 +185,10 @@ export async function forgotPasswordAction(
     )
   }
 }
+
+// ===================
+// RESET PASSWORD
+// ===================
 
 export async function resetPasswordAction(
   _previousState: ActionState<null>,
@@ -162,6 +215,22 @@ export async function resetPasswordAction(
     )
   }
 }
+
+// ===================
+// LOGOUT
+// ===================
+
+export async function logoutAction(): Promise<void> {
+  const cookieStore = await cookies()
+
+  cookieStore.delete(AUTH_TOKEN_COOKIE)
+
+  redirect('/auth/login')
+}
+
+// ===================
+// NORMALIZATION
+// ===================
 
 function normalizeNullableString(value: FormDataEntryValue | null) {
   if (typeof value !== 'string' || value.trim() === '') {

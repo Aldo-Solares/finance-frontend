@@ -65,7 +65,7 @@ export async function loginAction(
     return actionError(error instanceof Error ? error.message : 'Login failed')
   }
 
-  redirect('/dashboard')
+  redirect('/main')
 }
 
 // ===================

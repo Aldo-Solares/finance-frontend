@@ -2,12 +2,8 @@
 
 import { z } from 'zod'
 
-import { requiredString } from '@/core/utils/zod-helpers'
 import { UserRole } from '@/modules/user/enums/user-role.enum'
-
-// ===============================
-// PASSWORD
-// ===============================
+import { requiredString } from '@/core/utils/zod-helpers'
 
 export const StrongPasswordSchema = requiredString(
   'La contraseña es obligatoria',
@@ -17,10 +13,6 @@ export const StrongPasswordSchema = requiredString(
   .regex(/[a-z]/, 'La contraseña debe contener una minúscula')
   .regex(/\d/, 'La contraseña debe contener un número')
   .regex(/[^A-Za-z0-9\s]/, 'La contraseña debe contener un carácter especial')
-
-// ===============================
-// USER RESPONSE
-// ===============================
 
 export const UserSchema = z.object({
   userId: z.number(),
@@ -32,10 +24,6 @@ export const UserSchema = z.object({
   emailVerified: z.boolean(),
 })
 
-// ===============================
-// UPDATE USER
-// ===============================
-
 export const UpdateUserRequestSchema = z.object({
   name: requiredString('El nombre es obligatorio'),
   lastName: z.string().trim().nullable(),
@@ -45,30 +33,25 @@ export const UpdateUserRequestSchema = z.object({
   ),
 })
 
-// ===============================
-// CHANGE PASSWORD
-// ===============================
+export const UpdateUserResponseSchema = z.object({
+  user: UserSchema,
+  token: z.string(),
+})
 
 export const ChangePasswordRequestSchema = z.object({
   currentPassword: requiredString('La contraseña actual es obligatoria'),
   newPassword: StrongPasswordSchema,
 })
 
-// ===============================
-// CHANGE ROLE
-// ===============================
-
 export const ChangeRoleRequestSchema = z.object({
   role: z.nativeEnum(UserRole),
 })
 
-// ===============================
-// TYPES
-// ===============================
-
 export type User = z.infer<typeof UserSchema>
 
 export type UpdateUserRequest = z.infer<typeof UpdateUserRequestSchema>
+
+export type UpdateUserResponse = z.infer<typeof UpdateUserResponseSchema>
 
 export type ChangePasswordRequest = z.infer<typeof ChangePasswordRequestSchema>
 

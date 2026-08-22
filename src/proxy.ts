@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { AUTH_TOKEN_COOKIE } from '@/core/constants/auth.constants'
 
 const PRIVATE_ROUTES = [
+  '/main',
   '/dashboard',
   '/debts',
   '/investments',
@@ -47,6 +48,7 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/main/:path*',
     '/dashboard/:path*',
     '/debts/:path*',
     '/investments/:path*',

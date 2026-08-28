@@ -43,7 +43,7 @@ export function StatementEntryPage({
       entries.reduce(
         (current, entry) =>
           current +
-          (entry.installmentAmount ?? 0),
+          (entry.amount ?? 0),
         0,
       ),
     [entries],
@@ -55,7 +55,7 @@ export function StatementEntryPage({
         (current, entry) =>
           current +
           (!entry.paid
-            ? entry.installmentAmount ?? 0
+            ? entry.amount ?? 0
             : 0),
         0,
       ),
@@ -89,7 +89,7 @@ export function StatementEntryPage({
 
           <div className="mt-5">
             <PageHeader
-              eyebrow={statement.cardCode}
+              eyebrow={`${statement.bank} · ${statement.cardName}`}
               title={`${statement.month}/${statement.year}`}
               description="Consulta y administra los movimientos de este estado de cuenta."
               action={
@@ -107,6 +107,28 @@ export function StatementEntryPage({
               }
             />
           </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+  <InfoCard
+    label="Inicio del periodo"
+    value={formatDate(statement.periodStart)}
+  />
+
+  <InfoCard
+    label="Corte"
+    value={formatDate(statement.periodEnd)}
+  />
+
+  <InfoCard
+    label="Fecha límite"
+    value={formatDate(statement.paymentDate)}
+    highlight
+  />
+
+  <InfoCard
+    label="Estado"
+    value={formatStatementStatus(statement.status)}
+  />
+</div>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-3">
@@ -206,4 +228,82 @@ function formatMoney(
     style: 'currency',
     currency: 'MXN',
   }).format(value);
+}
+
+type InfoCardProps = {
+  label: string;
+  value: string;
+  highlight?: boolean;
+};
+
+function InfoCard({
+  label,
+  value,
+  highlight = false,
+}: InfoCardProps) {
+  return (
+    <div
+      className={[
+        'rounded-[1.5rem] border p-5',
+        highlight
+          ? 'border-amber-200 bg-amber-50'
+          : 'border-neutral-200 bg-white',
+      ].join(' ')}
+    >
+      <p className="text-xs font-medium text-neutral-400">
+        {label}
+      </p>
+
+      <p
+        className={[
+          'mt-2 text-sm font-semibold',
+          highlight
+            ? 'text-amber-800'
+            : 'text-neutral-950',
+        ].join(' ')}
+      >
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function formatDate(
+  value: string | null,
+): string {
+  if (!value) {
+    return '—';
+  }
+
+  return new Intl.DateTimeFormat(
+    'es-MX',
+    {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    },
+  ).format(
+    new Date(`${value}T00:00:00`),
+  );
+}
+
+function formatStatementStatus(
+  status: Statement['status'],
+): string {
+  switch (status) {
+    case 'UPCOMING':
+      return 'Próximo';
+
+    case 'ACTIVE':
+      return 'Periodo activo';
+
+    case 'PAYMENT_PENDING':
+      return 'Pago pendiente';
+
+    case 'CLOSED':
+      return 'Cerrado';
+
+    default:
+      return status;
+  }
 }

@@ -1,4 +1,4 @@
-// @/modules/debts/services/card.service.ts
+// @/modules/debts/card/services/card.service.ts
 
 import { z } from 'zod'
 
@@ -31,6 +31,32 @@ export async function findAllCards(): Promise<Card[]> {
 
   if (result.data === null) {
     throw new Error('La respuesta de tarjetas no contiene datos')
+  }
+
+  return result.data
+}
+
+// ===================
+// FIND ACTIVE
+// ===================
+
+export async function findAllActiveCards(): Promise<Card[]> {
+  const response = await fetchServer('/cards/active', {
+    method: 'GET',
+  })
+
+  const json: unknown = await response.json()
+
+  const result = createApiResponseSchema(z.array(CardSchema)).parse(json)
+
+  if (!result.success) {
+    throw new Error(
+      result.message ?? 'No fue posible obtener las tarjetas activas',
+    )
+  }
+
+  if (result.data === null) {
+    throw new Error('La respuesta de tarjetas activas no contiene datos')
   }
 
   return result.data

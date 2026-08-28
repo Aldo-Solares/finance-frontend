@@ -1,47 +1,47 @@
 // @/modules/debts/statement/components/statement-pay-all-modal.tsx
 
-'use client';
+'use client'
 
 import {
   useActionState,
   useEffect,
-} from 'react';
-import { useFormStatus } from 'react-dom';
+} from 'react'
+import { useFormStatus } from 'react-dom'
 import {
   CheckCheck,
   LoaderCircle,
-} from 'lucide-react';
+} from 'lucide-react'
 
-import type { ActionState } from '@/core/utils/action-state';
-import type { Card } from '@/modules/debts/card/schemas/card.schema';
-import { payAllStatementsAction } from '@/modules/debts/statement/actions/statement.actions';
-import type { Statement } from '@/modules/debts/statement/schemas/statement.schema';
+import type { ActionState } from '@/core/utils/action-state'
+import { payAllStatementsAction } from '@/modules/debts/statement/actions/statement.actions'
+import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
+import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
 
 type Props = {
-  card: Card;
-  onClose: () => void;
-};
+  userCard: UserCard
+  onClose: () => void
+}
 
 const initialState: ActionState<Statement[]> = {
   success: false,
   message: null,
   data: null,
-};
+}
 
 export function StatementPayAllModal({
-  card,
+  userCard,
   onClose,
 }: Props) {
   const [state, action] = useActionState(
     payAllStatementsAction,
     initialState,
-  );
+  )
 
   useEffect(() => {
     if (state.success) {
-      onClose();
+      onClose()
     }
-  }, [state.success, onClose]);
+  }, [state.success, onClose])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -63,7 +63,7 @@ export function StatementPayAllModal({
         <p className="mt-2 text-sm leading-6 text-neutral-500">
           Todos los estados de cuenta de{' '}
           <span className="font-medium text-neutral-950">
-            {card.cardCode}
+            {userCard.bank} · {userCard.cardName}
           </span>{' '}
           serán marcados como pagados.
         </p>
@@ -74,8 +74,8 @@ export function StatementPayAllModal({
         >
           <input
             type="hidden"
-            name="cardId"
-            value={card.cardId}
+            name="userCardId"
+            value={userCard.userCardId}
           />
 
           {!state.success &&
@@ -99,11 +99,11 @@ export function StatementPayAllModal({
         </form>
       </div>
     </div>
-  );
+  )
 }
 
 function PayAllButton() {
-  const { pending } = useFormStatus();
+  const { pending } = useFormStatus()
 
   return (
     <button
@@ -119,5 +119,5 @@ function PayAllButton() {
         ? 'Procesando...'
         : 'Confirmar'}
     </button>
-  );
+  )
 }

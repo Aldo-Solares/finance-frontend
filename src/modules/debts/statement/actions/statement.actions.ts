@@ -13,10 +13,12 @@ import {
   CreateStatementRequestSchema,
   UpdateStatementRequestSchema,
   type Statement,
+  type StatementDateSuggestion,
 } from '@/modules/debts/statement/schemas/statement.schema'
 import {
   createStatement,
   deleteStatement,
+  getStatementDateSuggestion,
   payAllStatements,
   updateStatement,
   updateStatementPaid,
@@ -31,12 +33,10 @@ export async function createStatementAction(
   formData: FormData,
 ): Promise<ActionState<Statement>> {
   const parsed = CreateStatementRequestSchema.safeParse({
-    cardId: Number(formData.get('cardId')),
-    year: Number(formData.get('year')),
-    month: Number(formData.get('month')),
-    periodStart: normalizeNullableString(formData.get('periodStart')),
-    periodEnd: normalizeNullableString(formData.get('periodEnd')),
-    paymentDate: normalizeNullableString(formData.get('paymentDate')),
+    userCardId: Number(formData.get('userCardId')),
+    periodStart: normalizeRequiredString(formData.get('periodStart')),
+    periodEnd: normalizeRequiredString(formData.get('periodEnd')),
+    paymentDate: normalizeRequiredString(formData.get('paymentDate')),
   })
 
   if (!parsed.success) {
@@ -70,17 +70,15 @@ export async function updateStatementAction(
 ): Promise<ActionState<Statement>> {
   const statementId = Number(formData.get('statementId'))
 
-  if (!Number.isInteger(statementId)) {
+  if (!Number.isInteger(statementId) || statementId <= 0) {
     return actionError('El estado de cuenta no es válido')
   }
 
   const parsed = UpdateStatementRequestSchema.safeParse({
-    cardId: Number(formData.get('cardId')),
-    year: Number(formData.get('year')),
-    month: Number(formData.get('month')),
-    periodStart: normalizeNullableString(formData.get('periodStart')),
-    periodEnd: normalizeNullableString(formData.get('periodEnd')),
-    paymentDate: normalizeNullableString(formData.get('paymentDate')),
+    userCardId: Number(formData.get('userCardId')),
+    periodStart: normalizeRequiredString(formData.get('periodStart')),
+    periodEnd: normalizeRequiredString(formData.get('periodEnd')),
+    paymentDate: normalizeRequiredString(formData.get('paymentDate')),
     notes: normalizeNullableString(formData.get('notes')),
   })
 
@@ -142,10 +140,14 @@ export async function payAllStatementsAction(
   _previousState: ActionState<Statement[]>,
   formData: FormData,
 ): Promise<ActionState<Statement[]>> {
-  const cardId = Number(formData.get('cardId'))
+  const userCardId = Number(formData.get('userCardId'))
+
+  if (!Number.isInteger(userCardId) || userCardId <= 0) {
+    return actionError('La tarjeta no es válida')
+  }
 
   try {
-    const statements = await payAllStatements(cardId)
+    const statements = await payAllStatements(userCardId)
 
     revalidatePath('/debts/statement')
 
@@ -169,6 +171,10 @@ export async function deleteStatementAction(
 ): Promise<ActionState<null>> {
   const statementId = Number(formData.get('statementId'))
 
+  if (!Number.isInteger(statementId) || statementId <= 0) {
+    return actionError('El estado de cuenta no es válido')
+  }
+
   try {
     await deleteStatement(statementId)
 
@@ -185,8 +191,40 @@ export async function deleteStatementAction(
 }
 
 // ===================
+// DATE SUGGESTION
+// ===================
+
+export async function getStatementDateSuggestionAction(
+  userCardId: number,
+): Promise<ActionState<StatementDateSuggestion>> {
+  if (!Number.isInteger(userCardId) || userCardId <= 0) {
+    return actionError('La tarjeta no es válida')
+  }
+
+  try {
+    const suggestion = await getStatementDateSuggestion(userCardId)
+
+    return actionSuccess(suggestion)
+  } catch (error) {
+    return actionError(
+      error instanceof Error
+        ? error.message
+        : 'No fue posible obtener las fechas sugeridas',
+    )
+  }
+}
+
+// ===================
 // NORMALIZATION
 // ===================
+
+function normalizeRequiredString(value: FormDataEntryValue | null): string {
+  if (typeof value !== 'string') {
+    return ''
+  }
+
+  return value.trim()
+}
 
 function normalizeNullableString(
   value: FormDataEntryValue | null,

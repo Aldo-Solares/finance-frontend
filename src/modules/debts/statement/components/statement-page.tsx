@@ -1,78 +1,80 @@
 // @/modules/debts/statement/components/statement-page.tsx
 
-'use client';
+'use client'
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react'
 import {
   CheckCheck,
   Plus,
-} from 'lucide-react';
+} from 'lucide-react'
 
-import type { Card } from '@/modules/debts/card/schemas/card.schema';
-import type { Statement } from '@/modules/debts/statement/schemas/statement.schema';
-import { PageHeader } from '@/shared/components/page/page-header';
+import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
+import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
+import { PageHeader } from '@/shared/components/page/page-header'
 
-import { StatementDeleteModal } from './statement-delete-modal';
-import { StatementFormModal } from './statement-form-modal';
-import { StatementGrid } from './statement-grid';
-import { StatementPayAllModal } from './statement-pay-all-modal';
+import { StatementDeleteModal } from './statement-delete-modal'
+import { StatementFormModal } from './statement-form-modal'
+import { StatementGrid } from './statement-grid'
+import { StatementPayAllModal } from './statement-pay-all-modal'
 
 type StatementPageProps = {
-  statements: Statement[];
-  cards: Card[];
-  initialCardId: number | null;
-};
+  statements: Statement[]
+  userCards: UserCard[]
+  initialUserCardId: number | null
+}
 
 export function StatementPage({
   statements,
-  cards,
-  initialCardId,
+  userCards,
+  initialUserCardId,
 }: StatementPageProps) {
-  const [cardId, setCardId] =
+  const [userCardId, setUserCardId] =
     useState<number | null>(
-      initialCardId,
-    );
+      initialUserCardId,
+    )
 
   const [formStatement, setFormStatement] =
-    useState<Statement | null>(null);
+    useState<Statement | null>(null)
 
   const [formOpen, setFormOpen] =
-    useState(false);
+    useState(false)
 
   const [
     deleteStatement,
     setDeleteStatement,
-  ] = useState<Statement | null>(null);
+  ] = useState<Statement | null>(null)
 
   const [payAllOpen, setPayAllOpen] =
-    useState(false);
+    useState(false)
 
   const filteredStatements = useMemo(
     () =>
-      cardId === null
+      userCardId === null
         ? []
         : statements.filter(
             (statement) =>
-              statement.cardId === cardId,
+              statement.userCardId === userCardId,
           ),
-    [statements, cardId],
-  );
+    [statements, userCardId],
+  )
 
-  const selectedCard = cards.find(
-    (card) => card.cardId === cardId,
-  );
+  const selectedUserCard =
+    userCards.find(
+      (userCard) =>
+        userCard.userCardId === userCardId,
+    )
 
   const handleCreate = () => {
-    setFormStatement(null);
-    setFormOpen(true);
-  };
+    setFormStatement(null)
+    setFormOpen(true)
+  }
 
   const handleEdit = (
     statement: Statement,
   ) => {
-    setFormStatement(statement);
-    setFormOpen(true);
-  };
+    setFormStatement(statement)
+    setFormOpen(true)
+  }
 
   return (
     <>
@@ -82,7 +84,7 @@ export function StatementPage({
           title="Estados de cuenta"
           description="Consulta periodos, fechas de pago y pagos de tus tarjetas."
           action={
-            cards.length > 0 ? (
+            userCards.length > 0 ? (
               <button
                 type="button"
                 onClick={handleCreate}
@@ -96,7 +98,7 @@ export function StatementPage({
           }
         />
 
-        {cards.length > 0 && (
+        {userCards.length > 0 && (
           <div className="flex flex-col gap-4 rounded-[1.5rem] border border-neutral-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-xs font-medium text-neutral-400">
@@ -104,9 +106,9 @@ export function StatementPage({
               </p>
 
               <select
-                value={cardId ?? ''}
+                value={userCardId ?? ''}
                 onChange={(event) =>
-                  setCardId(
+                  setUserCardId(
                     Number(
                       event.target.value,
                     ),
@@ -114,16 +116,21 @@ export function StatementPage({
                 }
                 className="mt-1 bg-transparent text-sm font-semibold text-neutral-950 outline-none"
               >
-                {cards.map((card) => (
-                  <option
-                    key={card.cardId}
-                    value={card.cardId}
-                  >
-                    {card.cardCode} ·{' '}
-                    {card.bank}{' '}
-                    {card.cardName}
-                  </option>
-                ))}
+                {userCards.map(
+                  (userCard) => (
+                    <option
+                      key={
+                        userCard.userCardId
+                      }
+                      value={
+                        userCard.userCardId
+                      }
+                    >
+                      {userCard.bank} ·{' '}
+                      {userCard.cardName}
+                    </option>
+                  ),
+                )}
               </select>
             </div>
 
@@ -147,10 +154,16 @@ export function StatementPage({
         )}
 
         <StatementGrid
-          statements={filteredStatements}
-          hasCards={cards.length > 0}
+          statements={
+            filteredStatements
+          }
+          hasCards={
+            userCards.length > 0
+          }
           onEdit={handleEdit}
-          onDelete={setDeleteStatement}
+          onDelete={
+            setDeleteStatement
+          }
         />
       </section>
 
@@ -158,14 +171,18 @@ export function StatementPage({
         <StatementFormModal
           key={
             formStatement?.statementId ??
-            `create-${cardId}`
+            `create-${userCardId}`
           }
-          cards={cards}
-          selectedCardId={cardId}
-          statement={formStatement}
+          userCards={userCards}
+          selectedUserCardId={
+            userCardId
+          }
+          statement={
+            formStatement
+          }
           onClose={() => {
-            setFormOpen(false);
-            setFormStatement(null);
+            setFormOpen(false)
+            setFormStatement(null)
           }}
         />
       )}
@@ -175,7 +192,9 @@ export function StatementPage({
           key={
             deleteStatement.statementId
           }
-          statement={deleteStatement}
+          statement={
+            deleteStatement
+          }
           onClose={() =>
             setDeleteStatement(null)
           }
@@ -183,15 +202,19 @@ export function StatementPage({
       )}
 
       {payAllOpen &&
-        selectedCard && (
+        selectedUserCard && (
           <StatementPayAllModal
-            key={selectedCard.cardId}
-            card={selectedCard}
+            key={
+              selectedUserCard.userCardId
+            }
+            userCard={
+              selectedUserCard
+            }
             onClose={() =>
               setPayAllOpen(false)
             }
           />
         )}
     </>
-  );
+  )
 }

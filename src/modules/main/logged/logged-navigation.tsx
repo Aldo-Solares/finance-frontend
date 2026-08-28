@@ -11,11 +11,11 @@ import {
 
 const navigationItems = [
   {
-    title: 'Dashboard',
+    title: 'Configuración',
     description:
-      'Consulta la visión general de tu información financiera.',
-    href: '/dashboard',
-    icon: ChartNoAxesCombined,
+      'Administra tu perfil, seguridad y datos de cuenta.',
+    href: '/settings',
+    icon: Settings,
   },
   {
     title: 'Tarjetas',
@@ -28,14 +28,14 @@ const navigationItems = [
     title: 'Inversiones',
     description:
       'Accede al espacio destinado a tus inversiones.',
-    href: '/investments',
+    href: '/investments/investment-snapshot',
     icon: TrendingUp,
   },
   {
-    title: 'Configuración',
+    title: 'Trading',
     description:
-      'Administra tu perfil, seguridad y datos de cuenta.',
-    href: '/settings',
+      'Accede al espacio destinado a tus tradings.',
+    href: '/trading/trade',
     icon: Settings,
   },
 ];

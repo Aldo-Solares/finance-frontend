@@ -182,7 +182,7 @@ export function StatementEntryFormModal({
                 name="purchaseDate"
                 type="date"
                 defaultValue={
-                  entry?.purchaseDate ?? ''
+                  entry?.date ?? ''
                 }
               />
 
@@ -193,7 +193,7 @@ export function StatementEntryFormModal({
                 min={0}
                 step="0.01"
                 defaultValue={
-                  entry?.installmentAmount ??
+                  entry?.amount ??
                   ''
                 }
               />
@@ -232,7 +232,7 @@ export function StatementEntryFormModal({
                   min={0}
                   step="0.01"
                   defaultValue={
-                    entry?.purchaseTotal ?? ''
+                    entry?.purchaseAmount ?? ''
                   }
                 />
 
@@ -242,7 +242,7 @@ export function StatementEntryFormModal({
                   type="number"
                   min={0}
                   defaultValue={
-                    entry?.remainingMonths ??
+                    entry?.remainingMsi ??
                     ''
                   }
                 />
@@ -254,7 +254,7 @@ export function StatementEntryFormModal({
                   min={0}
                   step="0.01"
                   defaultValue={
-                    entry?.remainingTotal ??
+                    entry?.remainingMsiAmount ??
                     ''
                   }
                 />

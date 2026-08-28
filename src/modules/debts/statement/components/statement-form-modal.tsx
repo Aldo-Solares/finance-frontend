@@ -1,74 +1,150 @@
 // @/modules/debts/statement/components/statement-form-modal.tsx
 
-'use client';
+'use client'
 
-import {
-  useActionState,
-  useEffect,
-} from 'react';
-import { useFormStatus } from 'react-dom';
+import { useActionState, useEffect, useState } from 'react'
+import { useFormStatus } from 'react-dom'
 import {
   CalendarDays,
   LoaderCircle,
   Plus,
   Save,
   X,
-} from 'lucide-react';
+} from 'lucide-react'
 
-import type { ActionState } from '@/core/utils/action-state';
-import type { Card } from '@/modules/debts/card/schemas/card.schema';
+import type { ActionState } from '@/core/utils/action-state'
 import {
   createStatementAction,
+  getStatementDateSuggestionAction,
   updateStatementAction,
-} from '@/modules/debts/statement/actions/statement.actions';
-import type { Statement } from '@/modules/debts/statement/schemas/statement.schema';
+} from '@/modules/debts/statement/actions/statement.actions'
+import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
+import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
 
 type StatementFormModalProps = {
-  cards: Card[];
-  selectedCardId: number | null;
-  statement: Statement | null;
-  onClose: () => void;
-};
+  userCards: UserCard[]
+  selectedUserCardId: number | null
+  statement: Statement | null
+  onClose: () => void
+}
 
 const initialState: ActionState<Statement> = {
   success: false,
   message: null,
   data: null,
-};
+}
 
 export function StatementFormModal({
-  cards,
-  selectedCardId,
+  userCards,
+  selectedUserCardId,
   statement,
   onClose,
 }: StatementFormModalProps) {
-  const editing = statement !== null;
+  const editing = statement !== null
 
-  const [createState, createAction] =
-    useActionState(
-      createStatementAction,
-      initialState,
-    );
+  const [userCardId, setUserCardId] = useState(
+    statement?.userCardId ??
+      selectedUserCardId ??
+      userCards[0]?.userCardId ??
+      0,
+  )
 
-  const [updateState, updateAction] =
-    useActionState(
-      updateStatementAction,
-      initialState,
-    );
+  const [periodStart, setPeriodStart] = useState(
+    statement?.periodStart ?? '',
+  )
+
+  const [periodEnd, setPeriodEnd] = useState(
+    statement?.periodEnd ?? '',
+  )
+
+  const [paymentDate, setPaymentDate] = useState(
+    statement?.paymentDate ?? '',
+  )
+
+  const [createState, createAction] = useActionState(
+    createStatementAction,
+    initialState,
+  )
+
+  const [updateState, updateAction] = useActionState(
+    updateStatementAction,
+    initialState,
+  )
 
   const state = editing
     ? updateState
-    : createState;
+    : createState
 
   const action = editing
     ? updateAction
-    : createAction;
+    : createAction
+
+  // ===================
+  // DATE SUGGESTION
+  // ===================
+
+  useEffect(() => {
+    if (editing || userCardId <= 0) {
+      return
+    }
+
+    let cancelled = false
+
+    async function loadSuggestion() {
+      const result =
+        await getStatementDateSuggestionAction(
+          userCardId,
+        )
+
+      if (cancelled) {
+        return
+      }
+
+      if (
+        !result.success ||
+        result.data === null
+      ) {
+        setPeriodStart('')
+        setPeriodEnd('')
+        setPaymentDate('')
+        return
+      }
+
+      setPeriodStart(
+        result.data.periodStart ?? '',
+      )
+
+      setPeriodEnd(
+        result.data.periodEnd ?? '',
+      )
+
+      setPaymentDate(
+        result.data.paymentDate ?? '',
+      )
+    }
+
+    void loadSuggestion()
+
+    return () => {
+      cancelled = true
+    }
+  }, [
+    editing,
+    userCardId,
+  ])
+
+  // ===================
+  // CLOSE AFTER SUCCESS
+  // ===================
 
   useEffect(() => {
     if (state.success) {
-      onClose();
+      onClose()
     }
-  }, [state.success, onClose]);
+  }, [
+    state.success,
+    onClose,
+  ])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -113,56 +189,34 @@ export function StatementFormModal({
           <div className="space-y-5 p-6">
             <div>
               <label
-                htmlFor="cardId"
+                htmlFor="userCardId"
                 className="mb-2 block text-xs font-medium text-neutral-500"
               >
                 Tarjeta
               </label>
 
               <select
-                id="cardId"
-                name="cardId"
-                defaultValue={String(
-                  statement?.cardId ??
-                    selectedCardId ??
-                    '',
-                )}
+                id="userCardId"
+                name="userCardId"
+                value={String(userCardId)}
+                onChange={(event) =>
+                  setUserCardId(
+                    Number(event.target.value),
+                  )
+                }
                 className="h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-sm text-neutral-950 outline-none focus:border-neutral-400"
               >
-                {cards.map((card) => (
+                {userCards.map((userCard) => (
                   <option
-                    key={card.cardId}
-                    value={String(card.cardId)}
+                    key={userCard.userCardId}
+                    value={String(
+                      userCard.userCardId,
+                    )}
                   >
-                    {card.cardCode} · {card.bank}{' '}
-                    {card.cardName}
+                    {userCard.bank} · {userCard.cardName}
                   </option>
                 ))}
               </select>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field
-                label="Año"
-                name="year"
-                type="number"
-                defaultValue={
-                  statement?.year ??
-                  new Date().getFullYear()
-                }
-              />
-
-              <Field
-                label="Mes"
-                name="month"
-                type="number"
-                min={1}
-                max={12}
-                defaultValue={
-                  statement?.month ??
-                  new Date().getMonth() + 1
-                }
-              />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
@@ -170,29 +224,40 @@ export function StatementFormModal({
                 label="Inicio"
                 name="periodStart"
                 type="date"
-                defaultValue={
-                  statement?.periodStart ?? ''
-                }
+                value={periodStart}
+                onChange={setPeriodStart}
               />
 
               <Field
                 label="Corte"
                 name="periodEnd"
                 type="date"
-                defaultValue={
-                  statement?.periodEnd ?? ''
-                }
+                value={periodEnd}
+                onChange={setPeriodEnd}
               />
 
               <Field
                 label="Fecha de pago"
                 name="paymentDate"
                 type="date"
-                defaultValue={
-                  statement?.paymentDate ?? ''
-                }
+                value={paymentDate}
+                onChange={setPaymentDate}
               />
             </div>
+
+            {periodEnd && (
+              <div className="rounded-xl bg-neutral-50 px-4 py-3">
+                <p className="text-xs text-neutral-400">
+                  Estado de cuenta
+                </p>
+
+                <p className="mt-1 text-sm font-medium text-neutral-800">
+                  {formatStatementPeriod(
+                    periodEnd,
+                  )}
+                </p>
+              </div>
+            )}
 
             {editing && (
               <div>
@@ -232,30 +297,30 @@ export function StatementFormModal({
               Cancelar
             </button>
 
-            <SaveButton editing={editing} />
+            <SaveButton
+              editing={editing}
+            />
           </div>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
 type FieldProps = {
-  label: string;
-  name: string;
-  type: string;
-  defaultValue: string | number;
-  min?: number;
-  max?: number;
-};
+  label: string
+  name: string
+  type: string
+  value: string
+  onChange: (value: string) => void
+}
 
 function Field({
   label,
   name,
   type,
-  defaultValue,
-  min,
-  max,
+  value,
+  onChange,
 }: FieldProps) {
   return (
     <div>
@@ -275,9 +340,13 @@ function Field({
           id={name}
           name={name}
           type={type}
-          min={min}
-          max={max}
-          defaultValue={defaultValue}
+          value={value}
+          onChange={(event) =>
+            onChange(
+              event.target.value,
+            )
+          }
+          required
           className={[
             'h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 pr-4 text-sm outline-none focus:border-neutral-400',
             type === 'date'
@@ -287,15 +356,16 @@ function Field({
         />
       </div>
     </div>
-  );
+  )
 }
 
 function SaveButton({
   editing,
 }: {
-  editing: boolean;
+  editing: boolean
 }) {
-  const { pending } = useFormStatus();
+  const { pending } =
+    useFormStatus()
 
   return (
     <button
@@ -317,5 +387,39 @@ function SaveButton({
           ? 'Guardar cambios'
           : 'Crear periodo'}
     </button>
-  );
+  )
+}
+
+function formatStatementPeriod(
+  periodEnd: string,
+): string {
+  const [
+    year,
+    month,
+  ] = periodEnd
+    .split('-')
+    .map(Number)
+
+  if (
+    !year ||
+    !month
+  ) {
+    return ''
+  }
+
+  const date = new Date(
+    year,
+    month - 1,
+    1,
+  )
+
+  const monthName =
+    new Intl.DateTimeFormat(
+      'es-MX',
+      {
+        month: 'long',
+      },
+    ).format(date)
+
+  return `${monthName.charAt(0).toUpperCase()}${monthName.slice(1)} ${year}`
 }

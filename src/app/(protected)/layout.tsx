@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { getCurrentUser } from '@/modules/user/services/user.service';
 import { AppFooter } from '@/shared/components/layout/app-footer';
-import { AppNav } from '@/shared/components/layout/app-nav';
+import { AppHeader } from '@/shared/components/layout/app-header';
 
 type ProtectedLayoutProps = {
   children: ReactNode;
@@ -23,14 +23,14 @@ export default async function ProtectedLayout({
   }
 
   return (
-  <div className="flex min-h-screen flex-col bg-neutral-100">
-    <AppNav user={user} />
+    <div className="flex min-h-screen flex-col bg-neutral-100">
+      <AppHeader user={user} />
 
-    <main className="flex w-full flex-1 px-6 py-8 lg:px-10">
-      {children}
-    </main>
+      <main className="flex w-full flex-1 px-6 py-8 lg:px-10">
+        {children}
+      </main>
 
-    <AppFooter />
-  </div>
+      <AppFooter />
+    </div>
   );
 }

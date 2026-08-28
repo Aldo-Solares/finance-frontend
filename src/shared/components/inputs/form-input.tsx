@@ -1,4 +1,5 @@
 // @/shared/components/inputs/form-input.tsx
+
 import type { LucideIcon } from 'lucide-react';
 
 type FormInputProps = {

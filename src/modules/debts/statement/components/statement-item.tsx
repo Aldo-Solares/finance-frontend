@@ -83,7 +83,7 @@ export function StatementItem({
             </p>
 
             <p className="mt-0.5 text-xs text-neutral-400">
-              {statement.cardCode}
+              {statement.bank} · {statement.cardName}
             </p>
           </div>
         </div>

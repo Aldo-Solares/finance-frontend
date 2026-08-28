@@ -1,6 +1,7 @@
 // @/core/api/api-server.ts
 
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 import { AUTH_TOKEN_COOKIE } from '@/core/constants/auth.constants'
 import { extractErrorMessage } from '@/core/utils/extract-error-message'
@@ -24,7 +25,7 @@ export const fetchServer = async (
   const token = cookieStore.get(AUTH_TOKEN_COOKIE)?.value
 
   if (!token) {
-    throw new Error('Authentication token not found')
+    redirect('/login')
   }
 
   const normalizedEndpoint = endpoint.startsWith('/')
@@ -44,6 +45,10 @@ export const fetchServer = async (
     headers,
     cache: 'no-store',
   })
+
+  if (response.status === 401 || response.status === 403) {
+    redirect('/login')
+  }
 
   if (!response.ok) {
     const message = await extractErrorMessage(response)

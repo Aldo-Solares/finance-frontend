@@ -6,13 +6,19 @@ import { requiredString } from '@/core/utils/zod-helpers'
 
 const nullableDateSchema = z.string().nullable()
 
+const nullablePositiveNumberSchema = z.number().positive().nullable()
+
 const nullableNonNegativeNumberSchema = z.number().nonnegative().nullable()
+
+const nullablePositiveIntegerSchema = z.number().int().positive().nullable()
 
 const nullableNonNegativeIntegerSchema = z
   .number()
   .int()
   .nonnegative()
   .nullable()
+
+export const StatementEntryTypeSchema = z.enum(['PURCHASE', 'RECURRING'])
 
 // ===================
 // STATEMENT ENTRY
@@ -22,16 +28,18 @@ export const StatementEntrySchema = z.object({
   entryId: z.number().int(),
   statementId: z.number().int(),
   conceptId: z.number().int(),
+  conceptName: z.string(),
   debtor: z.string(),
   description: z.string().nullable(),
-  purchaseDate: nullableDateSchema,
-  installmentAmount: nullableNonNegativeNumberSchema,
+  entryType: StatementEntryTypeSchema,
+  date: nullableDateSchema,
+  amount: z.number().positive(),
   paid: z.boolean(),
-  msiCurrent: nullableNonNegativeIntegerSchema,
-  msiTotal: nullableNonNegativeIntegerSchema,
-  purchaseTotal: nullableNonNegativeNumberSchema,
-  remainingMonths: nullableNonNegativeIntegerSchema,
-  remainingTotal: nullableNonNegativeNumberSchema,
+  msiCurrent: nullablePositiveIntegerSchema,
+  msiTotal: nullablePositiveIntegerSchema,
+  purchaseAmount: nullablePositiveNumberSchema,
+  remainingMsi: nullableNonNegativeIntegerSchema,
+  remainingMsiAmount: nullableNonNegativeNumberSchema,
 })
 
 // ===================
@@ -47,21 +55,23 @@ export const CreateStatementEntryRequestSchema = z.object({
 
   description: z.string().trim().nullable(),
 
-  purchaseDate: nullableDateSchema,
+  entryType: StatementEntryTypeSchema,
 
-  installmentAmount: nullableNonNegativeNumberSchema,
+  date: nullableDateSchema,
 
-  paid: z.boolean().nullable().optional(),
+  amount: z.number().positive(),
 
-  msiCurrent: nullableNonNegativeIntegerSchema,
+  paid: z.boolean(),
 
-  msiTotal: nullableNonNegativeIntegerSchema,
+  msiCurrent: nullablePositiveIntegerSchema,
 
-  purchaseTotal: nullableNonNegativeNumberSchema,
+  msiTotal: nullablePositiveIntegerSchema,
 
-  remainingMonths: nullableNonNegativeIntegerSchema,
+  purchaseAmount: nullablePositiveNumberSchema,
 
-  remainingTotal: nullableNonNegativeNumberSchema,
+  remainingMsi: nullableNonNegativeIntegerSchema,
+
+  remainingMsiAmount: nullableNonNegativeNumberSchema,
 })
 
 // ===================
@@ -77,26 +87,30 @@ export const UpdateStatementEntryRequestSchema = z.object({
 
   description: z.string().trim().nullable(),
 
-  purchaseDate: nullableDateSchema,
+  entryType: StatementEntryTypeSchema,
 
-  installmentAmount: nullableNonNegativeNumberSchema,
+  date: nullableDateSchema,
+
+  amount: z.number().positive(),
 
   paid: z.boolean(),
 
-  msiCurrent: nullableNonNegativeIntegerSchema,
+  msiCurrent: nullablePositiveIntegerSchema,
 
-  msiTotal: nullableNonNegativeIntegerSchema,
+  msiTotal: nullablePositiveIntegerSchema,
 
-  purchaseTotal: nullableNonNegativeNumberSchema,
+  purchaseAmount: nullablePositiveNumberSchema,
 
-  remainingMonths: nullableNonNegativeIntegerSchema,
+  remainingMsi: nullableNonNegativeIntegerSchema,
 
-  remainingTotal: nullableNonNegativeNumberSchema,
+  remainingMsiAmount: nullableNonNegativeNumberSchema,
 })
 
 // ===================
 // TYPES
 // ===================
+
+export type StatementEntryType = z.infer<typeof StatementEntryTypeSchema>
 
 export type StatementEntry = z.infer<typeof StatementEntrySchema>
 

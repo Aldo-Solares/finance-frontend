@@ -1,43 +1,43 @@
 // @/app/(protected)/debts/statement/page.tsx
 
-import { findAllCards } from '@/modules/debts/card/services/card.service';
-import { StatementPage } from '@/modules/debts/statement/components/statement-page';
-import { findAllStatements } from '@/modules/debts/statement/services/statement.service';
+import { StatementPage } from '@/modules/debts/statement/components/statement-page'
+import { findAllStatements } from '@/modules/debts/statement/services/statement.service'
+import { findAllUserCards } from '@/modules/debts/user-card/services/user-card.service'
 
 type StatementRoutePageProps = {
   searchParams: Promise<{
-    cardId?: string;
-  }>;
-};
+    userCardId?: string
+  }>
+}
 
 export default async function StatementRoutePage({
   searchParams,
 }: StatementRoutePageProps) {
-  const { cardId } = await searchParams;
+  const { userCardId } = await searchParams
 
-  const [statements, cards] = await Promise.all([
+  const [statements, userCards] = await Promise.all([
     findAllStatements(),
-    findAllCards(),
-  ]);
+    findAllUserCards(),
+  ])
 
-  const requestedCardId = cardId
-    ? Number(cardId)
-    : null;
+  const requestedUserCardId = userCardId
+    ? Number(userCardId)
+    : null
 
-  const selectedCardId =
-    requestedCardId !== null &&
-    cards.some(
-      (card) =>
-        card.cardId === requestedCardId,
+  const selectedUserCardId =
+    requestedUserCardId !== null &&
+    userCards.some(
+      (userCard) =>
+        userCard.userCardId === requestedUserCardId,
     )
-      ? requestedCardId
-      : cards[0]?.cardId ?? null;
+      ? requestedUserCardId
+      : userCards[0]?.userCardId ?? null
 
   return (
     <StatementPage
       statements={statements}
-      cards={cards}
-      initialCardId={selectedCardId}
+      userCards={userCards}
+      initialUserCardId={selectedUserCardId}
     />
-  );
+  )
 }

@@ -2,22 +2,16 @@
 
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import {
-  ChartNoAxesCombined,
-  CreditCard,
   LogOut,
   PawPrint,
-  Settings,
-  ShieldCheck,
-  TrendingUp,
   X,
 } from 'lucide-react';
+import Link from 'next/link';
 
 import { logoutAction } from '@/modules/auth/actions/auth.actions';
-import { UserRole } from '@/modules/user/enums/user-role.enum';
 import type { User } from '@/modules/user/schemas/user.schema';
+import { AppNavDrawerNav } from '@/shared/components/layout/app-nav-drawer-nav';
 
 type AppNavDrawerProps = {
   user: User;
@@ -30,27 +24,9 @@ export function AppNavDrawer({
   open,
   onClose,
 }: AppNavDrawerProps) {
-  const pathname = usePathname();
-
   if (!open) {
     return null;
   }
-
-  // ===================
-  // ACTIVE ROUTE
-  // ===================
-
-  const isActive = (route: string) =>
-    pathname === route ||
-    pathname.startsWith(`${route}/`);
-
-  const getLinkClassName = (route: string) =>
-    [
-      'flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-colors',
-      isActive(route)
-        ? 'bg-white text-neutral-950'
-        : 'text-white/55 hover:bg-white/[0.07] hover:text-white',
-    ].join(' ');
 
   return (
     <div className="fixed inset-0 z-50">
@@ -69,14 +45,14 @@ export function AppNavDrawer({
       DRAWER
       =================== */}
 
-      <aside className="absolute inset-y-0 left-0 flex w-full max-w-[390px] flex-col bg-neutral-950 px-6 py-6 text-white shadow-[30px_0_80px_-30px_rgba(0,0,0,0.7)]">
+      <aside className="absolute inset-y-0 left-0 flex w-full max-w-[390px] flex-col overflow-y-auto bg-neutral-950 px-6 py-6 text-white shadow-[30px_0_80px_-30px_rgba(0,0,0,0.7)]">
         {/* ===================
         TOP
         =================== */}
 
         <div className="flex items-center justify-between">
           <Link
-            href="/dashboard"
+            href="/main"
             onClick={onClose}
             className="group flex items-center gap-3"
           >
@@ -112,77 +88,24 @@ export function AppNavDrawer({
         <div className="mt-10">
           <p className="text-3xl font-semibold tracking-tight">
             {user.name}
-            {user.lastName ? ` ${user.lastName}` : ''}
+            {user.lastName
+              ? ` ${user.lastName}`
+              : ''}
           </p>
 
           <p className="mt-2 text-sm text-white/35">
             {user.email}
           </p>
-
-          <div className="mt-4 inline-flex rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[10px] font-medium tracking-wide text-white/40">
-            {user.role}
-          </div>
         </div>
 
         {/* ===================
         NAVIGATION
         =================== */}
 
-        <nav className="mt-10 space-y-1">
-          <Link
-            href="/debts/card"
-            onClick={onClose}
-            className={getLinkClassName('/debts/card')}
-          >
-            <CreditCard className="h-4 w-4" />
-
-            Tarjetas
-          </Link>
-
-          <Link
-            href="/investments"
-            onClick={onClose}
-            className={getLinkClassName('/investments')}
-          >
-            <TrendingUp className="h-4 w-4" />
-
-            Inversiones
-          </Link>
-
-          <Link
-            href="/trading"
-            onClick={onClose}
-            className={getLinkClassName('/trading')}
-          >
-            <ChartNoAxesCombined className="h-4 w-4" />
-
-            Trading
-          </Link>
-
-          <div className="my-4 h-px bg-white/[0.07]" />
-
-          <Link
-            href="/settings"
-            onClick={onClose}
-            className={getLinkClassName('/settings')}
-          >
-            <Settings className="h-4 w-4" />
-
-            Configuración
-          </Link>
-
-          {user.role === UserRole.ADMIN && (
-            <Link
-              href="/admin"
-              onClick={onClose}
-              className={getLinkClassName('/admin')}
-            >
-              <ShieldCheck className="h-4 w-4" />
-
-              Administración
-            </Link>
-          )}
-        </nav>
+        <AppNavDrawerNav
+          user={user}
+          onClose={onClose}
+        />
 
         {/* ===================
         LOGOUT

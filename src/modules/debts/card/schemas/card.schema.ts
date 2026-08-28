@@ -1,4 +1,4 @@
-// @/modules/debts/schemas/card.schema.ts
+// @/modules/debts/card/schemas/card.schema.ts
 
 import { z } from 'zod'
 
@@ -10,13 +10,9 @@ import { requiredString } from '@/core/utils/zod-helpers'
 
 export const CardSchema = z.object({
   cardId: z.number().int(),
-  cardCode: z.string(),
-  active: z.boolean(),
-  productId: z.number().int(),
   bank: z.string(),
   cardName: z.string(),
-  userId: z.number().int(),
-  userName: z.string(),
+  active: z.boolean(),
 })
 
 // ===================
@@ -24,12 +20,15 @@ export const CardSchema = z.object({
 // ===================
 
 export const CreateCardRequestSchema = z.object({
-  cardCode: requiredString('El código de la tarjeta es obligatorio').max(
-    50,
-    'El código de la tarjeta no puede superar los 50 caracteres',
+  bank: requiredString('El banco es obligatorio').max(
+    100,
+    'El banco no puede superar los 100 caracteres',
   ),
-  productId: z.number().int(),
-  active: z.boolean().nullable().optional(),
+  cardName: requiredString('El nombre de la tarjeta es obligatorio').max(
+    100,
+    'El nombre de la tarjeta no puede superar los 100 caracteres',
+  ),
+  active: z.boolean(),
 })
 
 // ===================
@@ -37,11 +36,14 @@ export const CreateCardRequestSchema = z.object({
 // ===================
 
 export const UpdateCardRequestSchema = z.object({
-  cardCode: requiredString('El código de la tarjeta es obligatorio').max(
-    50,
-    'El código de la tarjeta no puede superar los 50 caracteres',
+  bank: requiredString('El banco es obligatorio').max(
+    100,
+    'El banco no puede superar los 100 caracteres',
   ),
-  productId: z.number().int(),
+  cardName: requiredString('El nombre de la tarjeta es obligatorio').max(
+    100,
+    'El nombre de la tarjeta no puede superar los 100 caracteres',
+  ),
   active: z.boolean(),
 })
 

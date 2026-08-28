@@ -2,35 +2,48 @@
 
 'use client';
 
-import { useState } from 'react';
+import {
+  ChartCandlestick,
+  ChevronDown,
+  CreditCard,
+  FileText,
+  ListTree,
+  TrendingUp,
+  WalletCards,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
-  ChevronDown,
-  CreditCard,
-  LayoutDashboard,
-  LogOut,
-  Menu,
-  PawPrint,
-  Settings,
-  UserRound,
-} from 'lucide-react';
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { logoutAction } from '@/modules/auth/actions/auth.actions';
+import { UserRole } from '@/modules/user/enums/user-role.enum';
 import type { User } from '@/modules/user/schemas/user.schema';
-import { AppNavDrawer } from '@/shared/components/layout/app-nav-drawer';
 
 type AppNavProps = {
   user: User;
 };
+
+type OpenMenu =
+  | 'debts'
+  | 'trading'
+  | null;
 
 export function AppNav({
   user,
 }: AppNavProps) {
   const pathname = usePathname();
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [openMenu, setOpenMenu] =
+    useState<OpenMenu>(null);
+
+  const navigationRef =
+    useRef<HTMLElement>(null);
+
+  const isAdmin =
+    user.role === UserRole.ADMIN;
 
   // ===================
   // ACTIVE ROUTE
@@ -40,7 +53,19 @@ export function AppNav({
     pathname === route ||
     pathname.startsWith(`${route}/`);
 
-  const getLinkClassName = (route: string) =>
+  const debtsActive =
+    isActive('/debts');
+
+  const tradingActive =
+    isActive('/trading');
+
+  // ===================
+  // CLASSES
+  // ===================
+
+  const getLinkClassName = (
+    route: string,
+  ) =>
     [
       'flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium transition-colors',
       isActive(route)
@@ -48,190 +73,293 @@ export function AppNav({
         : 'text-white/45 hover:bg-white/[0.06] hover:text-white',
     ].join(' ');
 
+  const getDropdownButtonClassName = (
+    active: boolean,
+    opened: boolean,
+  ) =>
+    [
+      'flex h-10 cursor-pointer items-center gap-2 rounded-xl px-3 text-sm font-medium transition-colors',
+      active || opened
+        ? 'bg-white/10 text-white'
+        : 'text-white/45 hover:bg-white/[0.06] hover:text-white',
+    ].join(' ');
+
+  const getDropdownLinkClassName = (
+    route: string,
+  ) =>
+    [
+      'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors',
+      isActive(route)
+        ? 'bg-neutral-100 font-medium text-neutral-950'
+        : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-950',
+    ].join(' ');
+
+  // ===================
+  // MENU
+  // ===================
+
+  const toggleMenu = (
+    menu: Exclude<OpenMenu, null>,
+  ) => {
+    setOpenMenu((current) =>
+      current === menu
+        ? null
+        : menu,
+    );
+  };
+
+  const closeMenu = () => {
+    setOpenMenu(null);
+  };
+
+  // ===================
+  // CLICK OUTSIDE
+  // ===================
+
+  useEffect(() => {
+    const handleClickOutside = (
+      event: MouseEvent,
+    ) => {
+      const target = event.target as Node;
+
+      if (
+        navigationRef.current &&
+        !navigationRef.current.contains(target)
+      ) {
+        setOpenMenu(null);
+      }
+    };
+
+    document.addEventListener(
+      'mousedown',
+      handleClickOutside,
+    );
+
+    return () => {
+      document.removeEventListener(
+        'mousedown',
+        handleClickOutside,
+      );
+    };
+  }, []);
+
   return (
-    <>
-      <header className="relative z-40 shrink-0 bg-neutral-950 text-white">
-        <div className="flex h-20 w-full items-center px-6 lg:px-10">
-          {/* ===================
-          LEFT
-          =================== */}
+    <nav
+      ref={navigationRef}
+      className="hidden items-center gap-1 md:flex"
+    >
+      {/* ===================
+      HOME
+      =================== */}
 
-          <div className="flex min-w-0 flex-1 items-center">
-            {/* ===================
-            DRAWER BUTTON
-            =================== */}
+      <Link
+        href="/main"
+        className={getLinkClassName('/main')}
+      >
+        Inicio
+      </Link>
 
-            <button
-              type="button"
-              onClick={() => setDrawerOpen(true)}
-              aria-label="Abrir navegación"
-              className="mr-5 flex h-11 w-11 cursor-pointer items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
+      {/* ===================
+      DEBTS
+      =================== */}
 
-            {/* ===================
-            BRAND
-            =================== */}
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() =>
+            toggleMenu('debts')
+          }
+          aria-expanded={
+            openMenu === 'debts'
+          }
+          className={getDropdownButtonClassName(
+            debtsActive,
+            openMenu === 'debts',
+          )}
+        >
+          <CreditCard className="h-4 w-4" />
 
+          Tarjetas
+
+          <ChevronDown
+            className={[
+              'h-4 w-4 text-white/40 transition-transform duration-200',
+              openMenu === 'debts'
+                ? 'rotate-180'
+                : '',
+            ].join(' ')}
+          />
+        </button>
+
+        {openMenu === 'debts' && (
+          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
             <Link
-              href="/main"
-              className="group flex shrink-0 items-center gap-3"
+              href="/debts/card"
+              onClick={closeMenu}
+              className={getDropdownLinkClassName(
+                '/debts/card',
+              )}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-neutral-950 transition-transform duration-300 group-hover:scale-105">
-                <PawPrint className="h-4 w-4" />
-              </div>
+              <CreditCard className="h-4 w-4" />
 
-              <div className="hidden sm:block">
-                <p className="text-sm font-semibold tracking-[0.22em]">
-                  ISHA
-                </p>
-
-                <p className="mt-0.5 text-[9px] tracking-[0.16em] text-white/30">
-                  FINANCE
-                </p>
-              </div>
+              Mis tarjetas
             </Link>
 
-            {/* ===================
-            DIVIDER
-            =================== */}
-
-            <div className="mx-6 hidden h-8 w-px bg-white/10 md:block" />
-
-            {/* ===================
-            PRIMARY NAVIGATION
-            =================== */}
-
-            <nav className="hidden items-center gap-1 md:flex">
-              <Link
-                href="/main"
-                className={getLinkClassName('/main')}
-              >
-                <LayoutDashboard className="h-4 w-4" />
-
-                Inicio
-              </Link>
-
-              <Link
-                href="/debts/card"
-                className={getLinkClassName('/debts/card')}
-              >
-                <CreditCard className="h-4 w-4" />
-
-                Tarjetas
-              </Link>
-            </nav>
-          </div>
-
-          {/* ===================
-          USER
-          =================== */}
-
-          <div className="relative shrink-0">
-            <button
-              type="button"
-              onClick={() =>
-                setUserMenuOpen((current) => !current)
-              }
-              aria-expanded={userMenuOpen}
-              className={[
-                'group flex cursor-pointer items-center gap-3 rounded-2xl px-2 py-1.5 transition-colors',
-                userMenuOpen
-                  ? 'bg-white/[0.08]'
-                  : 'hover:bg-white/[0.06]',
-              ].join(' ')}
+            <Link
+              href="/debts/statement"
+              onClick={closeMenu}
+              className={getDropdownLinkClassName(
+                '/debts/statement',
+              )}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.08] text-sm font-semibold text-white transition-colors group-hover:bg-white/15">
-                {user.name.charAt(0).toUpperCase()}
-              </div>
+              <FileText className="h-4 w-4" />
 
-              <div className="hidden text-left lg:block">
-                <p className="max-w-40 truncate text-sm font-medium text-white">
-                  {user.name}
+              Estados de cuenta
+            </Link>
+
+            {isAdmin && (
+              <>
+                <div className="my-2 h-px bg-neutral-100" />
+
+                <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+                  Administración
                 </p>
 
-                <p className="mt-0.5 max-w-48 truncate text-[10px] text-white/30">
-                  {user.email}
-                </p>
-              </div>
+                <Link
+                  href="/admin/card"
+                  onClick={closeMenu}
+                  className={getDropdownLinkClassName(
+                    '/admin/card',
+                  )}
+                >
+                  <WalletCards className="h-4 w-4" />
 
-              <ChevronDown
-                className={[
-                  'hidden h-4 w-4 text-white/30 transition-transform duration-200 lg:block',
-                  userMenuOpen ? 'rotate-180' : '',
-                ].join(' ')}
-              />
-            </button>
+                  Catálogo de tarjetas
+                </Link>
 
-            {/* ===================
-            USER MENU
-            =================== */}
+                <Link
+                  href="/admin/concept"
+                  onClick={closeMenu}
+                  className={getDropdownLinkClassName(
+                    '/admin/concept',
+                  )}
+                >
+                  <ListTree className="h-4 w-4" />
 
-            {userMenuOpen && (
-              <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
-                <div className="px-3 pb-3 pt-2">
-                  <p className="truncate text-sm font-semibold">
-                    {user.name}
-                    {user.lastName
-                      ? ` ${user.lastName}`
-                      : ''}
-                  </p>
-
-                  <p className="mt-1 truncate text-xs text-neutral-400">
-                    {user.email}
-                  </p>
-                </div>
-
-                <div className="h-px bg-neutral-100" />
-
-                <div className="py-2">
-                  <Link
-                    href="/settings"
-                    onClick={() => setUserMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
-                  >
-                    <UserRound className="h-4 w-4" />
-
-                    Mi cuenta
-                  </Link>
-
-                  <Link
-                    href="/settings"
-                    onClick={() => setUserMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
-                  >
-                    <Settings className="h-4 w-4" />
-
-                    Configuración
-                  </Link>
-                </div>
-
-                <div className="h-px bg-neutral-100" />
-
-                <div className="pt-2">
-                  <form action={logoutAction}>
-                    <button
-                      type="submit"
-                      className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-500 transition-colors hover:bg-red-50 hover:text-red-600"
-                    >
-                      <LogOut className="h-4 w-4" />
-
-                      Cerrar sesión
-                    </button>
-                  </form>
-                </div>
-              </div>
+                  Conceptos
+                </Link>
+              </>
             )}
           </div>
-        </div>
-      </header>
+        )}
+      </div>
 
-      <AppNavDrawer
-        user={user}
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-      />
-    </>
+      {/* ===================
+      INVESTMENTS
+      =================== */}
+
+      <Link
+        href="/investments/investment-snapshot"
+        className={getLinkClassName(
+          '/investments/investment-snapshot',
+        )}
+      >
+        <TrendingUp className="h-4 w-4" />
+
+        Inversiones
+      </Link>
+
+      {/* ===================
+      TRADING
+      =================== */}
+
+      {isAdmin ? (
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() =>
+              toggleMenu('trading')
+            }
+            aria-expanded={
+              openMenu === 'trading'
+            }
+            className={getDropdownButtonClassName(
+              tradingActive,
+              openMenu === 'trading',
+            )}
+          >
+            <ChartCandlestick className="h-4 w-4" />
+
+            Trading
+
+            <ChevronDown
+              className={[
+                'h-4 w-4 text-white/40 transition-transform duration-200',
+                openMenu === 'trading'
+                  ? 'rotate-180'
+                  : '',
+              ].join(' ')}
+            />
+          </button>
+
+          {openMenu === 'trading' && (
+            <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
+              <Link
+                href="/trading/trade"
+                onClick={closeMenu}
+                className={getDropdownLinkClassName(
+                  '/trading/trade',
+                )}
+              >
+                <ChartCandlestick className="h-4 w-4" />
+
+                Operaciones
+              </Link>
+
+              <div className="my-2 h-px bg-neutral-100" />
+
+              <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+                Administración
+              </p>
+
+              <Link
+                href="/admin/account"
+                onClick={closeMenu}
+                className={getDropdownLinkClassName(
+                  '/admin/account',
+                )}
+              >
+                <WalletCards className="h-4 w-4" />
+
+                Cuentas
+              </Link>
+
+              <Link
+                href="/admin/instrument"
+                onClick={closeMenu}
+                className={getDropdownLinkClassName(
+                  '/admin/instrument',
+                )}
+              >
+                <ListTree className="h-4 w-4" />
+
+                Instrumentos
+              </Link>
+            </div>
+          )}
+        </div>
+      ) : (
+        <Link
+          href="/trading/trade"
+          className={getLinkClassName(
+            '/trading/trade',
+          )}
+        >
+          <ChartCandlestick className="h-4 w-4" />
+
+          Trading
+        </Link>
+      )}
+    </nav>
   );
 }

@@ -5,9 +5,11 @@ import { z } from 'zod'
 import { fetchServer } from '@/core/api/api-server'
 import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
 import {
+  StatementDateSuggestionSchema,
   StatementSchema,
   type CreateStatementRequest,
   type Statement,
+  type StatementDateSuggestion,
   type UpdateStatementPaidRequest,
   type UpdateStatementRequest,
 } from '@/modules/debts/statement/schemas/statement.schema'
@@ -39,13 +41,13 @@ export async function findAllStatements(): Promise<Statement[]> {
 }
 
 // ===================
-// FIND BY CARD
+// FIND BY USER CARD
 // ===================
 
-export async function findStatementsByCardId(
-  cardId: number,
+export async function findStatementsByUserCardId(
+  userCardId: number,
 ): Promise<Statement[]> {
-  const response = await fetchServer(`/statements/card/${cardId}`, {
+  const response = await fetchServer(`/statements/user-card/${userCardId}`, {
     method: 'GET',
   })
 
@@ -174,10 +176,15 @@ export async function updateStatementPaid(
 // PAY ALL
 // ===================
 
-export async function payAllStatements(cardId: number): Promise<Statement[]> {
-  const response = await fetchServer(`/statements/card/${cardId}/pay-all`, {
-    method: 'PATCH',
-  })
+export async function payAllStatements(
+  userCardId: number,
+): Promise<Statement[]> {
+  const response = await fetchServer(
+    `/statements/user-card/${userCardId}/pay-all`,
+    {
+      method: 'PATCH',
+    },
+  )
 
   const json: unknown = await response.json()
 
@@ -208,4 +215,41 @@ export async function deleteStatement(statementId: number): Promise<void> {
       result.message ?? 'No fue posible eliminar el estado de cuenta',
     )
   }
+}
+
+// ===================
+// DATE SUGGESTION
+// ===================
+
+export async function getStatementDateSuggestion(
+  userCardId: number,
+): Promise<StatementDateSuggestion> {
+  const params = new URLSearchParams({
+    userCardId: String(userCardId),
+  })
+
+  const response = await fetchServer(
+    `/statements/suggestion?${params.toString()}`,
+    {
+      method: 'GET',
+    },
+  )
+
+  const json: unknown = await response.json()
+
+  const result = createApiResponseSchema(StatementDateSuggestionSchema).parse(
+    json,
+  )
+
+  if (!result.success) {
+    throw new Error(
+      result.message ?? 'No fue posible obtener las fechas sugeridas',
+    )
+  }
+
+  if (result.data === null) {
+    throw new Error('La respuesta de fechas sugeridas no contiene datos')
+  }
+
+  return result.data
 }

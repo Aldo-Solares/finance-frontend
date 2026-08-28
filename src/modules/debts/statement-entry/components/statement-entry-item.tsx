@@ -50,7 +50,7 @@ export function StatementEntryItem({
       </td>
 
       <td className="px-5 py-4 text-sm text-neutral-500">
-        {entry.purchaseDate ?? '—'}
+        {entry.date ?? '—'}
       </td>
 
       <td className="px-5 py-4">
@@ -69,13 +69,13 @@ export function StatementEntryItem({
 
       <td className="px-5 py-4 text-right text-sm font-medium text-neutral-700">
         {formatMoney(
-          entry.installmentAmount,
+          entry.amount,
         )}
       </td>
 
       <td className="px-5 py-4 text-right text-sm text-neutral-500">
         {formatMoney(
-          entry.remainingTotal,
+          entry.remainingMsiAmount,
         )}
       </td>
 

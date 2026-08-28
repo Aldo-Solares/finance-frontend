@@ -1,28 +1,23 @@
-// @/app/(app)/layout.tsx
+// @/app/(protected)/(admin)/layout.tsx
 
-import type { ReactNode } from 'react';
-import { redirect } from 'next/navigation';
+import type { ReactNode } from 'react'
+import { redirect } from 'next/navigation'
 
-import { getCurrentUser } from '@/modules/user/services/user.service';
+import { UserRole } from '@/modules/user/enums/user-role.enum'
+import { getCurrentUser } from '@/modules/user/services/user.service'
 
+type AdminLayoutProps = {
+  children: ReactNode
+}
 
-type AppLayoutProps = {
-  children: ReactNode;
-};
-
-export default async function AppLayout({
+export default async function AdminLayout({
   children,
-}: AppLayoutProps) {
+}: AdminLayoutProps) {
+  const user = await getCurrentUser()
 
-  let user;
-  try {
-    user = await getCurrentUser();
-  } catch {
-    redirect('/auth/login');
+  if (user.role !== UserRole.ADMIN) {
+    redirect('/forbidden')
   }
 
-  return (
-    <>
-    </>
-  );
+  return children
 }

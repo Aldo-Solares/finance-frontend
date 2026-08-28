@@ -1,0 +1,115 @@
+// @/modules/trading/trading-account/components/trading-account-delete-modal.tsx
+
+'use client'
+
+import { AlertTriangle, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+
+import { deleteTradingAccountAction } from '@/modules/trading/trading-account/actions/trading-account.actions'
+import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema'
+
+type TradingAccountDeleteModalProps = {
+  tradingAccount: TradingAccount
+  onClose: () => void
+}
+
+export const TradingAccountDeleteModal = ({
+  tradingAccount,
+  onClose,
+}: TradingAccountDeleteModalProps) => {
+  const router = useRouter()
+
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleDelete = async () => {
+    setPending(true)
+    setError(null)
+
+    try {
+      const result = await deleteTradingAccountAction(
+        tradingAccount.tradingAccountId,
+      )
+
+      if (!result.success) {
+        setError(
+          result.message ??
+            'No fue posible eliminar la cuenta',
+        )
+        return
+      }
+
+      onClose()
+      router.refresh()
+    } finally {
+      setPending(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
+        <div className="flex items-start justify-between p-6">
+          <div className="flex gap-4">
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-red-50">
+              <AlertTriangle className="size-5 text-red-600" />
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-zinc-950">
+                Eliminar cuenta
+              </h2>
+
+              <p className="mt-2 text-sm leading-6 text-zinc-500">
+                ¿Seguro que quieres eliminar{' '}
+                <span className="font-medium text-zinc-900">
+                  {tradingAccount.name}
+                </span>
+                ?
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={pending}
+            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100"
+            aria-label="Cerrar"
+          >
+            <X className="size-5" />
+          </button>
+        </div>
+
+        {error && (
+          <div className="px-6 pb-2">
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+              {error}
+            </p>
+          </div>
+        )}
+
+        <div className="flex justify-end gap-3 border-t border-zinc-100 px-6 py-4">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={pending}
+            className="h-10 rounded-lg border border-zinc-300 px-4 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={pending}
+            className="h-10 rounded-lg bg-red-600 px-4 text-sm font-medium text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {pending ? 'Eliminando...' : 'Eliminar'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}

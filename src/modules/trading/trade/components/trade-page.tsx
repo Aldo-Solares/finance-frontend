@@ -13,7 +13,7 @@ import { TradeDeleteModal } from '@/modules/trading/trade/components/trade-delet
 import { TradeFormModal } from '@/modules/trading/trade/components/trade-form-modal';
 import { TradeList } from '@/modules/trading/trade/components/trade-list';
 import type { Trade } from '@/modules/trading/trade/schemas/trade.schema';
-import { PageHeader } from '@/shared/components/page/page-header';
+import { PageHeader } from '@/shared/page/page-header';
 
 type TradePageProps = {
   trades: Trade[];

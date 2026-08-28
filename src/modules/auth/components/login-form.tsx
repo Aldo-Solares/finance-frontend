@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { ArrowRight, Mail, Sparkles } from 'lucide-react';
 
 import { loginAction } from '@/modules/auth/actions/auth.actions';
-import { FormInput } from '@/shared/components/inputs/form-input';
-import { PasswordField } from '@/shared/components/inputs/password-field';
+import { FormInput } from '@/shared/inputs/form-input';
+import { PasswordField } from '@/shared/inputs/password-field';
 
 const initialState = {
   success: false,

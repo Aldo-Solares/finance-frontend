@@ -11,7 +11,7 @@ import Link from 'next/link';
 
 import { logoutAction } from '@/modules/auth/actions/auth.actions';
 import type { User } from '@/modules/user/schemas/user.schema';
-import { AppNavDrawerNav } from '@/shared/components/layout/app-nav-drawer-nav';
+import { AppNavDrawerNav } from '@/shared/layout/app-nav-drawer-nav';
 
 type AppNavDrawerProps = {
   user: User;

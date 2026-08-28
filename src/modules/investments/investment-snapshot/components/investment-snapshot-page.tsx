@@ -9,7 +9,7 @@ import type {
   InvestmentPerformance,
   InvestmentSnapshot,
 } from '@/modules/investments/investment-snapshot/schemas/investment-snapshot.schema'
-import { PageHeader } from '@/shared/components/page/page-header'
+import { PageHeader } from '@/shared/page/page-header'
 
 import { InvestmentPerformanceCard } from './investment-performance-card'
 import { InvestmentSnapshotDeleteModal } from './investment-snapshot-delete-modal'

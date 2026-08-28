@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 
 import type { Card } from '@/modules/debts/card/schemas/card.schema'
-import { PageHeader } from '@/shared/components/page/page-header'
+import { PageHeader } from '@/shared/page/page-header'
 
 import { CardCatalogDeleteModal } from './card-catalog-delete-modal'
 import { CardCatalogFormModal } from './card-catalog-form-modal'

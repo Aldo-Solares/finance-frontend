@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 import { resetPasswordAction } from '@/modules/auth/actions/auth.actions';
-import { PasswordField } from '@/shared/components/inputs/password-field';
+import { PasswordField } from '@/shared/inputs/password-field';
 
 const initialState = {
   success: false,

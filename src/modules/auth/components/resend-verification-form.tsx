@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 import { resendVerificationAction } from '@/modules/auth/actions/auth.actions';
-import { FormInput } from '@/shared/components/inputs/form-input';
+import { FormInput } from '@/shared/inputs/form-input';
 
 const initialState = {
   success: false,

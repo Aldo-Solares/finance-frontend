@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, CheckCircle2, Mail } from 'lucide-react';
 
 import { forgotPasswordAction } from '@/modules/auth/actions/auth.actions';
-import { FormInput } from '@/shared/components/inputs/form-input';
+import { FormInput } from '@/shared/inputs/form-input';
 
 const initialState = {
   success: false,

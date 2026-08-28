@@ -19,8 +19,8 @@ import {
 
 import { logoutAction } from '@/modules/auth/actions/auth.actions';
 import type { User } from '@/modules/user/schemas/user.schema';
-import { AppNav } from '@/shared/components/layout/app-nav';
-import { AppNavDrawer } from '@/shared/components/layout/app-nav-drawer';
+import { AppNav } from '@/shared/layout/app-nav';
+import { AppNavDrawer } from '@/shared/layout/app-nav-drawer';
 
 type AppHeaderProps = {
   user: User;

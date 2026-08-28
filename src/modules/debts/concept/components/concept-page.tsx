@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Plus } from 'lucide-react';
 
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema';
-import { PageHeader } from '@/shared/components/page/page-header';
+import { PageHeader } from '@/shared/page/page-header';
 
 import { ConceptDeleteModal } from './concept-delete-modal';
 import { ConceptFormModal } from './concept-form-modal';

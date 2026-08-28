@@ -4,8 +4,8 @@ import type { ReactNode } from 'react';
 import { redirect } from 'next/navigation';
 
 import { getCurrentUser } from '@/modules/user/services/user.service';
-import { AppFooter } from '@/shared/components/layout/app-footer';
-import { AppHeader } from '@/shared/components/layout/app-header';
+import { AppFooter } from '@/shared/layout/app-footer';
+import { AppHeader } from '@/shared/layout/app-header';
 
 type ProtectedLayoutProps = {
   children: ReactNode;

@@ -12,7 +12,7 @@ import {
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema';
 import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema';
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema';
-import { PageHeader } from '@/shared/components/page/page-header';
+import { PageHeader } from '@/shared/page/page-header';
 
 import { StatementEntryDeleteModal } from './statement-entry-delete-modal';
 import { StatementEntryFormModal } from './statement-entry-form-modal';

@@ -10,7 +10,7 @@ import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
-import { PageHeader } from '@/shared/components/page/page-header'
+import { PageHeader } from '@/shared/page/page-header'
 
 type DebtDashboardPageProps = {
   dashboard: DebtDashboard

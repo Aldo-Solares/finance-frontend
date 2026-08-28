@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 import type { User } from '@/modules/user/schemas/user.schema';
-import { PageHeader } from '@/shared/components/page/page-header';
+import { PageHeader } from '@/shared/page/page-header';
 
 import { UserAccountCard } from './user-account-card';
 import { UserPasswordForm } from './user-password-form';

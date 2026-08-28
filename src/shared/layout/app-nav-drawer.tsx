@@ -1,4 +1,4 @@
-// @/shared/components/layout/app-nav-drawer.tsx
+// @/shared/layout/app-nav-drawer.tsx
 
 'use client';
 

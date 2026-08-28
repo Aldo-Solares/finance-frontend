@@ -1,4 +1,4 @@
-// @/shared/components/page/page-header.tsx
+// @/shared/page/page-header.tsx
 
 import type { ReactNode } from 'react';
 

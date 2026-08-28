@@ -1,4 +1,4 @@
-// @/shared/components/layout/app-footer.tsx
+// @/shared/layout/app-footer.tsx
 
 import { PawPrint } from 'lucide-react';
 

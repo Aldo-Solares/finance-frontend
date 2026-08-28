@@ -13,24 +13,32 @@ import { TradingAccountFormModal } from './trading-account-form-modal'
 import { TradingAccountList } from './trading-account-list'
 
 type TradingAccountPageProps = {
-  userId: number
   tradingAccounts: TradingAccount[]
 }
 
 export const TradingAccountPage = ({
-  userId,
   tradingAccounts,
 }: TradingAccountPageProps) => {
   const [formOpen, setFormOpen] = useState(false)
+
   const [editingAccount, setEditingAccount] =
     useState<TradingAccount | null>(null)
+
   const [deletingAccount, setDeletingAccount] =
     useState<TradingAccount | null>(null)
+
+  // ===================
+  // CREATE
+  // ===================
 
   const handleCreate = () => {
     setEditingAccount(null)
     setFormOpen(true)
   }
+
+  // ===================
+  // EDIT
+  // ===================
 
   const handleEdit = (
     tradingAccount: TradingAccount,
@@ -38,6 +46,10 @@ export const TradingAccountPage = ({
     setEditingAccount(tradingAccount)
     setFormOpen(true)
   }
+
+  // ===================
+  // CLOSE FORM
+  // ===================
 
   const handleCloseForm = () => {
     setFormOpen(false)
@@ -50,11 +62,11 @@ export const TradingAccountPage = ({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-zinc-950">
-              Cuentas de trading
+              Catálogo de cuentas de trading
             </h1>
 
             <p className="mt-1 text-sm text-zinc-500">
-              Administra las cuentas donde registras tus operaciones.
+              Administra las cuentas de trading disponibles en el sistema.
             </p>
           </div>
 
@@ -90,8 +102,9 @@ export const TradingAccountPage = ({
               ? `edit-${editingAccount.tradingAccountId}`
               : 'create'
           }
-          userId={userId}
-          tradingAccount={editingAccount ?? undefined}
+          tradingAccount={
+            editingAccount ?? undefined
+          }
           onClose={handleCloseForm}
         />
       )}
@@ -99,7 +112,9 @@ export const TradingAccountPage = ({
       {deletingAccount && (
         <TradingAccountDeleteModal
           tradingAccount={deletingAccount}
-          onClose={() => setDeletingAccount(null)}
+          onClose={() =>
+            setDeletingAccount(null)
+          }
         />
       )}
     </>

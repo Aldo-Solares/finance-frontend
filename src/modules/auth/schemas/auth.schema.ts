@@ -6,18 +6,21 @@ import {
   optionalNullableString,
   requiredString,
 } from '@/core/utils/zod-helpers'
+import { USER_ROLE_VALUES } from '@/modules/user/constants/user.constants'
 
 // ===================
 // ROLE
 // ===================
 
-const RoleSchema = z.enum(['ADMIN', 'USER'])
+export const RoleSchema = z.enum(USER_ROLE_VALUES)
+
+export type Role = z.infer<typeof RoleSchema>
 
 // ===================
 // AUTH USER
 // ===================
 
-const AuthUserSchema = z.object({
+export const AuthUserSchema = z.object({
   userId: z.number(),
   name: z.string(),
   lastName: z.string().nullable(),
@@ -26,12 +29,15 @@ const AuthUserSchema = z.object({
   role: RoleSchema,
 })
 
+export type AuthUser = z.infer<typeof AuthUserSchema>
+
 // ===================
 // LOGIN
 // ===================
 
 export const LoginRequestSchema = z.object({
   email: requiredString('Email is required').email('Invalid email'),
+
   password: requiredString('Password is required'),
 })
 
@@ -50,9 +56,13 @@ export type LoginResponse = z.infer<typeof LoginResponseSchema>
 
 export const RegisterRequestSchema = z.object({
   name: requiredString('Name is required').max(100),
+
   lastName: optionalNullableString.pipe(z.string().max(100).nullable()),
+
   secondLastName: optionalNullableString.pipe(z.string().max(100).nullable()),
+
   email: requiredString('Email is required').email('Invalid email').max(150),
+
   password: requiredString('Password is required'),
 })
 
@@ -102,6 +112,7 @@ export type ForgotPasswordRequest = z.infer<typeof ForgotPasswordRequestSchema>
 
 export const ResetPasswordRequestSchema = z.object({
   token: requiredString('Token is required'),
+
   newPassword: requiredString('New password is required'),
 })
 

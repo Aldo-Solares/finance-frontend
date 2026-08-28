@@ -1,24 +1,30 @@
 // @/modules/debts/statement/components/statement-item.tsx
 
-'use client';
+'use client'
 
-import Link from 'next/link';
 import {
   ArrowUpRight,
   Check,
   Clock3,
   MoreHorizontal,
-} from 'lucide-react';
+} from 'lucide-react'
+import Link from 'next/link'
 
-import { StatementStatus } from '@/modules/debts/statement/enums/statement-status.enum';
-import type { Statement } from '@/modules/debts/statement/schemas/statement.schema';
+import {
+  STATEMENT_STATUS,
+  STATEMENT_STATUS_LABELS,
+} from '@/modules/debts/statement/constants/statement.constants'
+import type {
+  Statement,
+  StatementStatus,
+} from '@/modules/debts/statement/schemas/statement.schema'
 
 type StatementItemProps = {
-  statement: Statement;
-  separated?: boolean;
-  onEdit: (statement: Statement) => void;
-  onDelete: (statement: Statement) => void;
-};
+  statement: Statement
+  separated?: boolean
+  onEdit: (statement: Statement) => void
+  onDelete: (statement: Statement) => void
+}
 
 const months = [
   'Enero',
@@ -33,7 +39,7 @@ const months = [
   'Octubre',
   'Noviembre',
   'Diciembre',
-];
+]
 
 const shortMonths = [
   'ENE',
@@ -48,7 +54,28 @@ const shortMonths = [
   'OCT',
   'NOV',
   'DIC',
-];
+]
+
+// ===================
+// STATUS STYLES
+// ===================
+
+const STATEMENT_STATUS_CLASS_NAMES: Record<
+  StatementStatus,
+  string
+> = {
+  [STATEMENT_STATUS.UPCOMING]:
+    'bg-neutral-100 text-neutral-500',
+
+  [STATEMENT_STATUS.ACTIVE]:
+    'bg-blue-50 text-blue-700',
+
+  [STATEMENT_STATUS.PAYMENT_PENDING]:
+    'bg-amber-50 text-amber-700',
+
+  [STATEMENT_STATUS.CLOSED]:
+    'bg-neutral-100 text-neutral-500',
+}
 
 export function StatementItem({
   statement,
@@ -66,35 +93,46 @@ export function StatementItem({
       ].join(' ')}
     >
       <div className="grid gap-5 lg:grid-cols-[110px_minmax(180px,1fr)_minmax(180px,1fr)_auto] lg:items-center">
-        {/* MONTH */}
+        {/* ===================
+            MONTH
+        =================== */}
 
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-neutral-200 bg-neutral-50 text-[11px] font-semibold tracking-[0.12em] text-neutral-500">
-            {shortMonths[
-              statement.month - 1
-            ]}
+            {
+              shortMonths[
+                statement.month - 1
+              ]
+            }
           </div>
 
           <div className="lg:hidden">
             <p className="font-semibold text-neutral-950">
-              {months[
-                statement.month - 1
-              ]}
+              {
+                months[
+                  statement.month - 1
+                ]
+              }
             </p>
 
             <p className="mt-0.5 text-xs text-neutral-400">
-              {statement.bank} · {statement.cardName}
+              {statement.bank} ·{' '}
+              {statement.cardName}
             </p>
           </div>
         </div>
 
-        {/* PERIOD */}
+        {/* ===================
+            PERIOD
+        =================== */}
 
         <div className="hidden lg:block">
           <p className="font-semibold text-neutral-950">
-            {months[
-              statement.month - 1
-            ]}
+            {
+              months[
+                statement.month - 1
+              ]
+            }
           </p>
 
           <p className="mt-1 text-sm text-neutral-400">
@@ -105,7 +143,9 @@ export function StatementItem({
           </p>
         </div>
 
-        {/* PAYMENT */}
+        {/* ===================
+            PAYMENT
+        =================== */}
 
         <div>
           <p className="text-xs text-neutral-400">
@@ -119,7 +159,9 @@ export function StatementItem({
           </p>
         </div>
 
-        {/* STATUS + ACTION */}
+        {/* ===================
+            STATUS + ACTIONS
+        =================== */}
 
         <div className="flex items-center justify-between gap-4 lg:justify-end">
           <div className="flex flex-wrap items-center justify-end gap-2">
@@ -166,52 +208,40 @@ export function StatementItem({
         </p>
       )}
     </article>
-  );
+  )
 }
+
+// ===================
+// STATUS BADGE
+// ===================
 
 function StatementStatusBadge({
   status,
 }: {
-  status: StatementStatus;
+  status: StatementStatus
 }) {
-  const values = {
-    [StatementStatus.UPCOMING]: {
-      label: 'Próximo',
-      className:
-        'bg-neutral-100 text-neutral-500',
-    },
-    [StatementStatus.ACTIVE]: {
-      label: 'Activo',
-      className:
-        'bg-blue-50 text-blue-700',
-    },
-    [StatementStatus.PAYMENT_PENDING]: {
-      label: 'Pago pendiente',
-      className:
-        'bg-amber-50 text-amber-700',
-    },
-    [StatementStatus.CLOSED]: {
-      label: 'Cerrado',
-      className:
-        'bg-neutral-100 text-neutral-500',
-    },
-  };
-
-  const value = values[status];
-
   return (
     <span
-      className={`rounded-full px-2.5 py-1 text-[10px] font-medium ${value.className}`}
+      className={[
+        'rounded-full px-2.5 py-1 text-[10px] font-medium',
+        STATEMENT_STATUS_CLASS_NAMES[
+          status
+        ],
+      ].join(' ')}
     >
-      {value.label}
+      {STATEMENT_STATUS_LABELS[status]}
     </span>
-  );
+  )
 }
+
+// ===================
+// PAID BADGE
+// ===================
 
 function PaidBadge({
   paid,
 }: {
-  paid: boolean;
+  paid: boolean
 }) {
   return (
     <span
@@ -230,14 +260,18 @@ function PaidBadge({
 
       {paid ? 'Pagado' : 'Pendiente'}
     </span>
-  );
+  )
 }
 
+// ===================
+// MENU
+// ===================
+
 type StatementMenuProps = {
-  statement: Statement;
-  onEdit: (statement: Statement) => void;
-  onDelete: (statement: Statement) => void;
-};
+  statement: Statement
+  onEdit: (statement: Statement) => void
+  onDelete: (statement: Statement) => void
+}
 
 function StatementMenu({
   statement,
@@ -272,14 +306,18 @@ function StatementMenu({
         </button>
       </div>
     </details>
-  );
+  )
 }
+
+// ===================
+// DATE FORMAT
+// ===================
 
 function formatDate(
   value: string | null,
 ): string {
   if (!value) {
-    return '—';
+    return '—'
   }
 
   return new Intl.DateTimeFormat(
@@ -291,8 +329,10 @@ function formatDate(
       timeZone: 'UTC',
     },
   ).format(
-    new Date(`${value}T00:00:00Z`),
-  );
+    new Date(
+      `${value}T00:00:00Z`,
+    ),
+  )
 }
 
 function formatPeriod(
@@ -300,7 +340,7 @@ function formatPeriod(
   end: string | null,
 ): string {
   if (!start || !end) {
-    return 'Periodo sin fechas';
+    return 'Periodo sin fechas'
   }
 
   const formatter =
@@ -308,11 +348,15 @@ function formatPeriod(
       day: '2-digit',
       month: 'short',
       timeZone: 'UTC',
-    });
+    })
 
   return `${formatter.format(
-    new Date(`${start}T00:00:00Z`),
+    new Date(
+      `${start}T00:00:00Z`,
+    ),
   )} — ${formatter.format(
-    new Date(`${end}T00:00:00Z`),
-  )}`;
+    new Date(
+      `${end}T00:00:00Z`,
+    ),
+  )}`
 }

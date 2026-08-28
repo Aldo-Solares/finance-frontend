@@ -1,9 +1,10 @@
-// @/shared/components/layout/app-nav.tsx
+// @/shared/layout/app-nav.tsx
 
 'use client';
 
 import {
   ChartCandlestick,
+  ChartNoAxesCombined,
   ChevronDown,
   CreditCard,
   FileText,
@@ -19,7 +20,7 @@ import {
   useState,
 } from 'react';
 
-import { UserRole } from '@/modules/user/enums/user-role.enum';
+import { USER_ROLE } from '@/modules/user/constants/user.constants'
 import type { User } from '@/modules/user/schemas/user.schema';
 
 type AppNavProps = {
@@ -43,7 +44,7 @@ export function AppNav({
     useRef<HTMLElement>(null);
 
   const isAdmin =
-    user.role === UserRole.ADMIN;
+    user.role === USER_ROLE.ADMIN;
 
   // ===================
   // ACTIVE ROUTE
@@ -54,10 +55,14 @@ export function AppNav({
     pathname.startsWith(`${route}/`);
 
   const debtsActive =
-    isActive('/debts');
+    isActive('/debts') ||
+    isActive('/admin/card') ||
+    isActive('/admin/concept');
 
   const tradingActive =
-    isActive('/trading');
+    isActive('/trading') ||
+    isActive('/admin/account') ||
+    isActive('/admin/instrument');
 
   // ===================
   // CLASSES
@@ -273,93 +278,96 @@ export function AppNav({
       TRADING
       =================== */}
 
-      {isAdmin ? (
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() =>
-              toggleMenu('trading')
-            }
-            aria-expanded={
-              openMenu === 'trading'
-            }
-            className={getDropdownButtonClassName(
-              tradingActive,
-              openMenu === 'trading',
-            )}
-          >
-            <ChartCandlestick className="h-4 w-4" />
-
-            Trading
-
-            <ChevronDown
-              className={[
-                'h-4 w-4 text-white/40 transition-transform duration-200',
-                openMenu === 'trading'
-                  ? 'rotate-180'
-                  : '',
-              ].join(' ')}
-            />
-          </button>
-
-          {openMenu === 'trading' && (
-            <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
-              <Link
-                href="/trading/trade"
-                onClick={closeMenu}
-                className={getDropdownLinkClassName(
-                  '/trading/trade',
-                )}
-              >
-                <ChartCandlestick className="h-4 w-4" />
-
-                Operaciones
-              </Link>
-
-              <div className="my-2 h-px bg-neutral-100" />
-
-              <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
-                Administración
-              </p>
-
-              <Link
-                href="/admin/account"
-                onClick={closeMenu}
-                className={getDropdownLinkClassName(
-                  '/admin/account',
-                )}
-              >
-                <WalletCards className="h-4 w-4" />
-
-                Cuentas
-              </Link>
-
-              <Link
-                href="/admin/instrument"
-                onClick={closeMenu}
-                className={getDropdownLinkClassName(
-                  '/admin/instrument',
-                )}
-              >
-                <ListTree className="h-4 w-4" />
-
-                Instrumentos
-              </Link>
-            </div>
-          )}
-        </div>
-      ) : (
-        <Link
-          href="/trading/trade"
-          className={getLinkClassName(
-            '/trading/trade',
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() =>
+            toggleMenu('trading')
+          }
+          aria-expanded={
+            openMenu === 'trading'
+          }
+          className={getDropdownButtonClassName(
+            tradingActive,
+            openMenu === 'trading',
           )}
         >
           <ChartCandlestick className="h-4 w-4" />
 
           Trading
-        </Link>
-      )}
+
+          <ChevronDown
+            className={[
+              'h-4 w-4 text-white/40 transition-transform duration-200',
+              openMenu === 'trading'
+                ? 'rotate-180'
+                : '',
+            ].join(' ')}
+          />
+        </button>
+
+        {openMenu === 'trading' && (
+          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
+            <Link
+              href="/trading/account"
+              onClick={closeMenu}
+              className={getDropdownLinkClassName(
+                '/trading/account',
+              )}
+            >
+              <WalletCards className="h-4 w-4" />
+
+              Mis cuentas
+            </Link>
+
+            <Link
+              href="/trading/trade"
+              onClick={closeMenu}
+              className={getDropdownLinkClassName(
+                '/trading/trade',
+              )}
+            >
+              <ChartCandlestick className="h-4 w-4" />
+
+              Operaciones
+            </Link>
+
+            {isAdmin && (
+              <>
+                <div className="my-2 h-px bg-neutral-100" />
+
+                <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+                  Administración
+                </p>
+
+                <Link
+                  href="/admin/account"
+                  onClick={closeMenu}
+                  className={getDropdownLinkClassName(
+                    '/admin/account',
+                  )}
+                >
+                  <WalletCards className="h-4 w-4" />
+
+                  Catálogo de cuentas
+                </Link>
+
+                <Link
+                  href="/admin/instrument"
+                  onClick={closeMenu}
+                  className={getDropdownLinkClassName(
+                    '/admin/instrument',
+                  )}
+                >
+                  <ChartNoAxesCombined className="h-4 w-4" />
+
+                  Instrumentos
+                </Link>
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </nav>
   );
 }

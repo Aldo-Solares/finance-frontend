@@ -11,6 +11,10 @@ import {
   type UpdateTrade,
 } from '@/modules/trading/trade/schemas/trade.schema'
 
+// ===================
+// GET ALL
+// ===================
+
 export async function getTrades(): Promise<Trade[]> {
   const response = await fetchServer('/trades', {
     method: 'GET',
@@ -27,6 +31,10 @@ export async function getTrades(): Promise<Trade[]> {
   return result.data ?? []
 }
 
+// ===================
+// GET BY ID
+// ===================
+
 export async function getTradeById(tradeId: number): Promise<Trade> {
   const response = await fetchServer(`/trades/${tradeId}`, {
     method: 'GET',
@@ -42,6 +50,37 @@ export async function getTradeById(tradeId: number): Promise<Trade> {
 
   return result.data
 }
+
+// ===================
+// GET BY USER TRADING ACCOUNT
+// ===================
+
+export async function getTradesByUserTradingAccountId(
+  userTradingAccountId: number,
+): Promise<Trade[]> {
+  const response = await fetchServer(
+    `/trades/account/${userTradingAccountId}`,
+    {
+      method: 'GET',
+    },
+  )
+
+  const json: unknown = await response.json()
+
+  const result = createApiResponseSchema(TradeSchema.array()).parse(json)
+
+  if (!result.success) {
+    throw new Error(
+      result.message ?? 'No fue posible obtener las operaciones de la cuenta.',
+    )
+  }
+
+  return result.data ?? []
+}
+
+// ===================
+// CREATE
+// ===================
 
 export async function createTrade(input: CreateTrade): Promise<Trade> {
   const payload = CreateTradeSchema.parse(input)
@@ -61,6 +100,10 @@ export async function createTrade(input: CreateTrade): Promise<Trade> {
 
   return result.data
 }
+
+// ===================
+// UPDATE
+// ===================
 
 export async function updateTrade(
   tradeId: number,
@@ -83,6 +126,10 @@ export async function updateTrade(
 
   return result.data
 }
+
+// ===================
+// DELETE
+// ===================
 
 export async function deleteTrade(tradeId: number): Promise<void> {
   await fetchServer(`/trades/${tradeId}`, {

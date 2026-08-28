@@ -1,4 +1,4 @@
-// @/shared/components/layout/app-nav-drawer-nav.tsx
+// @/shared/layout/app-nav-drawer-nav.tsx
 
 'use client';
 
@@ -17,7 +17,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { UserRole } from '@/modules/user/enums/user-role.enum';
+import { USER_ROLE } from '@/modules/user/constants/user.constants'
 import type { User } from '@/modules/user/schemas/user.schema';
 
 type AppNavDrawerNavProps = {
@@ -32,7 +32,7 @@ export function AppNavDrawerNav({
   const pathname = usePathname();
 
   const isAdmin =
-    user.role === UserRole.ADMIN;
+    user.role === USER_ROLE.ADMIN;
 
   // ===================
   // ACTIVE ROUTE
@@ -43,11 +43,14 @@ export function AppNavDrawerNav({
     pathname.startsWith(`${route}/`);
 
   const debtsActive =
-    isActive('/debts');
-
+    isActive('/debts') ||
+    isActive('/admin/card') ||
+    isActive('/admin/concept');
 
   const tradingActive =
-    isActive('/trading');
+    isActive('/trading') ||
+    isActive('/admin/account') ||
+    isActive('/admin/instrument');
 
   // ===================
   // CLASSES
@@ -192,81 +195,82 @@ export function AppNavDrawerNav({
 
         Inversiones
       </Link>
-     
 
       {/* ===================
       TRADING
       =================== */}
 
-      {isAdmin ? (
-        <div className="pt-1">
-          <div
-            className={getSectionClassName(
-              tradingActive,
-            )}
-          >
-            <ChartNoAxesCombined className="h-4 w-4" />
-
-            Trading
-          </div>
-
-          <div className="ml-5 mt-2 space-y-1 border-l border-white/[0.08] pl-4">
-            <Link
-              href="/trading/trade"
-              onClick={onClose}
-              className={getSubLinkClassName(
-                '/trading/trade',
-              )}
-            >
-              <ChartCandlestick className="h-4 w-4" />
-
-              Operaciones
-            </Link>
-
-            <div className="my-2 h-px bg-white/[0.07]" />
-
-            <p className="px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/25">
-              Administración
-            </p>
-
-            <Link
-              href="/admin/account"
-              onClick={onClose}
-              className={getSubLinkClassName(
-                '/admin/account',
-              )}
-            >
-              <WalletCards className="h-4 w-4" />
-
-              Cuentas
-            </Link>
-
-            <Link
-              href="/admin/instrument"
-              onClick={onClose}
-              className={getSubLinkClassName(
-                '/admin/instrument',
-              )}
-            >
-              <ChartNoAxesCombined className="h-4 w-4" />
-
-              Instrumentos
-            </Link>
-          </div>
-        </div>
-      ) : (
-        <Link
-          href="/trading/trade"
-          onClick={onClose}
-          className={getLinkClassName(
-            '/trading/trade',
+      <div className="pt-1">
+        <div
+          className={getSectionClassName(
+            tradingActive,
           )}
         >
-          <ChartCandlestick className="h-4 w-4" />
+          <ChartNoAxesCombined className="h-4 w-4" />
 
           Trading
-        </Link>
-      )}
+        </div>
+
+        <div className="ml-5 mt-2 space-y-1 border-l border-white/[0.08] pl-4">
+          <Link
+            href="/trading/account"
+            onClick={onClose}
+            className={getSubLinkClassName(
+              '/trading/account',
+            )}
+          >
+            <WalletCards className="h-4 w-4" />
+
+            Mis cuentas
+          </Link>
+
+          <Link
+            href="/trading/trade"
+            onClick={onClose}
+            className={getSubLinkClassName(
+              '/trading/trade',
+            )}
+          >
+            <ChartCandlestick className="h-4 w-4" />
+
+            Operaciones
+          </Link>
+
+          {isAdmin && (
+            <>
+              <div className="my-2 h-px bg-white/[0.07]" />
+
+              <p className="px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/25">
+                Administración
+              </p>
+
+              <Link
+                href="/admin/account"
+                onClick={onClose}
+                className={getSubLinkClassName(
+                  '/admin/account',
+                )}
+              >
+                <WalletCards className="h-4 w-4" />
+
+                Catálogo de cuentas
+              </Link>
+
+              <Link
+                href="/admin/instrument"
+                onClick={onClose}
+                className={getSubLinkClassName(
+                  '/admin/instrument',
+                )}
+              >
+                <ChartNoAxesCombined className="h-4 w-4" />
+
+                Instrumentos
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
 
       {/* ===================
       SETTINGS

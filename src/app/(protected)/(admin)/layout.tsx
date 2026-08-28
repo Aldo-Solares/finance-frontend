@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react'
 import { redirect } from 'next/navigation'
 
-import { UserRole } from '@/modules/user/enums/user-role.enum'
+import { USER_ROLE } from '@/modules/user/constants/user.constants'
 import { getCurrentUser } from '@/modules/user/services/user.service'
 
 type AdminLayoutProps = {
@@ -15,7 +15,7 @@ export default async function AdminLayout({
 }: AdminLayoutProps) {
   const user = await getCurrentUser()
 
-  if (user.role !== UserRole.ADMIN) {
+  if (user.role !== USER_ROLE.ADMIN) {
     redirect('/forbidden')
   }
 

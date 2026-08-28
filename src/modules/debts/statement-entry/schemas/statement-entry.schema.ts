@@ -4,6 +4,10 @@ import { z } from 'zod'
 
 import { requiredString } from '@/core/utils/zod-helpers'
 
+// ===================
+// COMMON SCHEMAS
+// ===================
+
 const nullableDateSchema = z.string().nullable()
 
 const nullablePositiveNumberSchema = z.number().positive().nullable()
@@ -18,7 +22,13 @@ const nullableNonNegativeIntegerSchema = z
   .nonnegative()
   .nullable()
 
+// ===================
+// ENTRY TYPE
+// ===================
+
 export const StatementEntryTypeSchema = z.enum(['PURCHASE', 'RECURRING'])
+
+export type StatementEntryType = z.infer<typeof StatementEntryTypeSchema>
 
 // ===================
 // STATEMENT ENTRY
@@ -109,8 +119,6 @@ export const UpdateStatementEntryRequestSchema = z.object({
 // ===================
 // TYPES
 // ===================
-
-export type StatementEntryType = z.infer<typeof StatementEntryTypeSchema>
 
 export type StatementEntry = z.infer<typeof StatementEntrySchema>
 

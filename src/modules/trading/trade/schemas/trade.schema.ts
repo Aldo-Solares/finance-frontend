@@ -2,35 +2,25 @@
 
 import { z } from 'zod'
 
-export const TradeStatusSchema = z.enum(['OPEN', 'PARTIALLY_SOLD', 'CLOSED'])
+import { TRADE_STATUS_VALUES } from '@/modules/trading/trade/constants/trade.constants'
+import { TradeSaleSchema } from '@/modules/trading/trade-sale/schemas/trade-sale.schema'
+
+// ===================
+// STATUS
+// ===================
+
+export const TradeStatusSchema = z.enum(TRADE_STATUS_VALUES)
 
 export type TradeStatus = z.infer<typeof TradeStatusSchema>
 
-export const TradeSaleSchema = z.object({
-  tradeSaleId: z.number(),
-  tradeId: z.number(),
-
-  quantity: z.number(),
-  salePrice: z.number(),
-
-  commission: z.number(),
-  commissionRate: z.number(),
-
-  expectedCommission: z.number(),
-  commissionValid: z.boolean(),
-
-  saleDate: z.string(),
-
-  grossAmount: z.number(),
-  netAmount: z.number(),
-  costBasis: z.number(),
-  realizedProfit: z.number(),
-})
-
-export type TradeSale = z.infer<typeof TradeSaleSchema>
+// ===================
+// TRADE
+// ===================
 
 export const TradeSchema = z.object({
   tradeId: z.number(),
+
+  userTradingAccountId: z.number(),
 
   tradingAccountId: z.number(),
   tradingAccountName: z.string(),
@@ -72,8 +62,13 @@ export const TradeSchema = z.object({
 
 export type Trade = z.infer<typeof TradeSchema>
 
+// ===================
+// CREATE
+// ===================
+
 export const CreateTradeSchema = z.object({
-  tradingAccountId: z.number(),
+  userTradingAccountId: z.number(),
+
   instrumentId: z.number(),
 
   quantity: z.number().positive(),
@@ -88,6 +83,10 @@ export const CreateTradeSchema = z.object({
 })
 
 export type CreateTrade = z.infer<typeof CreateTradeSchema>
+
+// ===================
+// UPDATE
+// ===================
 
 export const UpdateTradeSchema = CreateTradeSchema
 

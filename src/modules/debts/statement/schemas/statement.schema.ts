@@ -2,10 +2,22 @@
 
 import { z } from 'zod'
 
-import { StatementStatus } from '@/modules/debts/statement/enums/statement-status.enum'
+import { STATEMENT_STATUS_VALUES } from '@/modules/debts/statement/constants/statement.constants'
 
 const nullableDateSchema = z.string().nullable()
 const requiredDateSchema = z.string().min(1)
+
+// ===================
+// STATUS
+// ===================
+
+export const StatementStatusSchema = z.enum(STATEMENT_STATUS_VALUES)
+
+export type StatementStatus = z.infer<typeof StatementStatusSchema>
+
+// ===================
+// STATEMENT
+// ===================
 
 export const StatementSchema = z.object({
   statementId: z.number().int(),
@@ -18,10 +30,14 @@ export const StatementSchema = z.object({
   periodStart: nullableDateSchema,
   periodEnd: nullableDateSchema,
   paymentDate: nullableDateSchema,
-  status: z.nativeEnum(StatementStatus),
+  status: StatementStatusSchema,
   paid: z.boolean(),
   notes: z.string().nullable(),
 })
+
+// ===================
+// CREATE
+// ===================
 
 export const CreateStatementRequestSchema = z.object({
   userCardId: z.number().int().positive(),
@@ -29,6 +45,10 @@ export const CreateStatementRequestSchema = z.object({
   periodEnd: requiredDateSchema,
   paymentDate: requiredDateSchema,
 })
+
+// ===================
+// UPDATE
+// ===================
 
 export const UpdateStatementRequestSchema = z.object({
   userCardId: z.number().int().positive(),
@@ -38,15 +58,27 @@ export const UpdateStatementRequestSchema = z.object({
   notes: z.string().nullable(),
 })
 
+// ===================
+// UPDATE PAID
+// ===================
+
 export const UpdateStatementPaidRequestSchema = z.object({
   paid: z.boolean(),
 })
+
+// ===================
+// DATE SUGGESTION
+// ===================
 
 export const StatementDateSuggestionSchema = z.object({
   periodStart: nullableDateSchema,
   periodEnd: nullableDateSchema,
   paymentDate: nullableDateSchema,
 })
+
+// ===================
+// TYPES
+// ===================
 
 export type Statement = z.infer<typeof StatementSchema>
 

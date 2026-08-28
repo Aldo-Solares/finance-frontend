@@ -1,4 +1,4 @@
-// @/shared/components/layout/app-header.tsx
+// @/shared/layout/app-header.tsx
 
 'use client';
 

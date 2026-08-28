@@ -1,4 +1,4 @@
-// @/shared/components/inputs/password-field.tsx
+// @/shared/inputs/password-field.tsx
 'use client';
 
 import { Eye, EyeOff, LockKeyhole } from 'lucide-react';

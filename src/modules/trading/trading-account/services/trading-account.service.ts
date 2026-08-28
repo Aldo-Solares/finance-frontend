@@ -5,10 +5,12 @@ import { z } from 'zod'
 import { fetchServer } from '@/core/api/api-server'
 import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
 import {
-  CreateTradingAccount,
-  TradingAccount,
+  CreateTradingAccountSchema,
   TradingAccountSchema,
-  UpdateTradingAccount,
+  UpdateTradingAccountSchema,
+  type CreateTradingAccount,
+  type TradingAccount,
+  type UpdateTradingAccount,
 } from '@/modules/trading/trading-account/schemas/trading-account.schema'
 
 // ===================
@@ -69,8 +71,10 @@ export const getTradingAccountById = async (
 // ===================
 
 export const createTradingAccount = async (
-  payload: CreateTradingAccount,
+  input: CreateTradingAccount,
 ): Promise<TradingAccount> => {
+  const payload = CreateTradingAccountSchema.parse(input)
+
   const response = await fetchServer('/trading-accounts', {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -95,8 +99,10 @@ export const createTradingAccount = async (
 
 export const updateTradingAccount = async (
   tradingAccountId: number,
-  payload: UpdateTradingAccount,
+  input: UpdateTradingAccount,
 ): Promise<TradingAccount> => {
+  const payload = UpdateTradingAccountSchema.parse(input)
+
   const response = await fetchServer(`/trading-accounts/${tradingAccountId}`, {
     method: 'PUT',
     body: JSON.stringify(payload),

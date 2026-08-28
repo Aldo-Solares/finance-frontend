@@ -2,11 +2,13 @@
 
 import { z } from 'zod'
 
+import { INSTRUMENT_TYPE_VALUES } from '@/modules/trading/instrument/constants/instrument.constants'
+
 // ===================
-// ENUMS
+// TYPE
 // ===================
 
-export const InstrumentTypeSchema = z.enum(['STOCK'])
+export const InstrumentTypeSchema = z.enum(INSTRUMENT_TYPE_VALUES)
 
 export type InstrumentType = z.infer<typeof InstrumentTypeSchema>
 

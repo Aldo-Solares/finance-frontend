@@ -3,8 +3,8 @@
 'use client'
 
 import { X } from 'lucide-react'
-import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { type FormEvent, useState } from 'react'
 
 import {
   createTradingAccountAction,
@@ -13,26 +13,51 @@ import {
 import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema'
 
 type TradingAccountFormModalProps = {
-  userId: number
   tradingAccount?: TradingAccount
   onClose: () => void
 }
 
 export const TradingAccountFormModal = ({
-  userId,
   tradingAccount,
   onClose,
 }: TradingAccountFormModalProps) => {
   const router = useRouter()
 
-  const [name, setName] = useState(tradingAccount?.name ?? '')
+  // ===================
+  // STATE
+  // ===================
+
+  const [institution, setInstitution] = useState(
+    tradingAccount?.institution ?? '',
+  )
+
+  const [name, setName] = useState(
+    tradingAccount?.name ?? '',
+  )
+
+  const [accountType, setAccountType] = useState(
+    tradingAccount?.accountType ?? '',
+  )
+
   const [currency, setCurrency] = useState(
     tradingAccount?.currency ?? 'USD',
   )
-  const [error, setError] = useState<string | null>(null)
+
+  const [active, setActive] = useState(
+    tradingAccount?.active ?? true,
+  )
+
+  const [error, setError] = useState<string | null>(
+    null,
+  )
+
   const [pending, setPending] = useState(false)
 
   const isEditing = Boolean(tradingAccount)
+
+  // ===================
+  // SUBMIT
+  // ===================
 
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>,
@@ -43,36 +68,30 @@ export const TradingAccountFormModal = ({
     setError(null)
 
     try {
-      if (tradingAccount) {
-        const result = await updateTradingAccountAction(
-          tradingAccount.tradingAccountId,
-          {
-            name,
-            currency,
-          },
+      const payload = {
+        institution,
+        name,
+        accountType,
+        currency,
+        active,
+      }
+
+      const result = tradingAccount
+        ? await updateTradingAccountAction(
+            tradingAccount.tradingAccountId,
+            payload,
+          )
+        : await createTradingAccountAction(
+            payload,
+          )
+
+      if (!result.success) {
+        setError(
+          result.message ??
+            'No fue posible guardar la cuenta de trading',
         )
 
-        if (!result.success) {
-          setError(
-            result.message ??
-              'No fue posible actualizar la cuenta',
-          )
-          return
-        }
-      } else {
-        const result = await createTradingAccountAction({
-          userId,
-          name,
-          currency,
-        })
-
-        if (!result.success) {
-          setError(
-            result.message ??
-              'No fue posible crear la cuenta',
-          )
-          return
-        }
+        return
       }
 
       onClose()
@@ -95,8 +114,8 @@ export const TradingAccountFormModal = ({
 
             <p className="mt-1 text-sm text-zinc-500">
               {isEditing
-                ? 'Modifica la información de la cuenta.'
-                : 'Agrega una cuenta para registrar tus operaciones.'}
+                ? 'Modifica la información del catálogo.'
+                : 'Agrega una cuenta al catálogo de trading.'}
             </p>
           </div>
 
@@ -117,6 +136,28 @@ export const TradingAccountFormModal = ({
         >
           <div>
             <label
+              htmlFor="trading-account-institution"
+              className="mb-2 block text-sm font-medium text-zinc-700"
+            >
+              Institución
+            </label>
+
+            <input
+              id="trading-account-institution"
+              type="text"
+              value={institution}
+              onChange={(event) =>
+                setInstitution(event.target.value)
+              }
+              placeholder="GBM"
+              disabled={pending}
+              required
+              className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950"
+            />
+          </div>
+
+          <div>
+            <label
               htmlFor="trading-account-name"
               className="mb-2 block text-sm font-medium text-zinc-700"
             >
@@ -127,11 +168,37 @@ export const TradingAccountFormModal = ({
               id="trading-account-name"
               type="text"
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(event) =>
+                setName(event.target.value)
+              }
               placeholder="Trading USA"
               disabled={pending}
               required
               className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="trading-account-type"
+              className="mb-2 block text-sm font-medium text-zinc-700"
+            >
+              Tipo de cuenta
+            </label>
+
+            <input
+              id="trading-account-type"
+              type="text"
+              value={accountType}
+              onChange={(event) =>
+                setAccountType(
+                  event.target.value.toUpperCase(),
+                )
+              }
+              placeholder="TRADING"
+              disabled={pending}
+              required
+              className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm uppercase text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950"
             />
           </div>
 
@@ -148,7 +215,9 @@ export const TradingAccountFormModal = ({
               type="text"
               value={currency}
               onChange={(event) =>
-                setCurrency(event.target.value.toUpperCase())
+                setCurrency(
+                  event.target.value.toUpperCase(),
+                )
               }
               placeholder="USD"
               disabled={pending}
@@ -156,6 +225,28 @@ export const TradingAccountFormModal = ({
               className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm uppercase text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950"
             />
           </div>
+
+          <label className="flex items-center gap-3 rounded-xl border border-zinc-200 px-4 py-3">
+            <input
+              type="checkbox"
+              checked={active}
+              onChange={(event) =>
+                setActive(event.target.checked)
+              }
+              disabled={pending}
+              className="size-4"
+            />
+
+            <div>
+              <p className="text-sm font-medium text-zinc-800">
+                Cuenta activa
+              </p>
+
+              <p className="text-xs text-zinc-500">
+                Permite utilizar esta cuenta dentro del sistema.
+              </p>
+            </div>
+          </label>
 
           {error && (
             <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">

@@ -11,15 +11,15 @@ import {
 } from 'react';
 
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema';
-import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema';
 import {
   createTradeAction,
   updateTradeAction,
 } from '@/modules/trading/trade/actions/trade.actions';
 import type { Trade } from '@/modules/trading/trade/schemas/trade.schema';
+import type { UserTradingAccount } from '@/modules/trading/user-trading-account/schemas/user-trading-account.schema';
 
 type TradeFormModalProps = {
-  tradingAccounts: TradingAccount[];
+  userTradingAccounts: UserTradingAccount[];
   instruments: Instrument[];
   trade?: Trade;
   onClose: () => void;
@@ -54,26 +54,38 @@ function calculateCommission(
 }
 
 export function TradeFormModal({
-  tradingAccounts,
+  userTradingAccounts,
   instruments,
   trade,
   onClose,
 }: TradeFormModalProps) {
   const router = useRouter();
 
-  const [tradingAccountId, setTradingAccountId] =
-    useState(
-      trade?.tradingAccountId ??
-        tradingAccounts[0]?.tradingAccountId ??
-        0,
-    );
+  // ===================
+  // USER TRADING ACCOUNT
+  // ===================
+
+  const [
+    userTradingAccountId,
+    setUserTradingAccountId,
+  ] = useState(
+    trade?.userTradingAccountId ??
+      userTradingAccounts[0]
+        ?.userTradingAccountId ??
+      0,
+  );
+
+  // ===================
+  // COMPATIBLE INSTRUMENTS
+  // ===================
 
   const compatibleInstruments = useMemo(() => {
-    const account = tradingAccounts.find(
-      (item) =>
-        item.tradingAccountId ===
-        tradingAccountId,
-    );
+    const account =
+      userTradingAccounts.find(
+        (item) =>
+          item.userTradingAccountId ===
+          userTradingAccountId,
+      );
 
     if (!account) {
       return [];
@@ -86,9 +98,13 @@ export function TradeFormModal({
     );
   }, [
     instruments,
-    tradingAccountId,
-    tradingAccounts,
+    userTradingAccountId,
+    userTradingAccounts,
   ]);
+
+  // ===================
+  // FORM STATE
+  // ===================
 
   const [instrumentId, setInstrumentId] =
     useState(
@@ -133,6 +149,10 @@ export function TradeFormModal({
     useState<string | null>(null);
 
   const isEditing = Boolean(trade);
+
+  // ===================
+  // COMMISSION
+  // ===================
 
   const updateCalculatedCommission = (
     nextQuantity: string,
@@ -184,15 +204,19 @@ export function TradeFormModal({
     );
   };
 
+  // ===================
+  // ACCOUNT CHANGE
+  // ===================
+
   const handleAccountChange = (
     value: number,
   ) => {
-    setTradingAccountId(value);
+    setUserTradingAccountId(value);
 
     const account =
-      tradingAccounts.find(
+      userTradingAccounts.find(
         (item) =>
-          item.tradingAccountId === value,
+          item.userTradingAccountId === value,
       );
 
     const firstInstrument =
@@ -207,6 +231,10 @@ export function TradeFormModal({
     );
   };
 
+  // ===================
+  // SUBMIT
+  // ===================
+
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>,
   ) => {
@@ -217,7 +245,7 @@ export function TradeFormModal({
 
     try {
       const payload = {
-        tradingAccountId,
+        userTradingAccountId,
         instrumentId,
 
         quantity: Number(quantity),
@@ -301,7 +329,7 @@ export function TradeFormModal({
 
             <select
               id="trade-account"
-              value={tradingAccountId}
+              value={userTradingAccountId}
               onChange={(event) =>
                 handleAccountChange(
                   Number(event.target.value),
@@ -311,18 +339,19 @@ export function TradeFormModal({
               required
               className="h-11 w-full rounded-lg border border-neutral-300 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-neutral-950"
             >
-              {tradingAccounts.map(
+              {userTradingAccounts.map(
                 (account) => (
                   <option
                     key={
-                      account.tradingAccountId
+                      account.userTradingAccountId
                     }
                     value={
-                      account.tradingAccountId
+                      account.userTradingAccountId
                     }
                   >
-                    {account.name} ·{' '}
-                    {account.currency}
+                    {account.alias ??
+                      account.name}{' '}
+                    · {account.currency}
                   </option>
                 ),
               )}
@@ -437,9 +466,7 @@ export function TradeFormModal({
                 type="number"
                 min="0"
                 step="0.00000001"
-                value={
-                  purchaseCommission
-                }
+                value={purchaseCommission}
                 onChange={(event) =>
                   setPurchaseCommission(
                     event.target.value,

@@ -2,7 +2,12 @@
 
 'use client'
 
-import { MoreVertical, Pencil, Trash2, WalletCards } from 'lucide-react'
+import {
+  Building2,
+  MoreVertical,
+  Pencil,
+  Trash2,
+} from 'lucide-react'
 import { useState } from 'react'
 
 import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema'
@@ -25,16 +30,31 @@ export const TradingAccountItem = ({
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100">
-            <WalletCards className="size-5 text-zinc-700" />
+            <Building2 className="size-5 text-zinc-700" />
           </div>
 
           <div className="min-w-0">
-            <h2 className="truncate font-semibold text-zinc-950">
-              {tradingAccount.name}
-            </h2>
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="truncate font-semibold text-zinc-950">
+                {tradingAccount.name}
+              </h2>
+
+              <span
+                className={[
+                  'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
+                  tradingAccount.active
+                    ? 'bg-emerald-50 text-emerald-700'
+                    : 'bg-zinc-100 text-zinc-500',
+                ].join(' ')}
+              >
+                {tradingAccount.active
+                  ? 'Activa'
+                  : 'Inactiva'}
+              </span>
+            </div>
 
             <p className="mt-1 text-sm text-zinc-500">
-              Cuenta de trading
+              {tradingAccount.institution}
             </p>
           </div>
         </div>
@@ -42,7 +62,9 @@ export const TradingAccountItem = ({
         <div className="relative">
           <button
             type="button"
-            onClick={() => setMenuOpen((current) => !current)}
+            onClick={() =>
+              setMenuOpen((current) => !current)
+            }
             className="flex size-9 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-950"
             aria-label="Opciones de la cuenta"
           >
@@ -79,14 +101,26 @@ export const TradingAccountItem = ({
         </div>
       </div>
 
-      <div className="mt-5 border-t border-zinc-100 pt-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">
-          Moneda
-        </p>
+      <div className="mt-5 grid grid-cols-2 gap-4 border-t border-zinc-100 pt-4">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">
+            Tipo
+          </p>
 
-        <p className="mt-1 text-sm font-semibold text-zinc-900">
-          {tradingAccount.currency}
-        </p>
+          <p className="mt-1 text-sm font-semibold text-zinc-900">
+            {tradingAccount.accountType}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">
+            Moneda
+          </p>
+
+          <p className="mt-1 text-sm font-semibold text-zinc-900">
+            {tradingAccount.currency}
+          </p>
+        </div>
       </div>
     </article>
   )

@@ -29,7 +29,7 @@ export const config = {
     '/debts/:path*',
     '/investments/:path*',
     '/trading/:path*',
-    '/settings/:path*',
+    '/user/:path*',
     '/admin/:path*',
   ],
 }

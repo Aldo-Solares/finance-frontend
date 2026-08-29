@@ -3,7 +3,7 @@
 import { CardCatalogPage } from '@/modules/debts/card/components/card-catalog-page'
 import { findAllCards } from '@/modules/debts/card/services/card.service'
 
-export default async function AdminCardPage() {
+export default async function Page() {
   const cards = await findAllCards()
 
   return (

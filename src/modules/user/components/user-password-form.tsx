@@ -10,13 +10,12 @@ import {
 import { useFormStatus } from 'react-dom';
 import {
   Check,
-  KeyRound,
   LoaderCircle,
-  LockKeyhole,
 } from 'lucide-react';
 
 import type { ActionState } from '@/core/utils/action-state';
 import { changePasswordAction } from '@/modules/user/actions/user.actions';
+import { PasswordField } from '@/shared/inputs/password-field';
 
 const initialState: ActionState<null> = {
   success: false,
@@ -47,63 +46,37 @@ export function UserPasswordForm() {
     >
       <div className="space-y-5 p-6">
         {/* ===================
-        CURRENT PASSWORD
-        =================== */}
+            CURRENT PASSWORD
+            =================== */}
 
-        <div>
-          <label
-            htmlFor="currentPassword"
-            className="mb-2 block text-xs font-medium text-neutral-500"
-          >
-            Contraseña actual
-          </label>
-
-          <div className="relative">
-            <KeyRound className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-
-            <input
-              id="currentPassword"
-              name="currentPassword"
-              type="password"
-              autoComplete="current-password"
-              className="h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 pl-10 pr-4 text-sm text-neutral-950 outline-none transition-colors focus:border-neutral-400 focus:bg-white"
-            />
-          </div>
-        </div>
+        <PasswordField
+          id="currentPassword"
+          name="currentPassword"
+          label="Contraseña actual"
+          autoComplete="current-password"
+          required
+        />
 
         {/* ===================
-        NEW PASSWORD
-        =================== */}
+            NEW PASSWORD
+            =================== */}
 
-        <div>
-          <label
-            htmlFor="newPassword"
-            className="mb-2 block text-xs font-medium text-neutral-500"
-          >
-            Nueva contraseña
-          </label>
+        <PasswordField
+          id="newPassword"
+          name="newPassword"
+          label="Nueva contraseña"
+          autoComplete="new-password"
+          required
+        />
 
-          <div className="relative">
-            <LockKeyhole className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
-
-            <input
-              id="newPassword"
-              name="newPassword"
-              type="password"
-              autoComplete="new-password"
-              className="h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 pl-10 pr-4 text-sm text-neutral-950 outline-none transition-colors focus:border-neutral-400 focus:bg-white"
-            />
-          </div>
-
-          <p className="mt-2 text-xs leading-5 text-neutral-400">
-            Mínimo 8 caracteres, una mayúscula, una
-            minúscula, un número y un carácter especial.
-          </p>
-        </div>
+        <p className="-mt-2 text-xs leading-5 text-neutral-400">
+          Mínimo 8 caracteres, una mayúscula, una
+          minúscula, un número y un carácter especial.
+        </p>
 
         {/* ===================
-        RESPONSE
-        =================== */}
+            RESPONSE
+            =================== */}
 
         {state.message && (
           <div
@@ -124,8 +97,8 @@ export function UserPasswordForm() {
       </div>
 
       {/* ===================
-      ACTIONS
-      =================== */}
+          ACTIONS
+          =================== */}
 
       <div className="flex justify-end border-t border-neutral-100 bg-neutral-50/60 px-6 py-4">
         <PasswordSaveButton />

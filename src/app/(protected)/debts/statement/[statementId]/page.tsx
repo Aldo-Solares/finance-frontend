@@ -11,7 +11,7 @@ type StatementEntryRoutePageProps = {
   }>;
 };
 
-export default async function StatementEntryRoutePage({
+export default async function Page({
   params,
 }: StatementEntryRoutePageProps) {
   const { statementId } = await params;

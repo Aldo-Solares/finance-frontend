@@ -201,7 +201,7 @@ export function AppHeader({
 
                 <div className="py-2">
                   <Link
-                    href="/settings"
+                    href="/user"
                     onClick={() =>
                       setUserMenuOpen(false)
                     }

@@ -1,4 +1,4 @@
-// @/modules/user/components/settings-page.tsx
+// @/modules/user/components/user-page.tsx
 
 import {
   LockKeyhole,
@@ -13,13 +13,13 @@ import { UserAccountCard } from './user-account-card';
 import { UserPasswordForm } from './user-password-form';
 import { UserProfileForm } from './user-profile-form';
 
-type SettingsPageProps = {
+type UsersPageProps = {
   user: User;
 };
 
-export function SettingsPage({
+export function UsersPage({
   user,
-}: SettingsPageProps) {
+}: UsersPageProps) {
   return (
     <section className="w-full space-y-8">
       <PageHeader

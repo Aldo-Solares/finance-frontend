@@ -1,10 +1,26 @@
 // @/app/(protected)/settings/page.tsx
 
-import { SettingsPage } from '@/modules/user/components/settings-page';
-import { getCurrentUser } from '@/modules/user/services/user.service';
+import { PageHeader } from '@/shared/page/page-header'
+import { getCurrentUserSettings } from '@/modules/user/services/user-settings.service'
+import { UserSettingsNotifications } from '@/modules/user/components/user-settings-notifications'
 
-export default async function SettingsRoutePage() {
-  const user = await getCurrentUser();
+// ===================
+// PAGE
+// ===================
 
-  return <SettingsPage user={user} />;
+export default async function SettingsPage() {
+  const userSettings = await getCurrentUserSettings()
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Configuración"
+        description="Personaliza las notificaciones de tu cuenta."
+      />
+
+      <UserSettingsNotifications
+        userSettings={userSettings}
+      />
+    </div>
+  )
 }

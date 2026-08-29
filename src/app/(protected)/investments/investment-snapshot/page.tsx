@@ -6,7 +6,7 @@ import {
   findInvestmentPerformance,
 } from '@/modules/investments/investment-snapshot/services/investment-snapshot.service'
 
-export default async function InvestmentsPage() {
+export default async function Page() {
   const [snapshots, performance] =
     await Promise.all([
       findAllInvestmentSnapshots(),

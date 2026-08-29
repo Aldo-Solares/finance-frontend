@@ -3,7 +3,7 @@
 import { ConceptPage } from '@/modules/debts/concept/components/concept-page';
 import { findAllConcepts } from '@/modules/debts/concept/services/concept.service';
 
-export default async function ConceptRoutePage() {
+export default async function Page() {
   const concepts = await findAllConcepts();
 
   return (

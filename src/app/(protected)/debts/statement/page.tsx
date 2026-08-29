@@ -10,7 +10,7 @@ type StatementRoutePageProps = {
   }>
 }
 
-export default async function StatementRoutePage({
+export default async function Page({
   searchParams,
 }: StatementRoutePageProps) {
   const { userCardId } = await searchParams

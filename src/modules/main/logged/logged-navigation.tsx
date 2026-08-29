@@ -14,7 +14,7 @@ const navigationItems = [
     title: 'Configuración',
     description:
       'Administra tu perfil, seguridad y datos de cuenta.',
-    href: '/settings',
+    href: '/user',
     icon: Settings,
   },
   {

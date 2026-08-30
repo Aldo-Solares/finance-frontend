@@ -1,6 +1,6 @@
 // @/modules/debts/statement-entry/components/statement-entry-empty-state.tsx
 
-import { ReceiptText } from 'lucide-react';
+import { ReceiptText } from 'lucide-react'
 
 export function StatementEntryEmptyState() {
   return (
@@ -17,5 +17,5 @@ export function StatementEntryEmptyState() {
         Este estado de cuenta todavía no tiene movimientos registrados.
       </p>
     </div>
-  );
+  )
 }

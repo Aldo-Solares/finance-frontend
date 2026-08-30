@@ -1,34 +1,26 @@
 // @/app/(protected)/debts/statement/[statementId]/page.tsx
 
-import { findAllConcepts } from '@/modules/debts/concept/services/concept.service';
-import { StatementEntryPage } from '@/modules/debts/statement-entry/components/statement-entry-page';
-import { findStatementEntriesByStatementId } from '@/modules/debts/statement-entry/services/statement-entry.service';
-import { findStatementById } from '@/modules/debts/statement/services/statement.service';
+import { findAllConcepts } from '@/modules/debts/concept/services/concept.service'
+import { StatementEntryPage } from '@/modules/debts/statement-entry/components/statement-entry-page'
+import { findStatementEntriesByStatementId } from '@/modules/debts/statement-entry/services/statement-entry.service'
+import { findStatementById } from '@/modules/debts/statement/services/statement.service'
 
 type StatementEntryRoutePageProps = {
   params: Promise<{
-    statementId: string;
-  }>;
-};
+    statementId: string
+  }>
+}
 
-export default async function Page({
-  params,
-}: StatementEntryRoutePageProps) {
-  const { statementId } = await params;
+export default async function Page({ params }: StatementEntryRoutePageProps) {
+  const { statementId } = await params
 
-  const parsedStatementId = Number(statementId);
+  const parsedStatementId = Number(statementId)
 
-  const [
-    statement,
-    entries,
-    concepts,
-  ] = await Promise.all([
+  const [statement, entries, concepts] = await Promise.all([
     findStatementById(parsedStatementId),
-    findStatementEntriesByStatementId(
-      parsedStatementId,
-    ),
+    findStatementEntriesByStatementId(parsedStatementId),
     findAllConcepts(),
-  ]);
+  ])
 
   return (
     <StatementEntryPage
@@ -36,5 +28,5 @@ export default async function Page({
       entries={entries}
       concepts={concepts}
     />
-  );
+  )
 }

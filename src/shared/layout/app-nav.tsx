@@ -4,6 +4,7 @@
 
 import {
   ChartCandlestick,
+  ChartPie,
   ChartNoAxesCombined,
   ChevronDown,
   CreditCard,
@@ -20,7 +21,7 @@ import {
   useState,
 } from 'react';
 
-import { USER_ROLE } from '@/modules/user/constants/user.constants'
+import { USER_ROLE } from '@/modules/user/constants/user.constants';
 import type { User } from '@/modules/user/schemas/user.schema';
 
 type AppNavProps = {
@@ -154,8 +155,8 @@ export function AppNav({
       className="hidden items-center gap-1 md:flex"
     >
       {/* ===================
-      HOME
-      =================== */}
+          HOME
+          =================== */}
 
       <Link
         href="/main"
@@ -165,8 +166,21 @@ export function AppNav({
       </Link>
 
       {/* ===================
-      DEBTS
-      =================== */}
+          DASHBOARD
+          =================== */}
+
+      <Link
+        href="/dashboard"
+        className={getLinkClassName('/dashboard')}
+      >
+        <ChartPie className="h-4 w-4" />
+
+        Dashboard
+      </Link>
+
+      {/* ===================
+          DEBTS
+          =================== */}
 
       <div className="relative">
         <button
@@ -260,8 +274,8 @@ export function AppNav({
       </div>
 
       {/* ===================
-      INVESTMENTS
-      =================== */}
+          INVESTMENTS
+          =================== */}
 
       <Link
         href="/investments/investment-snapshot"
@@ -275,8 +289,8 @@ export function AppNav({
       </Link>
 
       {/* ===================
-      TRADING
-      =================== */}
+          TRADING
+          =================== */}
 
       <div className="relative">
         <button

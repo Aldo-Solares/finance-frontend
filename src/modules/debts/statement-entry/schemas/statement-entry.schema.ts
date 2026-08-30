@@ -9,13 +9,9 @@ import { requiredString } from '@/core/utils/zod-helpers'
 // ===================
 
 const nullableDateSchema = z.string().nullable()
-
 const nullablePositiveNumberSchema = z.number().positive().nullable()
-
 const nullableNonNegativeNumberSchema = z.number().nonnegative().nullable()
-
 const nullablePositiveIntegerSchema = z.number().int().positive().nullable()
-
 const nullableNonNegativeIntegerSchema = z
   .number()
   .int()
@@ -40,7 +36,8 @@ export const StatementEntrySchema = z.object({
   conceptId: z.number().int(),
   conceptName: z.string(),
   debtor: z.string(),
-  description: z.string().nullable(),
+  specification: z.string().nullable(),
+  notes: z.string().nullable(),
   entryType: StatementEntryTypeSchema,
   date: nullableDateSchema,
   amount: z.number().positive(),
@@ -58,30 +55,16 @@ export const StatementEntrySchema = z.object({
 
 export const CreateStatementEntryRequestSchema = z.object({
   statementId: z.number().int().positive(),
-
   conceptId: z.number().int().positive(),
-
   debtor: requiredString('El deudor es obligatorio'),
-
-  description: z.string().trim().nullable(),
-
+  specification: z.string().trim().nullable(),
+  notes: z.string().nullable(),
   entryType: StatementEntryTypeSchema,
-
   date: nullableDateSchema,
-
   amount: z.number().positive(),
-
   paid: z.boolean(),
-
   msiCurrent: nullablePositiveIntegerSchema,
-
   msiTotal: nullablePositiveIntegerSchema,
-
-  purchaseAmount: nullablePositiveNumberSchema,
-
-  remainingMsi: nullableNonNegativeIntegerSchema,
-
-  remainingMsiAmount: nullableNonNegativeNumberSchema,
 })
 
 // ===================
@@ -90,30 +73,16 @@ export const CreateStatementEntryRequestSchema = z.object({
 
 export const UpdateStatementEntryRequestSchema = z.object({
   statementId: z.number().int().positive(),
-
   conceptId: z.number().int().positive(),
-
   debtor: requiredString('El deudor es obligatorio'),
-
-  description: z.string().trim().nullable(),
-
+  specification: z.string().trim().nullable(),
+  notes: z.string().nullable(),
   entryType: StatementEntryTypeSchema,
-
   date: nullableDateSchema,
-
   amount: z.number().positive(),
-
   paid: z.boolean(),
-
   msiCurrent: nullablePositiveIntegerSchema,
-
   msiTotal: nullablePositiveIntegerSchema,
-
-  purchaseAmount: nullablePositiveNumberSchema,
-
-  remainingMsi: nullableNonNegativeIntegerSchema,
-
-  remainingMsiAmount: nullableNonNegativeNumberSchema,
 })
 
 // ===================

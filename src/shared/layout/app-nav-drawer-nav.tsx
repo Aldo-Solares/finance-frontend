@@ -4,10 +4,10 @@
 
 import {
   ChartCandlestick,
+  ChartPie,
   ChartNoAxesCombined,
   CreditCard,
   FileText,
-  LayoutDashboard,
   ListTree,
   Settings,
   ShieldCheck,
@@ -17,7 +17,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { USER_ROLE } from '@/modules/user/constants/user.constants'
+import { USER_ROLE } from '@/modules/user/constants/user.constants';
 import type { User } from '@/modules/user/schemas/user.schema';
 
 type AppNavDrawerNavProps = {
@@ -89,24 +89,36 @@ export function AppNavDrawerNav({
   return (
     <nav className="mt-10 space-y-1">
       {/* ===================
-      MAIN
-      =================== */}
+          MAIN
+          =================== */}
 
       <Link
         href="/main"
         onClick={onClose}
-        className={getLinkClassName(
-          '/main',
-        )}
+        className={getLinkClassName('/main')}
       >
-        <LayoutDashboard className="h-4 w-4" />
+        <ChartPie className="h-4 w-4" />
 
         Inicio
       </Link>
 
       {/* ===================
-      DEBTS
-      =================== */}
+          DASHBOARD
+          =================== */}
+
+      <Link
+        href="/dashboard"
+        onClick={onClose}
+        className={getLinkClassName('/dashboard')}
+      >
+        <ChartPie className="h-4 w-4" />
+
+        Dashboard
+      </Link>
+
+      {/* ===================
+          DEBTS
+          =================== */}
 
       <div className="pt-1">
         <div
@@ -181,8 +193,8 @@ export function AppNavDrawerNav({
       </div>
 
       {/* ===================
-      INVESTMENTS
-      =================== */}
+          INVESTMENTS
+          =================== */}
 
       <Link
         href="/investments/investment-snapshot"
@@ -197,8 +209,8 @@ export function AppNavDrawerNav({
       </Link>
 
       {/* ===================
-      TRADING
-      =================== */}
+          TRADING
+          =================== */}
 
       <div className="pt-1">
         <div
@@ -273,8 +285,8 @@ export function AppNavDrawerNav({
       </div>
 
       {/* ===================
-      SETTINGS
-      =================== */}
+          SETTINGS
+          =================== */}
 
       <div className="my-4 h-px bg-white/[0.07]" />
 
@@ -291,8 +303,8 @@ export function AppNavDrawerNav({
       </Link>
 
       {/* ===================
-      ADMIN
-      =================== */}
+          ADMIN
+          =================== */}
 
       {isAdmin && (
         <Link

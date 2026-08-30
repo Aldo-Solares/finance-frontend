@@ -32,15 +32,14 @@ export async function createStatementEntryAction(
     statementId: Number(formData.get('statementId')),
     conceptId: Number(formData.get('conceptId')),
     debtor: formData.get('debtor'),
-    description: nullableString(formData.get('description')),
-    purchaseDate: nullableString(formData.get('purchaseDate')),
-    installmentAmount: nullableNumber(formData.get('installmentAmount')),
+    specification: nullableString(formData.get('specification')),
+    notes: nullableString(formData.get('notes')),
+    entryType: formData.get('entryType'),
+    date: nullableString(formData.get('date')),
+    amount: nullableNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
     msiCurrent: nullableNumber(formData.get('msiCurrent')),
     msiTotal: nullableNumber(formData.get('msiTotal')),
-    purchaseTotal: nullableNumber(formData.get('purchaseTotal')),
-    remainingMonths: nullableNumber(formData.get('remainingMonths')),
-    remainingTotal: nullableNumber(formData.get('remainingTotal')),
   })
 
   if (!parsed.success) {
@@ -83,15 +82,14 @@ export async function updateStatementEntryAction(
     statementId: Number(formData.get('statementId')),
     conceptId: Number(formData.get('conceptId')),
     debtor: formData.get('debtor'),
-    description: nullableString(formData.get('description')),
-    purchaseDate: nullableString(formData.get('purchaseDate')),
-    installmentAmount: nullableNumber(formData.get('installmentAmount')),
+    specification: nullableString(formData.get('specification')),
+    notes: nullableString(formData.get('notes')),
+    entryType: formData.get('entryType'),
+    date: nullableString(formData.get('date')),
+    amount: nullableNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
     msiCurrent: nullableNumber(formData.get('msiCurrent')),
     msiTotal: nullableNumber(formData.get('msiTotal')),
-    purchaseTotal: nullableNumber(formData.get('purchaseTotal')),
-    remainingMonths: nullableNumber(formData.get('remainingMonths')),
-    remainingTotal: nullableNumber(formData.get('remainingTotal')),
   })
 
   if (!parsed.success) {
@@ -162,5 +160,11 @@ function nullableNumber(value: FormDataEntryValue | null): number | null {
     return null
   }
 
-  return Number(value)
+  const number = Number(value)
+
+  if (!Number.isFinite(number)) {
+    return null
+  }
+
+  return number
 }

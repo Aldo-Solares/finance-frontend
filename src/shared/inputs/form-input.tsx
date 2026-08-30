@@ -1,17 +1,17 @@
 // @/shared/inputs/form-input.tsx
 
-import type { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react'
 
 type FormInputProps = {
-  id: string;
-  name: string;
-  label: string;
-  type?: 'text' | 'email' | 'number' | 'date';
-  placeholder?: string;
-  autoComplete?: string;
-  required?: boolean;
-  icon?: LucideIcon;
-};
+  id: string
+  name: string
+  label: string
+  type?: 'text' | 'email' | 'number' | 'date'
+  placeholder?: string
+  autoComplete?: string
+  required?: boolean
+  icon?: LucideIcon
+}
 
 export function FormInput({
   id,
@@ -50,5 +50,5 @@ export function FormInput({
         />
       </div>
     </div>
-  );
+  )
 }

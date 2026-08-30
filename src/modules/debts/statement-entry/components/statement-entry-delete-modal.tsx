@@ -1,32 +1,25 @@
 // @/modules/debts/statement-entry/components/statement-entry-delete-modal.tsx
 
-'use client';
+'use client'
 
-import {
-  useActionState,
-  useEffect,
-} from 'react';
-import { useFormStatus } from 'react-dom';
-import {
-  LoaderCircle,
-  Trash2,
-  TriangleAlert,
-} from 'lucide-react';
+import { useActionState, useEffect } from 'react'
+import { useFormStatus } from 'react-dom'
+import { LoaderCircle, Trash2, TriangleAlert } from 'lucide-react'
 
-import type { ActionState } from '@/core/utils/action-state';
-import { deleteStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions';
-import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema';
+import type { ActionState } from '@/core/utils/action-state'
+import { deleteStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
+import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 
 type StatementEntryDeleteModalProps = {
-  entry: StatementEntry;
-  onClose: () => void;
-};
+  entry: StatementEntry
+  onClose: () => void
+}
 
 const initialState: ActionState<null> = {
   success: false,
   message: null,
   data: null,
-};
+}
 
 export function StatementEntryDeleteModal({
   entry,
@@ -35,13 +28,13 @@ export function StatementEntryDeleteModal({
   const [state, action] = useActionState(
     deleteStatementEntryAction,
     initialState,
-  );
+  )
 
   useEffect(() => {
     if (state.success) {
-      onClose();
+      onClose()
     }
-  }, [state.success, onClose]);
+  }, [state.success, onClose])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -63,28 +56,19 @@ export function StatementEntryDeleteModal({
         <p className="mt-2 text-sm leading-6 text-neutral-500">
           Se eliminará{' '}
           <span className="font-medium text-neutral-950">
-            {entry.description ||
-              `movimiento #${entry.entryId}`}
+            {entry.specification || `movimiento #${entry.entryId}`}
           </span>
           .
         </p>
 
-        <form
-          action={action}
-          className="mt-6"
-        >
-          <input
-            type="hidden"
-            name="entryId"
-            value={entry.entryId}
-          />
+        <form action={action} className="mt-6">
+          <input type="hidden" name="entryId" value={entry.entryId} />
 
-          {!state.success &&
-            state.message && (
-              <div className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-left text-sm text-red-600">
-                {state.message}
-              </div>
-            )}
+          {!state.success && state.message && (
+            <div className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-left text-sm text-red-600">
+              {state.message}
+            </div>
+          )}
 
           <div className="flex gap-3">
             <button
@@ -100,11 +84,11 @@ export function StatementEntryDeleteModal({
         </form>
       </div>
     </div>
-  );
+  )
 }
 
 function DeleteButton() {
-  const { pending } = useFormStatus();
+  const { pending } = useFormStatus()
 
   return (
     <button
@@ -118,9 +102,7 @@ function DeleteButton() {
         <Trash2 className="h-4 w-4" />
       )}
 
-      {pending
-        ? 'Eliminando...'
-        : 'Eliminar'}
+      {pending ? 'Eliminando...' : 'Eliminar'}
     </button>
-  );
+  )
 }

@@ -1,17 +1,17 @@
 // @/shared/inputs/password-field.tsx
-'use client';
+'use client'
 
-import { Eye, EyeOff, LockKeyhole } from 'lucide-react';
-import { useState } from 'react';
+import { Eye, EyeOff, LockKeyhole } from 'lucide-react'
+import { useState } from 'react'
 
 type PasswordFieldProps = {
-  id: string;
-  name: string;
-  label: string;
-  placeholder?: string;
-  autoComplete?: string;
-  required?: boolean;
-};
+  id: string
+  name: string
+  label: string
+  placeholder?: string
+  autoComplete?: string
+  required?: boolean
+}
 
 export function PasswordField({
   id,
@@ -21,7 +21,7 @@ export function PasswordField({
   autoComplete,
   required = false,
 }: PasswordFieldProps) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
 
   return (
     <div className="space-y-2">
@@ -60,5 +60,5 @@ export function PasswordField({
         </button>
       </div>
     </div>
-  );
+  )
 }

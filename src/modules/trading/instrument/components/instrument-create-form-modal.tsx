@@ -1,39 +1,47 @@
-// @/modules/trading/instrument/components/instrument-form-modal.tsx
+// @/modules/trading/instrument/components/instrument-create-form-modal.tsx
 
 'use client'
 
 import { X } from 'lucide-react'
-import { FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { FormEvent, useState } from 'react'
 
+import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'
 import { createInstrumentAction } from '@/modules/trading/instrument/actions/instrument.actions'
-import type { InstrumentType } from '@/modules/trading/instrument/schemas/instrument.schema'
+import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 
-type InstrumentFormModalProps = {
+type InstrumentCreateFormModalProps = {
+  currencies: Currency[]
   onClose: () => void
 }
 
-export const InstrumentFormModal = ({
+export const InstrumentCreateFormModal = ({
+  currencies,
   onClose,
-}: InstrumentFormModalProps) => {
+}: InstrumentCreateFormModalProps) => {
   const router = useRouter()
 
   const [symbol, setSymbol] = useState('')
   const [name, setName] = useState('')
-  const [type, setType] =
-    useState<InstrumentType>('STOCK')
-  const [currency, setCurrency] = useState('USD')
+  const [currencyId, setCurrencyId] = useState<number | null>(
+    currencies[0]?.currencyId ?? null,
+  )
 
-  const [pending, setPending] =
-    useState(false)
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const [error, setError] =
-    useState<string | null>(null)
+  const currencyOptions = currencies.map((currency) => ({
+    value: currency.currencyId,
+    label: `${currency.code} — ${currency.symbol}`,
+  }))
 
-  const handleSubmit = async (
-    event: FormEvent<HTMLFormElement>,
-  ) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+
+    if (currencyId === null) {
+      setError('Selecciona una moneda')
+      return
+    }
 
     setPending(true)
     setError(null)
@@ -42,15 +50,11 @@ export const InstrumentFormModal = ({
       const result = await createInstrumentAction({
         symbol: symbol.trim().toUpperCase(),
         name: name.trim(),
-        type,
-        currency: currency.trim().toUpperCase(),
+        currencyId,
       })
 
       if (!result.success) {
-        setError(
-          result.message ??
-            'No fue posible crear el instrumento',
-        )
+        setError(result.message ?? 'No fue posible crear el instrumento')
         return
       }
 
@@ -79,17 +83,14 @@ export const InstrumentFormModal = ({
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100"
+            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Cerrar"
           >
             <X className="size-5" />
           </button>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5 p-6"
-        >
+        <form onSubmit={handleSubmit} className="space-y-5 p-6">
           <div>
             <label
               htmlFor="instrument-symbol"
@@ -102,15 +103,11 @@ export const InstrumentFormModal = ({
               id="instrument-symbol"
               type="text"
               value={symbol}
-              onChange={(event) =>
-                setSymbol(
-                  event.target.value.toUpperCase(),
-                )
-              }
+              onChange={(event) => setSymbol(event.target.value.toUpperCase())}
               placeholder="NVDA"
               disabled={pending}
               required
-              className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm uppercase text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950"
+              className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm uppercase text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:opacity-60"
             />
           </div>
 
@@ -126,39 +123,12 @@ export const InstrumentFormModal = ({
               id="instrument-name"
               type="text"
               value={name}
-              onChange={(event) =>
-                setName(event.target.value)
-              }
+              onChange={(event) => setName(event.target.value)}
               placeholder="NVIDIA"
               disabled={pending}
               required
-              className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950"
+              className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:opacity-60"
             />
-          </div>
-
-          <div>
-            <label
-              htmlFor="instrument-type"
-              className="mb-2 block text-sm font-medium text-zinc-700"
-            >
-              Tipo
-            </label>
-
-            <select
-              id="instrument-type"
-              value={type}
-              onChange={(event) =>
-                setType(
-                  event.target.value as InstrumentType,
-                )
-              }
-              disabled={pending}
-              className="h-11 w-full rounded-lg border border-zinc-300 bg-white px-3 text-sm text-zinc-950 outline-none transition focus:border-zinc-950"
-            >
-              <option value="STOCK">
-                Acción
-              </option>
-            </select>
           </div>
 
           <div>
@@ -169,19 +139,19 @@ export const InstrumentFormModal = ({
               Moneda
             </label>
 
-            <input
+            <SearchableSelectInput
               id="instrument-currency"
-              type="text"
-              value={currency}
-              onChange={(event) =>
-                setCurrency(
-                  event.target.value.toUpperCase(),
-                )
-              }
-              placeholder="USD"
+              name="currencyId"
+              options={currencyOptions}
+              value={currencyId === null ? '' : String(currencyId)}
+              onChange={(value) => {
+                setCurrencyId(value === '' ? null : Number(value))
+              }}
+              placeholder="Selecciona una moneda"
+              searchPlaceholder="Buscar moneda..."
+              emptyMessage="No se encontraron monedas."
               disabled={pending}
               required
-              className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm uppercase text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950"
             />
           </div>
 
@@ -203,12 +173,10 @@ export const InstrumentFormModal = ({
 
             <button
               type="submit"
-              disabled={pending}
+              disabled={pending || currencyId === null}
               className="h-10 rounded-lg bg-zinc-950 px-4 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {pending
-                ? 'Guardando...'
-                : 'Crear instrumento'}
+              {pending ? 'Creando...' : 'Crear instrumento'}
             </button>
           </div>
         </form>

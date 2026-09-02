@@ -9,7 +9,7 @@ import {
   ChevronRight,
   X,
 } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 type DateInputProps = {
   id?: string
@@ -51,42 +51,15 @@ export function DateInput({
 }: DateInputProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const initialDate = parseDate(value)
+  const parsedValue = parseDate(value)
 
   const [open, setOpen] = useState(false)
 
   const [visibleMonth, setVisibleMonth] = useState(() =>
-    initialDate
-      ? new Date(initialDate.year, initialDate.month - 1, 1)
+    parsedValue
+      ? new Date(parsedValue.year, parsedValue.month - 1, 1)
       : new Date(new Date().getFullYear(), new Date().getMonth(), 1),
   )
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false)
-      }
-    }
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-
-    document.addEventListener('keydown', handleEscape)
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-
-      document.removeEventListener('keydown', handleEscape)
-    }
-  }, [])
 
   const calendarDays = useMemo(
     () => getCalendarDays(visibleMonth.getFullYear(), visibleMonth.getMonth()),
@@ -96,7 +69,7 @@ export function DateInput({
   const displayValue = value ? formatDisplayDate(value) : ''
 
   const selectDate = (year: number, month: number, day: number) => {
-    const nextValue = formatInputDate(year, month + 1, day)
+    const nextValue = formatInputDate(year, month, day)
 
     onChange?.(nextValue)
     setOpen(false)
@@ -118,6 +91,11 @@ export function DateInput({
     const today = new Date()
 
     selectDate(today.getFullYear(), today.getMonth(), today.getDate())
+  }
+
+  const clearDate = () => {
+    onChange?.('')
+    setOpen(false)
   }
 
   return (
@@ -179,10 +157,6 @@ export function DateInput({
           aria-label="Seleccionar fecha"
           className="absolute left-0 top-[calc(100%+0.5rem)] z-30 w-full min-w-[300px] overflow-hidden rounded-2xl border border-neutral-200 bg-white p-4 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.28)]"
         >
-          {/* ===================
-              HEADER
-              =================== */}
-
           <div className="mb-4 flex items-center justify-between">
             <button
               type="button"
@@ -213,10 +187,6 @@ export function DateInput({
             </button>
           </div>
 
-          {/* ===================
-              WEEK DAYS
-              =================== */}
-
           <div className="mb-2 grid grid-cols-7">
             {WEEK_DAYS.map((day) => (
               <span
@@ -227,10 +197,6 @@ export function DateInput({
               </span>
             ))}
           </div>
-
-          {/* ===================
-              CALENDAR
-              =================== */}
 
           <div className="grid grid-cols-7 gap-1">
             {calendarDays.map((calendarDay, index) => {
@@ -243,7 +209,6 @@ export function DateInput({
               const dateValue = formatInputDate(year, month, day)
 
               const selected = dateValue === value
-
               const today = dateValue === getLocalDateInputValue()
 
               return (
@@ -268,10 +233,6 @@ export function DateInput({
             })}
           </div>
 
-          {/* ===================
-              FOOTER
-              =================== */}
-
           <div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-3">
             <button
               type="button"
@@ -284,10 +245,7 @@ export function DateInput({
             {value && (
               <button
                 type="button"
-                onClick={() => {
-                  onChange?.('')
-                  setOpen(false)
-                }}
+                onClick={clearDate}
                 className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700"
               >
                 <X className="h-3.5 w-3.5" />
@@ -300,10 +258,6 @@ export function DateInput({
     </div>
   )
 }
-
-// ===================
-// DATE PARSING
-// ===================
 
 function parseDate(value: string) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
@@ -327,10 +281,6 @@ function parseDate(value: string) {
   }
 }
 
-// ===================
-// DATE FORMAT
-// ===================
-
 function formatInputDate(year: number, month: number, day: number) {
   return [
     year,
@@ -352,10 +302,6 @@ function formatDisplayDate(value: string) {
     parsed.year,
   ].join('-')
 }
-
-// ===================
-// CALENDAR
-// ===================
 
 type CalendarDay = {
   year: number

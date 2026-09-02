@@ -10,8 +10,9 @@ export const TradingAccountSchema = z.object({
   tradingAccountId: z.number(),
   institution: z.string(),
   name: z.string(),
-  accountType: z.string(),
-  currency: z.string(),
+  currencyId: z.number(),
+  currencyCode: z.string(),
+  currencySymbol: z.string(),
   active: z.boolean(),
 })
 
@@ -24,8 +25,7 @@ export type TradingAccount = z.infer<typeof TradingAccountSchema>
 export const CreateTradingAccountSchema = z.object({
   institution: z.string().min(1),
   name: z.string().min(1),
-  accountType: z.string().min(1),
-  currency: z.string().min(1),
+  currencyId: z.number(),
   active: z.boolean(),
 })
 
@@ -38,8 +38,7 @@ export type CreateTradingAccount = z.infer<typeof CreateTradingAccountSchema>
 export const UpdateTradingAccountSchema = z.object({
   institution: z.string().min(1),
   name: z.string().min(1),
-  accountType: z.string().min(1),
-  currency: z.string().min(1),
+  currencyId: z.number(),
   active: z.boolean(),
 })
 

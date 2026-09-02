@@ -6,9 +6,10 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema'
+import { UserTradingAccountCreateModal } from '@/modules/trading/user-trading-account/components/user-trading-account-create-modal'
 import { UserTradingAccountDeleteModal } from '@/modules/trading/user-trading-account/components/user-trading-account-delete-modal'
+import { UserTradingAccountEditModal } from '@/modules/trading/user-trading-account/components/user-trading-account-edit-modal'
 import { UserTradingAccountEmptyState } from '@/modules/trading/user-trading-account/components/user-trading-account-empty-state'
-import { UserTradingAccountFormModal } from '@/modules/trading/user-trading-account/components/user-trading-account-form-modal'
 import { UserTradingAccountList } from '@/modules/trading/user-trading-account/components/user-trading-account-list'
 import type { UserTradingAccount } from '@/modules/trading/user-trading-account/schemas/user-trading-account.schema'
 import { PageHeader } from '@/shared/page/page-header'
@@ -22,42 +23,31 @@ export function UserTradingAccountPage({
   userTradingAccounts,
   tradingAccounts,
 }: UserTradingAccountPageProps) {
-  const [formOpen, setFormOpen] =
-    useState(false)
+  const [createOpen, setCreateOpen] = useState(false)
 
-  const [
-    editingAccount,
-    setEditingAccount,
-  ] = useState<UserTradingAccount | null>(
-    null,
-  )
+  const [editingAccount, setEditingAccount] =
+    useState<UserTradingAccount | null>(null)
 
-  const [
-    deletingAccount,
-    setDeletingAccount,
-  ] = useState<UserTradingAccount | null>(
-    null,
-  )
+  const [deletingAccount, setDeletingAccount] =
+    useState<UserTradingAccount | null>(null)
 
   const handleCreate = () => {
-    setEditingAccount(null)
-    setFormOpen(true)
+    setCreateOpen(true)
   }
 
-  const handleEdit = (
-    userTradingAccount: UserTradingAccount,
-  ) => {
+  const handleEdit = (userTradingAccount: UserTradingAccount) => {
     setEditingAccount(userTradingAccount)
-    setFormOpen(true)
   }
 
-  const handleCloseForm = () => {
-    setFormOpen(false)
+  const handleCloseCreate = () => {
+    setCreateOpen(false)
+  }
+
+  const handleCloseEdit = () => {
     setEditingAccount(null)
   }
 
-  const canCreate =
-    tradingAccounts.length > 0
+  const canCreate = tradingAccounts.length > 0
 
   return (
     <>
@@ -67,8 +57,7 @@ export function UserTradingAccountPage({
           title="Mis cuentas"
           description="Administra las cuentas que utilizas para registrar tus operaciones."
           action={
-            canCreate &&
-            userTradingAccounts.length > 0 ? (
+            canCreate ? (
               <button
                 type="button"
                 onClick={handleCreate}
@@ -81,50 +70,39 @@ export function UserTradingAccountPage({
           }
         />
 
-        {userTradingAccounts.length ===
-        0 ? (
+        {userTradingAccounts.length === 0 ? (
           <UserTradingAccountEmptyState
             canCreate={canCreate}
             onCreate={handleCreate}
           />
         ) : (
           <UserTradingAccountList
-            userTradingAccounts={
-              userTradingAccounts
-            }
+            userTradingAccounts={userTradingAccounts}
             onEdit={handleEdit}
-            onDelete={
-              setDeletingAccount
-            }
+            onDelete={setDeletingAccount}
           />
         )}
       </div>
 
-      {formOpen && (
-        <UserTradingAccountFormModal
-          key={
-            editingAccount
-              ? `edit-${editingAccount.userTradingAccountId}`
-              : 'create'
-          }
-          tradingAccounts={
-            tradingAccounts
-          }
-          userTradingAccount={
-            editingAccount ?? undefined
-          }
-          onClose={handleCloseForm}
+      {createOpen && (
+        <UserTradingAccountCreateModal
+          tradingAccounts={tradingAccounts}
+          onClose={handleCloseCreate}
+        />
+      )}
+
+      {editingAccount && (
+        <UserTradingAccountEditModal
+          userTradingAccount={editingAccount}
+          tradingAccounts={tradingAccounts}
+          onClose={handleCloseEdit}
         />
       )}
 
       {deletingAccount && (
         <UserTradingAccountDeleteModal
-          userTradingAccount={
-            deletingAccount
-          }
-          onClose={() =>
-            setDeletingAccount(null)
-          }
+          userTradingAccount={deletingAccount}
+          onClose={() => setDeletingAccount(null)}
         />
       )}
     </>

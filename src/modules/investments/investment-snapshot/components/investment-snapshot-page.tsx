@@ -2,20 +2,20 @@
 
 'use client'
 
-import { useState } from 'react'
 import { Plus } from 'lucide-react'
+import { useState } from 'react'
 
 import type {
   InvestmentPerformance,
   InvestmentSnapshot,
 } from '@/modules/investments/investment-snapshot/schemas/investment-snapshot.schema'
+import { InvestmentSnapshotCreateModal } from '@/modules/investments/investment-snapshot/components/investment-snapshot-create-modal'
+import { InvestmentSnapshotDeleteModal } from '@/modules/investments/investment-snapshot/components/investment-snapshot-delete-modal'
+import { InvestmentSnapshotEditModal } from '@/modules/investments/investment-snapshot/components/investment-snapshot-edit-modal'
+import { InvestmentPerformanceCard } from '@/modules/investments/investment-snapshot/components/investment-performance-card'
+import { InvestmentSnapshotList } from '@/modules/investments/investment-snapshot/components/investment-snapshot-list'
+import { InvestmentSummary } from '@/modules/investments/investment-snapshot/components/investment-summary'
 import { PageHeader } from '@/shared/page/page-header'
-
-import { InvestmentPerformanceCard } from './investment-performance-card'
-import { InvestmentSnapshotDeleteModal } from './investment-snapshot-delete-modal'
-import { InvestmentSnapshotFormModal } from './investment-snapshot-form-modal'
-import { InvestmentSnapshotList } from './investment-snapshot-list'
-import { InvestmentSummary } from './investment-summary'
 
 type InvestmentSnapshotPageProps = {
   snapshots: InvestmentSnapshot[]
@@ -26,31 +26,20 @@ export function InvestmentSnapshotPage({
   snapshots,
   performance,
 }: InvestmentSnapshotPageProps) {
-  const [formOpen, setFormOpen] =
-    useState(false)
+  const [createOpen, setCreateOpen] = useState(false)
 
-  const [formSnapshot, setFormSnapshot] =
-    useState<InvestmentSnapshot | null>(
-      null,
-    )
+  const [editingSnapshot, setEditingSnapshot] =
+    useState<InvestmentSnapshot | null>(null)
 
-  const [
-    deleteSnapshot,
-    setDeleteSnapshot,
-  ] = useState<InvestmentSnapshot | null>(
-    null,
-  )
+  const [deleteSnapshot, setDeleteSnapshot] =
+    useState<InvestmentSnapshot | null>(null)
 
   const handleCreate = () => {
-    setFormSnapshot(null)
-    setFormOpen(true)
+    setCreateOpen(true)
   }
 
-  const handleEdit = (
-    snapshot: InvestmentSnapshot,
-  ) => {
-    setFormSnapshot(snapshot)
-    setFormOpen(true)
+  const handleEdit = (snapshot: InvestmentSnapshot) => {
+    setEditingSnapshot(snapshot)
   }
 
   return (
@@ -72,13 +61,9 @@ export function InvestmentSnapshotPage({
           }
         />
 
-        <InvestmentPerformanceCard
-          performance={performance}
-        />
+        <InvestmentPerformanceCard performance={performance} />
 
-        <InvestmentSummary
-          performance={performance}
-        />
+        <InvestmentSummary performance={performance} />
 
         <div>
           <h2 className="mb-4 text-lg font-semibold text-neutral-950">
@@ -93,29 +78,22 @@ export function InvestmentSnapshotPage({
         </div>
       </section>
 
-      {formOpen && (
-        <InvestmentSnapshotFormModal
-          key={
-            formSnapshot?.investmentSnapshotId ??
-            'create'
-          }
-          snapshot={formSnapshot}
-          onClose={() => {
-            setFormOpen(false)
-            setFormSnapshot(null)
-          }}
+      {createOpen && (
+        <InvestmentSnapshotCreateModal onClose={() => setCreateOpen(false)} />
+      )}
+
+      {editingSnapshot && (
+        <InvestmentSnapshotEditModal
+          snapshot={editingSnapshot}
+          onClose={() => setEditingSnapshot(null)}
         />
       )}
 
       {deleteSnapshot && (
         <InvestmentSnapshotDeleteModal
-          key={
-            deleteSnapshot.investmentSnapshotId
-          }
+          key={deleteSnapshot.investmentSnapshotId}
           snapshot={deleteSnapshot}
-          onClose={() =>
-            setDeleteSnapshot(null)
-          }
+          onClose={() => setDeleteSnapshot(null)}
         />
       )}
     </>

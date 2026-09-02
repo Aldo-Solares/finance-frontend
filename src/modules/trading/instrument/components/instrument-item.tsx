@@ -1,38 +1,54 @@
 // @/modules/trading/instrument/components/instrument-item.tsx
 
-import { ChartCandlestick } from 'lucide-react'
+'use client'
 
+import { ChartCandlestick, Pencil } from 'lucide-react'
+
+import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema'
 
 type InstrumentItemProps = {
   instrument: Instrument
+  currencies: Currency[]
+  onEdit: (instrument: Instrument) => void
 }
 
 export const InstrumentItem = ({
   instrument,
+  currencies,
+  onEdit,
 }: InstrumentItemProps) => {
+  const currency = currencies.find(
+    (item) => item.currencyId === instrument.currencyId,
+  )
+
   return (
     <article className="rounded-2xl border border-zinc-200 bg-white p-5">
-      <div className="flex items-start gap-3">
-        <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100">
-          <ChartCandlestick className="size-5 text-zinc-700" />
-        </div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100">
+            <ChartCandlestick className="size-5 text-zinc-700" />
+          </div>
 
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="min-w-0">
             <h2 className="text-lg font-semibold text-zinc-950">
               {instrument.symbol}
             </h2>
 
-            <span className="rounded-md bg-zinc-100 px-2 py-1 text-xs font-medium text-zinc-600">
-              {instrument.type}
-            </span>
+            <p className="mt-1 truncate text-sm text-zinc-500">
+              {instrument.name}
+            </p>
           </div>
-
-          <p className="mt-1 truncate text-sm text-zinc-500">
-            {instrument.name}
-          </p>
         </div>
+
+        <button
+          type="button"
+          onClick={() => onEdit(instrument)}
+          className="flex size-9 shrink-0 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900"
+          aria-label={`Editar ${instrument.symbol}`}
+        >
+          <Pencil className="size-4" />
+        </button>
       </div>
 
       <div className="mt-5 border-t border-zinc-100 pt-4">
@@ -41,7 +57,9 @@ export const InstrumentItem = ({
         </p>
 
         <p className="mt-1 text-sm font-semibold text-zinc-900">
-          {instrument.currency}
+          {currency
+            ? `${currency.code} — ${currency.symbol}`
+            : 'Moneda no encontrada'}
         </p>
       </div>
     </article>

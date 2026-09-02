@@ -1,5 +1,7 @@
 // @/modules/dashboard/debts/components/debt-dashboard-card-breakdown.tsx
 
+import Link from 'next/link'
+
 import type { DebtDashboardCard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
 
 type DebtDashboardCardBreakdownProps = {
@@ -7,15 +9,12 @@ type DebtDashboardCardBreakdownProps = {
 }
 
 function formatMoney(value: number) {
-  return new Intl.NumberFormat(
-    'es-MX',
-    {
-      style: 'currency',
-      currency: 'MXN',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-  ).format(value)
+  return new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)
 }
 
 export function DebtDashboardCardBreakdown({
@@ -40,69 +39,54 @@ export function DebtDashboardCardBreakdown({
       ) : (
         <div className="mt-6 space-y-5">
           {cards.map((card) => (
-            <div
+            <Link
               key={card.userCardId}
-              className="space-y-2"
+              href={`/debts/statement?userCardId=${card.userCardId}`}
+              className="group block cursor-pointer rounded-xl p-2 -m-2 transition hover:bg-neutral-50"
             >
-              <div className="flex items-end justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-neutral-900">
-                    {card.cardName}
-                  </p>
+              <div className="space-y-2">
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-neutral-900 group-hover:text-neutral-950">
+                      {card.cardName}
+                    </p>
 
-                  <p className="mt-0.5 text-xs text-neutral-400">
-                    {card.bank}
-                  </p>
+                    <p className="mt-0.5 text-xs text-neutral-400">
+                      {card.bank}
+                    </p>
 
-                  <p className="mt-1 text-xs text-neutral-400">
-                    {card.totalEntries} movimientos
-                  </p>
+                    <p className="mt-1 text-xs text-neutral-400">
+                      {card.totalEntries} movimientos
+                    </p>
+                  </div>
+
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-neutral-950">
+                      {formatMoney(card.totalExpenses)}
+                    </p>
+
+                    <p className="text-xs text-neutral-400">
+                      {card.percentage.toFixed(2)}%
+                    </p>
+                  </div>
                 </div>
 
-                <div className="text-right">
-                  <p className="text-sm font-semibold text-neutral-950">
-                    {formatMoney(
-                      card.totalExpenses,
-                    )}
-                  </p>
+                <div className="h-2 overflow-hidden rounded-full bg-neutral-100">
+                  <div
+                    className="h-full rounded-full bg-neutral-950"
+                    style={{
+                      width: `${Math.min(card.percentage, 100)}%`,
+                    }}
+                  />
+                </div>
 
-                  <p className="text-xs text-neutral-400">
-                    {card.percentage.toFixed(
-                      2,
-                    )}
-                    %
-                  </p>
+                <div className="flex justify-between gap-4 text-xs text-neutral-400">
+                  <span>Pagado {formatMoney(card.totalPaid)}</span>
+
+                  <span>Pendiente {formatMoney(card.totalPending)}</span>
                 </div>
               </div>
-
-              <div className="h-2 overflow-hidden rounded-full bg-neutral-100">
-                <div
-                  className="h-full rounded-full bg-neutral-950"
-                  style={{
-                    width: `${Math.min(
-                      card.percentage,
-                      100,
-                    )}%`,
-                  }}
-                />
-              </div>
-
-              <div className="flex justify-between gap-4 text-xs text-neutral-400">
-                <span>
-                  Pagado{' '}
-                  {formatMoney(
-                    card.totalPaid,
-                  )}
-                </span>
-
-                <span>
-                  Pendiente{' '}
-                  {formatMoney(
-                    card.totalPending,
-                  )}
-                </span>
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

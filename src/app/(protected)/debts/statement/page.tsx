@@ -10,9 +10,7 @@ type StatementRoutePageProps = {
   }>
 }
 
-export default async function Page({
-  searchParams,
-}: StatementRoutePageProps) {
+export default async function Page({ searchParams }: StatementRoutePageProps) {
   const { userCardId } = await searchParams
 
   const [statements, userCards] = await Promise.all([
@@ -20,24 +18,13 @@ export default async function Page({
     findAllUserCards(),
   ])
 
-  const requestedUserCardId = userCardId
-    ? Number(userCardId)
-    : null
+  const requestedUserCardId = userCardId ? Number(userCardId) : null
 
   const selectedUserCardId =
     requestedUserCardId !== null &&
-    userCards.some(
-      (userCard) =>
-        userCard.userCardId === requestedUserCardId,
-    )
+    userCards.some((userCard) => userCard.userCardId === requestedUserCardId)
       ? requestedUserCardId
-      : userCards[0]?.userCardId ?? null
+      : (userCards[0]?.userCardId ?? null)
 
-  return (
-    <StatementPage
-      statements={statements}
-      userCards={userCards}
-      initialUserCardId={selectedUserCardId}
-    />
-  )
+  return <StatementPage statements={statements} userCards={userCards} />
 }

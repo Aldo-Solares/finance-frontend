@@ -3,6 +3,7 @@
 'use client'
 
 import { Pencil, Trash2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
 import {
   STATEMENT_STATUS,
@@ -39,12 +40,19 @@ export function StatementItem({
   onEdit,
   onDelete,
 }: StatementItemProps) {
+  const router = useRouter()
+
   const monthName = MONTH_NAMES[statement.month - 1] ?? String(statement.month)
+
+  const handleRowClick = () => {
+    router.push(`/debts/statement/${statement.statementId}`)
+  }
 
   return (
     <tr
+      onClick={handleRowClick}
       className={[
-        'group transition-colors hover:bg-neutral-50/60',
+        'group cursor-pointer transition-colors hover:bg-neutral-50/60',
         separated ? 'border-t border-neutral-100' : '',
       ].join(' ')}
     >
@@ -112,7 +120,10 @@ export function StatementItem({
         <div className="flex items-center justify-end gap-1">
           <button
             type="button"
-            onClick={() => onEdit(statement)}
+            onClick={(event) => {
+              event.stopPropagation()
+              onEdit(statement)
+            }}
             aria-label={`Editar estado de cuenta de ${monthName} ${statement.year}`}
             className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-950"
           >
@@ -121,7 +132,10 @@ export function StatementItem({
 
           <button
             type="button"
-            onClick={() => onDelete(statement)}
+            onClick={(event) => {
+              event.stopPropagation()
+              onDelete(statement)
+            }}
             aria-label={`Eliminar estado de cuenta de ${monthName} ${statement.year}`}
             className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-neutral-400 transition hover:bg-red-50 hover:text-red-600"
           >

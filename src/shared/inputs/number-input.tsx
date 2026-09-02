@@ -57,12 +57,14 @@ export function NumberInput({
         disabled={disabled}
         readOnly={readOnly}
         onChange={(event) => onChange?.(event.target.value)}
-        // 'h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-sm text-neutral-950 outline-none transition',
         className={[
-          'h-11 w-full rounded-xl border border-neutral-200 bg-pink-400 px-4 text-sm text-neutral-950 outline-none transition',
+          'h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-sm text-neutral-950 outline-none transition',
           'placeholder:text-neutral-300',
           'focus:border-neutral-400 focus:bg-white',
           'disabled:cursor-not-allowed disabled:opacity-60',
+          '[appearance:textfield]',
+          '[&::-webkit-inner-spin-button]:appearance-none',
+          '[&::-webkit-outer-spin-button]:appearance-none',
           prefix ? 'pl-8' : '',
           className,
         ].join(' ')}

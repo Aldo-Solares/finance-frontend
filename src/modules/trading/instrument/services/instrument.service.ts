@@ -8,6 +8,7 @@ import {
   CreateInstrument,
   Instrument,
   InstrumentSchema,
+  UpdateInstrument,
 } from '@/modules/trading/instrument/schemas/instrument.schema'
 
 // ===================
@@ -56,6 +57,32 @@ export const createInstrument = async (
 
   if (!parsed.success || !parsed.data) {
     throw new Error(parsed.message ?? 'No fue posible crear el instrumento')
+  }
+
+  return parsed.data
+}
+
+// ===================
+// UPDATE
+// ===================
+
+export const updateInstrument = async (
+  instrumentId: number,
+  payload: UpdateInstrument,
+): Promise<Instrument> => {
+  const response = await fetchServer(`/instruments/${instrumentId}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  })
+
+  const json: unknown = await response.json()
+
+  const parsed = InstrumentResponseSchema.parse(json)
+
+  if (!parsed.success || !parsed.data) {
+    throw new Error(
+      parsed.message ?? 'No fue posible actualizar el instrumento',
+    )
   }
 
   return parsed.data

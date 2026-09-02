@@ -76,7 +76,6 @@ export const CreateTradeSchema = z.object({
   purchasePrice: z.number().positive(),
 
   purchaseCommission: z.number().min(0),
-
   purchaseCommissionRate: z.number().min(0),
 
   purchaseDate: z.string().min(1),

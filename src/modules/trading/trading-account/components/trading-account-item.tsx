@@ -2,12 +2,7 @@
 
 'use client'
 
-import {
-  Building2,
-  MoreVertical,
-  Pencil,
-  Trash2,
-} from 'lucide-react'
+import { Building2, MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 
 import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema'
@@ -47,9 +42,7 @@ export const TradingAccountItem = ({
                     : 'bg-zinc-100 text-zinc-500',
                 ].join(' ')}
               >
-                {tradingAccount.active
-                  ? 'Activa'
-                  : 'Inactiva'}
+                {tradingAccount.active ? 'Activa' : 'Inactiva'}
               </span>
             </div>
 
@@ -62,9 +55,7 @@ export const TradingAccountItem = ({
         <div className="relative">
           <button
             type="button"
-            onClick={() =>
-              setMenuOpen((current) => !current)
-            }
+            onClick={() => setMenuOpen((current) => !current)}
             className="flex size-9 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-950"
             aria-label="Opciones de la cuenta"
           >
@@ -101,26 +92,14 @@ export const TradingAccountItem = ({
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-4 border-t border-zinc-100 pt-4">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">
-            Tipo
-          </p>
+      <div className="mt-5 border-t border-zinc-100 pt-4">
+        <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">
+          Moneda
+        </p>
 
-          <p className="mt-1 text-sm font-semibold text-zinc-900">
-            {tradingAccount.accountType}
-          </p>
-        </div>
-
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">
-            Moneda
-          </p>
-
-          <p className="mt-1 text-sm font-semibold text-zinc-900">
-            {tradingAccount.currency}
-          </p>
-        </div>
+        <p className="mt-1 text-sm font-semibold text-zinc-900">
+          {tradingAccount.currencyCode} — {tradingAccount.currencySymbol}
+        </p>
       </div>
     </article>
   )

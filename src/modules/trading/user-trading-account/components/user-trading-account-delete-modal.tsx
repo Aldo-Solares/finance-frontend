@@ -2,10 +2,7 @@
 
 'use client'
 
-import {
-  AlertTriangle,
-  X,
-} from 'lucide-react'
+import { AlertTriangle, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -23,27 +20,21 @@ export function UserTradingAccountDeleteModal({
 }: UserTradingAccountDeleteModalProps) {
   const router = useRouter()
 
-  const [pending, setPending] =
-    useState(false)
+  const [pending, setPending] = useState(false)
 
-  const [error, setError] =
-    useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const handleDelete = async () => {
     setPending(true)
     setError(null)
 
     try {
-      const result =
-        await deleteUserTradingAccountAction(
-          userTradingAccount.userTradingAccountId,
-        )
+      const result = await deleteUserTradingAccountAction(
+        userTradingAccount.userTradingAccountId,
+      )
 
       if (!result.success) {
-        setError(
-          result.message ??
-            'No fue posible eliminar la cuenta.',
-        )
+        setError(result.message ?? 'No fue posible eliminar la cuenta.')
 
         return
       }
@@ -72,8 +63,7 @@ export function UserTradingAccountDeleteModal({
               <p className="mt-2 text-sm leading-6 text-neutral-500">
                 Se eliminará{' '}
                 <span className="font-medium text-neutral-900">
-                  {userTradingAccount.alias ??
-                    userTradingAccount.name}
+                  {userTradingAccount.name}
                 </span>{' '}
                 de tus cuentas de trading.
               </p>
@@ -115,9 +105,7 @@ export function UserTradingAccountDeleteModal({
             disabled={pending}
             className="h-10 rounded-lg bg-red-600 px-4 text-sm font-medium text-white disabled:opacity-50"
           >
-            {pending
-              ? 'Eliminando...'
-              : 'Eliminar'}
+            {pending ? 'Eliminando...' : 'Eliminar'}
           </button>
         </div>
       </div>

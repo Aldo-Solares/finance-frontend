@@ -1,92 +1,63 @@
 // @/shared/layout/app-header.tsx
 
-'use client';
+'use client'
 
-import {
-  ChevronDown,
-  LogOut,
-  Menu,
-  PawPrint,
-  Settings,
-  UserRound,
-} from 'lucide-react';
-import Link from 'next/link';
-import {
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { ChevronDown, LogOut, Menu, Settings, UserRound } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
 
-import { logoutAction } from '@/modules/auth/actions/auth.actions';
-import type { User } from '@/modules/user/schemas/user.schema';
-import { AppNav } from '@/shared/layout/app-nav';
-import { AppNavDrawer } from '@/shared/layout/app-nav-drawer';
+import { logoutAction } from '@/modules/auth/actions/auth.actions'
+import type { User } from '@/modules/user/schemas/user.schema'
+import { AppNav } from '@/shared/layout/app-nav'
+import { AppNavDrawer } from '@/shared/layout/app-nav-drawer'
 
 type AppHeaderProps = {
-  user: User;
-};
+  user: User
+}
 
-export function AppHeader({
-  user,
-}: AppHeaderProps) {
-  const [drawerOpen, setDrawerOpen] =
-    useState(false);
+export function AppHeader({ user }: AppHeaderProps) {
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
 
-  const [userMenuOpen, setUserMenuOpen] =
-    useState(false);
-
-  const userMenuRef =
-    useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null)
 
   // ===================
   // CLICK OUTSIDE
   // ===================
 
   useEffect(() => {
-    const handleClickOutside = (
-      event: MouseEvent,
-    ) => {
-      const target = event.target as Node;
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node
 
-      if (
-        userMenuRef.current &&
-        !userMenuRef.current.contains(target)
-      ) {
-        setUserMenuOpen(false);
+      if (userMenuRef.current && !userMenuRef.current.contains(target)) {
+        setUserMenuOpen(false)
       }
-    };
+    }
 
-    document.addEventListener(
-      'mousedown',
-      handleClickOutside,
-    );
+    document.addEventListener('mousedown', handleClickOutside)
 
     return () => {
-      document.removeEventListener(
-        'mousedown',
-        handleClickOutside,
-      );
-    };
-  }, []);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <>
       <header className="relative z-40 shrink-0 bg-neutral-950 text-white">
         <div className="flex h-20 w-full items-center px-6 lg:px-10">
           {/* ===================
-          LEFT
-          =================== */}
+              LEFT
+              =================== */}
 
           <div className="flex min-w-0 flex-1 items-center">
             {/* ===================
-            DRAWER BUTTON
-            =================== */}
+                DRAWER BUTTON
+                =================== */}
 
             <button
               type="button"
-              onClick={() =>
-                setDrawerOpen(true)
-              }
+              onClick={() => setDrawerOpen(true)}
               aria-label="Abrir navegación"
               className="mr-5 flex h-11 w-11 cursor-pointer items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] text-white/60 transition-colors hover:bg-white/10 hover:text-white"
             >
@@ -94,68 +65,66 @@ export function AppHeader({
             </button>
 
             {/* ===================
-            BRAND
-            =================== */}
+                BRAND
+                =================== */}
 
             <Link
               href="/main"
-              className="group flex shrink-0 items-center gap-3"
+              aria-label="Isha"
+              className="flex h-11 w-11 shrink-0 items-center justify-center"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white text-neutral-950 transition-transform duration-300 group-hover:scale-105">
-                <PawPrint className="h-4 w-4" />
-              </div>
-
-              <div className="hidden sm:block">
-                <p className="text-sm font-semibold tracking-[0.22em]">
-                  ISHA
-                </p>
-
-                <p className="mt-0.5 text-[9px] tracking-[0.16em] text-white/30">
-                  FINANCE
-                </p>
-              </div>
+              <Image
+                src="/icons/IshaTextWhite.png"
+                alt="Isha"
+                width={44}
+                height={44}
+                className="h-11 w-11 object-contain"
+                priority
+              />
             </Link>
 
             {/* ===================
-            DIVIDER
-            =================== */}
+                DIVIDER
+                =================== */}
 
             <div className="mx-6 hidden h-8 w-px bg-white/10 md:block" />
 
             {/* ===================
-            NAVIGATION
-            =================== */}
+                NAVIGATION
+                =================== */}
 
             <AppNav user={user} />
           </div>
 
           {/* ===================
-          USER
-          =================== */}
+              USER
+              =================== */}
 
-          <div
-            ref={userMenuRef}
-            className="relative shrink-0"
-          >
+          <div ref={userMenuRef} className="relative shrink-0">
             <button
               type="button"
-              onClick={() =>
-                setUserMenuOpen(
-                  (current) => !current,
-                )
-              }
+              onClick={() => setUserMenuOpen((current) => !current)}
               aria-expanded={userMenuOpen}
               className={[
                 'group flex cursor-pointer items-center gap-3 rounded-2xl px-2 py-1.5 transition-colors',
-                userMenuOpen
-                  ? 'bg-white/[0.08]'
-                  : 'hover:bg-white/[0.06]',
+                userMenuOpen ? 'bg-white/[0.08]' : 'hover:bg-white/[0.06]',
               ].join(' ')}
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.08] text-sm font-semibold text-white transition-colors group-hover:bg-white/15">
-                {user.name
-                  .charAt(0)
-                  .toUpperCase()}
+              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/10 bg-white/[0.08] text-sm font-semibold text-white">
+                {user.profileImage ? (
+                  <Image
+                    src={user.profileImage.imageUrl}
+                    alt={user.profileImage.name}
+                    fill
+                    unoptimized
+                    sizes="40px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <span className="flex h-full w-full items-center justify-center">
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                )}
               </div>
 
               <div className="hidden text-left lg:block">
@@ -171,25 +140,21 @@ export function AppHeader({
               <ChevronDown
                 className={[
                   'hidden h-4 w-4 text-white/30 transition-transform duration-200 lg:block',
-                  userMenuOpen
-                    ? 'rotate-180'
-                    : '',
+                  userMenuOpen ? 'rotate-180' : '',
                 ].join(' ')}
               />
             </button>
 
             {/* ===================
-            USER MENU
-            =================== */}
+                USER MENU
+                =================== */}
 
             {userMenuOpen && (
               <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
                 <div className="px-3 pb-3 pt-2">
                   <p className="truncate text-sm font-semibold">
                     {user.name}
-                    {user.lastName
-                      ? ` ${user.lastName}`
-                      : ''}
+                    {user.lastName ? ` ${user.lastName}` : ''}
                   </p>
 
                   <p className="mt-1 truncate text-xs text-neutral-400">
@@ -202,25 +167,19 @@ export function AppHeader({
                 <div className="py-2">
                   <Link
                     href="/user"
-                    onClick={() =>
-                      setUserMenuOpen(false)
-                    }
+                    onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
                   >
                     <UserRound className="h-4 w-4" />
-
                     Mi cuenta
                   </Link>
 
                   <Link
                     href="/settings"
-                    onClick={() =>
-                      setUserMenuOpen(false)
-                    }
+                    onClick={() => setUserMenuOpen(false)}
                     className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
                   >
                     <Settings className="h-4 w-4" />
-
                     Configuración
                   </Link>
                 </div>
@@ -234,7 +193,6 @@ export function AppHeader({
                       className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-neutral-500 transition-colors hover:bg-red-50 hover:text-red-600"
                     >
                       <LogOut className="h-4 w-4" />
-
                       Cerrar sesión
                     </button>
                   </form>
@@ -248,10 +206,8 @@ export function AppHeader({
       <AppNavDrawer
         user={user}
         open={drawerOpen}
-        onClose={() =>
-          setDrawerOpen(false)
-        }
+        onClose={() => setDrawerOpen(false)}
       />
     </>
-  );
+  )
 }

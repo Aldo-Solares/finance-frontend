@@ -1,49 +1,36 @@
 // @/modules/user/components/user-password-form.tsx
 
-'use client';
+'use client'
 
-import {
-  useActionState,
-  useEffect,
-  useRef,
-} from 'react';
-import { useFormStatus } from 'react-dom';
-import {
-  Check,
-  LoaderCircle,
-} from 'lucide-react';
+import { useActionState, useEffect, useRef } from 'react'
+import { useFormStatus } from 'react-dom'
+import { Check, LoaderCircle } from 'lucide-react'
 
-import type { ActionState } from '@/core/utils/action-state';
-import { changePasswordAction } from '@/modules/user/actions/user.actions';
-import { PasswordField } from '@/shared/inputs/password-field';
+import type { ActionState } from '@/core/utils/action-state'
+import { changePasswordAction } from '@/modules/user/actions/user.actions'
+import { PasswordField } from '@/shared/inputs/password-field'
 
 const initialState: ActionState<null> = {
   success: false,
   message: null,
   data: null,
-};
+}
 
 export function UserPasswordForm() {
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null)
 
-  const [state, formAction] = useActionState(
-    changePasswordAction,
-    initialState,
-  );
+  const [state, formAction] = useActionState(changePasswordAction, initialState)
 
   useEffect(() => {
     if (!state.success) {
-      return;
+      return
     }
 
-    formRef.current?.reset();
-  }, [state.success]);
+    formRef.current?.reset()
+  }, [state.success])
 
   return (
-    <form
-      ref={formRef}
-      action={formAction}
-    >
+    <form ref={formRef} action={formAction}>
       <div className="space-y-5 p-6">
         {/* ===================
             CURRENT PASSWORD
@@ -70,8 +57,8 @@ export function UserPasswordForm() {
         />
 
         <p className="-mt-2 text-xs leading-5 text-neutral-400">
-          Mínimo 8 caracteres, una mayúscula, una
-          minúscula, un número y un carácter especial.
+          Mínimo 8 caracteres, una mayúscula, una minúscula, un número y un
+          carácter especial.
         </p>
 
         {/* ===================
@@ -87,9 +74,7 @@ export function UserPasswordForm() {
                 : 'border-red-100 bg-red-50 text-red-600',
             ].join(' ')}
           >
-            {state.success && (
-              <Check className="h-4 w-4 shrink-0" />
-            )}
+            {state.success && <Check className="h-4 w-4 shrink-0" />}
 
             {state.message}
           </div>
@@ -104,7 +89,7 @@ export function UserPasswordForm() {
         <PasswordSaveButton />
       </div>
     </form>
-  );
+  )
 }
 
 // ===================
@@ -112,7 +97,7 @@ export function UserPasswordForm() {
 // ===================
 
 function PasswordSaveButton() {
-  const { pending } = useFormStatus();
+  const { pending } = useFormStatus()
 
   return (
     <button
@@ -120,13 +105,9 @@ function PasswordSaveButton() {
       disabled={pending}
       className="flex min-w-44 cursor-pointer items-center justify-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
     >
-      {pending && (
-        <LoaderCircle className="h-4 w-4 animate-spin" />
-      )}
+      {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
 
-      {pending
-        ? 'Actualizando...'
-        : 'Cambiar contraseña'}
+      {pending ? 'Actualizando...' : 'Cambiar contraseña'}
     </button>
-  );
+  )
 }

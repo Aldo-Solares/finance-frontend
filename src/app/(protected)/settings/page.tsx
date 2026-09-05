@@ -18,9 +18,7 @@ export default async function SettingsPage() {
         description="Personaliza las notificaciones de tu cuenta."
       />
 
-      <UserSettingsNotifications
-        userSettings={userSettings}
-      />
+      <UserSettingsNotifications userSettings={userSettings} />
     </div>
   )
 }

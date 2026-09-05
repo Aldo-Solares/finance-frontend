@@ -1,5 +1,6 @@
 // @/modules/auth/components/register-form.tsx
-'use client';
+
+'use client'
 
 import {
   startTransition,
@@ -7,40 +8,42 @@ import {
   useEffect,
   useRef,
   type FormEvent,
-} from 'react';
-import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Mail, UserRound } from 'lucide-react';
+} from 'react'
 
-import { registerAction } from '@/modules/auth/actions/auth.actions';
-import { FormInput } from '@/shared/inputs/form-input';
-import { PasswordField } from '@/shared/inputs/password-field';
+import Link from 'next/link'
+
+import { ArrowRight, CheckCircle2, Mail, UserRound } from 'lucide-react'
+
+import { registerAction } from '@/modules/auth/actions/auth.actions'
+import { PasswordField } from '@/shared/inputs/password-field'
+import { TextInput } from '@/shared/inputs/text-input'
 
 const initialState = {
   success: false,
   message: null,
   data: null,
-};
+}
 
 export function RegisterForm() {
   const [state, formAction, pending] = useActionState(
     registerAction,
     initialState,
-  );
+  )
 
-  const formRef = useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null)
 
   // ===================
   // SUBMIT
   // ===================
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+    event.preventDefault()
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(event.currentTarget)
 
     startTransition(() => {
-      formAction(formData);
-    });
+      formAction(formData)
+    })
   }
 
   // ===================
@@ -49,41 +52,42 @@ export function RegisterForm() {
 
   useEffect(() => {
     if (state.success) {
-      formRef.current?.reset();
+      formRef.current?.reset()
     }
-  }, [state.success]);
+  }, [state.success])
 
   return (
     <section className="w-full">
       {/* ===================
-      HEADER
-      =================== */}
+          HEADER
+          =================== */}
 
-      <div className="mb-8">
-        <p className="text-sm font-semibold tracking-[0.2em] text-neutral-400">
-          ISHA
-        </p>
+      <div className="mb-10 pt-8">
+        <div className="mb-5">
+          <p className="text-lg font-semibold tracking-[0.22em] text-[#30282c]">
+            ISHA
+          </p>
 
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-neutral-950">
-          Crear cuenta
+          <p className="text-xs text-[#a49a9f]">Finance</p>
+        </div>
+
+        <h1 className="max-w-sm text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-[#30282c] sm:text-[2.7rem]">
+          Crea tu cuenta.
+          <span className="block text-[#b86f89]">Empieza aquí.</span>
         </h1>
 
-        <p className="mt-3 max-w-sm text-sm leading-6 text-neutral-500">
+        <p className="mt-4 max-w-sm text-sm leading-6 text-[#81767b]">
           Crea tu espacio financiero y empieza a organizar todo desde un solo
           lugar.
         </p>
       </div>
 
       {/* ===================
-      FORM
-      =================== */}
+          FORM
+          =================== */}
 
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit}
-        className="space-y-5"
-      >
-        <FormInput
+      <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
+        <TextInput
           id="name"
           name="name"
           label="Nombre"
@@ -95,7 +99,7 @@ export function RegisterForm() {
         />
 
         <div className="grid gap-5 sm:grid-cols-2">
-          <FormInput
+          <TextInput
             id="lastName"
             name="lastName"
             label="Apellido"
@@ -105,7 +109,7 @@ export function RegisterForm() {
             icon={UserRound}
           />
 
-          <FormInput
+          <TextInput
             id="secondLastName"
             name="secondLastName"
             label="Segundo apellido"
@@ -115,7 +119,7 @@ export function RegisterForm() {
           />
         </div>
 
-        <FormInput
+        <TextInput
           id="email"
           name="email"
           label="Correo electrónico"
@@ -136,35 +140,33 @@ export function RegisterForm() {
         />
 
         {/* ===================
-        ERROR
-        =================== */}
+            ERROR
+            =================== */}
 
         {state.message && !state.success && (
           <div
             role="alert"
-            className="animate-in fade-in slide-in-from-top-1 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="animate-in fade-in slide-in-from-top-1 rounded-xl border border-red-200 bg-red-50/90 px-4 py-3 text-sm text-red-700"
           >
             {state.message}
           </div>
         )}
 
         {/* ===================
-        SUCCESS
-        =================== */}
+            SUCCESS
+            =================== */}
 
         {state.success && (
           <div
             role="status"
-            className="animate-in fade-in slide-in-from-top-1 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
+            className="animate-in fade-in slide-in-from-top-1 flex items-start gap-3 rounded-xl border border-[#d9eadf] bg-[#f3faf5] px-4 py-3 text-sm text-[#477057]"
           >
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
 
             <div>
-              <p className="font-medium">
-                Cuenta creada correctamente
-              </p>
+              <p className="font-medium">Cuenta creada correctamente</p>
 
-              <p className="mt-0.5 text-emerald-600">
+              <p className="mt-0.5 text-[#5d8068]">
                 Revisa tu correo electrónico para verificar tu cuenta.
               </p>
             </div>
@@ -172,13 +174,13 @@ export function RegisterForm() {
         )}
 
         {/* ===================
-        SUBMIT
-        =================== */}
+            SUBMIT
+            =================== */}
 
         <button
           type="submit"
           disabled={pending}
-          className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl bg-neutral-950 px-4 text-sm font-medium text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800 hover:shadow-xl active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
+          className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl bg-[#b86f89] px-4 text-sm font-medium text-white shadow-[0_12px_30px_-12px_rgba(159,83,111,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#a9617b] hover:shadow-[0_16px_34px_-12px_rgba(159,83,111,0.6)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <span className="relative z-10 flex items-center gap-2">
             {pending ? (
@@ -191,33 +193,31 @@ export function RegisterForm() {
             )}
           </span>
 
-          <span className="absolute inset-y-0 -left-1/3 w-1/3 skew-x-[-20deg] bg-white/10 transition-all duration-700 group-hover:left-[120%]" />
+          <span className="absolute inset-y-0 -left-1/3 w-1/3 skew-x-[-20deg] bg-white/15 transition-all duration-700 group-hover:left-[120%]" />
         </button>
       </form>
 
       {/* ===================
-      LOGIN
-      =================== */}
+          LOGIN
+          =================== */}
 
       <div className="mt-8 flex items-center gap-4">
-        <div className="h-px flex-1 bg-neutral-200" />
+        <div className="h-px flex-1 bg-[#ebe3e6]" />
 
-        <span className="text-xs text-neutral-400">
-          o
-        </span>
+        <span className="text-xs text-[#b2a7ac]">o</span>
 
-        <div className="h-px flex-1 bg-neutral-200" />
+        <div className="h-px flex-1 bg-[#ebe3e6]" />
       </div>
 
-      <p className="mt-6 text-center text-sm text-neutral-500">
+      <p className="mt-6 text-center text-sm text-[#81767b]">
         ¿Ya tienes una cuenta?{' '}
         <Link
           href="/auth/login"
-          className="font-semibold text-neutral-950 transition-colors hover:text-neutral-600"
+          className="font-semibold text-[#9f536f] transition-colors hover:text-[#82465d]"
         >
           Iniciar sesión
         </Link>
       </p>
     </section>
-  );
+  )
 }

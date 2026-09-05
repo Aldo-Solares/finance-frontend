@@ -4,6 +4,7 @@ import { z } from 'zod'
 
 import { requiredString } from '@/core/utils/zod-helpers'
 import { USER_ROLE_VALUES } from '@/modules/user/constants/user.constants'
+import { ProfileImageSchema } from '@/modules/user/schemas/profile-image.schema'
 
 // ===================
 // ROLE
@@ -38,6 +39,7 @@ export const UserSchema = z.object({
   email: z.string().email(),
   role: UserRoleSchema,
   emailVerified: z.boolean(),
+  profileImage: ProfileImageSchema.nullable(),
 })
 
 // ===================

@@ -15,10 +15,13 @@ import {
   ChangePasswordRequestSchema,
   UpdateUserRequestSchema,
   type UpdateUserResponse,
+  type User,
 } from '@/modules/user/schemas/user.schema'
 import {
   changePassword,
+  removeCurrentUserProfileImage,
   updateCurrentUser,
+  updateCurrentUserProfileImage,
 } from '@/modules/user/services/user.service'
 
 // ===================
@@ -70,6 +73,58 @@ export async function updateCurrentUserAction(
       error instanceof Error
         ? error.message
         : 'No fue posible actualizar el usuario',
+    )
+  }
+}
+
+// ===================
+// UPDATE CURRENT USER PROFILE IMAGE
+// ===================
+
+export async function updateCurrentUserProfileImageAction(
+  _previousState: ActionState<User>,
+  formData: FormData,
+): Promise<ActionState<User>> {
+  const profileImageId = Number(formData.get('profileImageId'))
+
+  if (!Number.isInteger(profileImageId) || profileImageId <= 0) {
+    return actionError('La imagen de perfil no es válida')
+  }
+
+  try {
+    const result = await updateCurrentUserProfileImage(profileImageId)
+
+    revalidatePath('/', 'layout')
+
+    return actionSuccess(result)
+  } catch (error) {
+    return actionError(
+      error instanceof Error
+        ? error.message
+        : 'No fue posible actualizar la imagen de perfil',
+    )
+  }
+}
+
+// ===================
+// REMOVE CURRENT USER PROFILE IMAGE
+// ===================
+
+export async function removeCurrentUserProfileImageAction(
+  _previousState: ActionState<null>,
+  _formData: FormData,
+): Promise<ActionState<null>> {
+  try {
+    await removeCurrentUserProfileImage()
+
+    revalidatePath('/', 'layout')
+
+    return actionSuccess(null)
+  } catch (error) {
+    return actionError(
+      error instanceof Error
+        ? error.message
+        : 'No fue posible eliminar la imagen de perfil',
     )
   }
 }

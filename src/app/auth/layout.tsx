@@ -1,21 +1,19 @@
 // @/app/auth/layout.tsx
 
-'use client';
+'use client'
 
-import type { ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
-import { Sparkles } from 'lucide-react';
-
+import type { ReactNode } from 'react'
+import { usePathname } from 'next/navigation'
+import { Sparkles } from 'lucide-react'
+import Image from 'next/image'
 type AuthLayoutProps = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
-export default function AuthLayout({
-  children,
-}: AuthLayoutProps) {
-  const pathname = usePathname();
+export default function AuthLayout({ children }: AuthLayoutProps) {
+  const pathname = usePathname()
 
-  const isRegister = pathname === '/auth/register';
+  const isRegister = pathname === '/auth/register'
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-neutral-100 px-4 py-8">
@@ -52,11 +50,7 @@ export default function AuthLayout({
                 px-12 py-14
                 transition-transform duration-700
                 [transition-timing-function:cubic-bezier(0.77,0,0.18,1)]
-                ${
-                  isRegister
-                    ? 'translate-x-full'
-                    : 'translate-x-0'
-                }
+                ${isRegister ? 'translate-x-full' : 'translate-x-0'}
               `}
             >
               <div
@@ -76,11 +70,7 @@ export default function AuthLayout({
                 relative min-h-full p-3
                 transition-transform duration-700
                 [transition-timing-function:cubic-bezier(0.77,0,0.18,1)]
-                ${
-                  isRegister
-                    ? '-translate-x-full'
-                    : 'translate-x-0'
-                }
+                ${isRegister ? '-translate-x-full' : 'translate-x-0'}
               `}
             >
               <div className="relative flex h-full min-h-[656px] overflow-hidden rounded-[2rem] bg-neutral-950 p-12 text-white">
@@ -105,18 +95,20 @@ export default function AuthLayout({
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-sm font-bold text-neutral-950">
-                        I
+                      <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-white">
+                        <Image
+                          src="/icons/IshaTextBlack.png"
+                          alt="Isha"
+                          width={44}
+                          height={44}
+                          className="h-11 w-11 object-contain"
+                          priority
+                        />
                       </div>
 
                       <div>
-                        <p className="font-semibold tracking-[0.2em]">
-                          ISHA
-                        </p>
-
-                        <p className="text-xs text-white/40">
-                          Finance
-                        </p>
+                        <p className="font-semibold tracking-[0.2em]">ISHA</p>
+                        <p className="text-xs text-white/40">Finance</p>
                       </div>
                     </div>
 
@@ -135,9 +127,7 @@ export default function AuthLayout({
                     className="animate-[authFade_500ms_ease-out]"
                   >
                     <p className="mb-4 text-sm font-medium tracking-wide text-white/40">
-                      {isRegister
-                        ? 'UN SOLO LUGAR'
-                        : 'TODO BAJO CONTROL'}
+                      {isRegister ? 'UN SOLO LUGAR' : 'TODO BAJO CONTROL'}
                     </p>
 
                     <h2 className="max-w-md text-5xl font-semibold leading-[1.05] tracking-[-0.04em]">
@@ -173,24 +163,18 @@ export default function AuthLayout({
                     <div className="flex gap-2">
                       <span
                         className={`h-1.5 rounded-full transition-all duration-500 ${
-                          isRegister
-                            ? 'w-1.5 bg-white/30'
-                            : 'w-8 bg-white'
+                          isRegister ? 'w-1.5 bg-white/30' : 'w-8 bg-white'
                         }`}
                       />
 
                       <span
                         className={`h-1.5 rounded-full transition-all duration-500 ${
-                          isRegister
-                            ? 'w-8 bg-white'
-                            : 'w-1.5 bg-white/30'
+                          isRegister ? 'w-8 bg-white' : 'w-1.5 bg-white/30'
                         }`}
                       />
                     </div>
 
-                    <p className="text-xs text-white/30">
-                      ISHA © 2026
-                    </p>
+                    <p className="text-xs text-white/30">ISHA © 2026</p>
                   </div>
                 </div>
               </div>
@@ -201,11 +185,9 @@ export default function AuthLayout({
           MOBILE
           =================== */}
 
-          <div className="p-5 sm:p-8 lg:hidden">
-            {children}
-          </div>
+          <div className="p-5 sm:p-8 lg:hidden">{children}</div>
         </div>
       </div>
     </main>
-  );
+  )
 }

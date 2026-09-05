@@ -1,24 +1,24 @@
 // @/modules/auth/components/forgot-password-form.tsx
-'use client';
+'use client'
 
-import { useActionState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, ArrowRight, CheckCircle2, Mail } from 'lucide-react';
+import { useActionState } from 'react'
+import Link from 'next/link'
+import { ArrowLeft, ArrowRight, CheckCircle2, Mail } from 'lucide-react'
 
-import { forgotPasswordAction } from '@/modules/auth/actions/auth.actions';
-import { FormInput } from '@/shared/inputs/form-input';
+import { forgotPasswordAction } from '@/modules/auth/actions/auth.actions'
+import { TextInput } from '@/shared/inputs/text-input'
 
 const initialState = {
   success: false,
   message: null,
   data: null,
-};
+}
 
 export function ForgotPasswordForm() {
   const [state, formAction, pending] = useActionState(
     forgotPasswordAction,
     initialState,
-  );
+  )
 
   return (
     <section className="w-full">
@@ -54,7 +54,7 @@ export function ForgotPasswordForm() {
       =================== */}
 
       <form action={formAction} className="space-y-5">
-        <FormInput
+        <TextInput
           id="email"
           name="email"
           label="Correo electrónico"
@@ -90,9 +90,7 @@ export function ForgotPasswordForm() {
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
 
             <div>
-              <p className="font-medium">
-                Revisa tu correo
-              </p>
+              <p className="font-medium">Revisa tu correo</p>
 
               <p className="mt-0.5 text-emerald-600">
                 Si existe una cuenta asociada, recibirás un enlace para
@@ -135,9 +133,7 @@ export function ForgotPasswordForm() {
       <div className="mt-8 flex items-center gap-4">
         <div className="h-px flex-1 bg-neutral-200" />
 
-        <span className="text-xs text-neutral-400">
-          o
-        </span>
+        <span className="text-xs text-neutral-400">o</span>
 
         <div className="h-px flex-1 bg-neutral-200" />
       </div>
@@ -152,5 +148,5 @@ export function ForgotPasswordForm() {
         </Link>
       </p>
     </section>
-  );
+  )
 }

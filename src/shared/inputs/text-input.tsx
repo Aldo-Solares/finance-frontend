@@ -9,7 +9,7 @@ type TextInputProps = {
   id: string
   name: string
   label?: string
-  type?: 'text' | 'email' | 'search' | 'tel' | 'url'
+  type?: 'text' | 'email' | 'number' | 'date' | 'search' | 'tel' | 'url'
   value?: string
   defaultValue?: string
   placeholder?: string
@@ -81,9 +81,8 @@ export function TextInput({
             description || error ? `${id}-description` : undefined
           }
           onChange={handleChange}
-          // 'h-11 w-full rounded-xl border bg-neutral-50 px-4 text-sm text-neutral-950 outline-none transition-colors',
           className={[
-            'h-11 w-full rounded-xl border bg-red-600 px-4 text-sm text-neutral-950 outline-none transition-colors',
+            'h-11 w-full rounded-xl border bg-neutral-50 px-4 text-sm text-neutral-950 outline-none transition-colors',
             'border-neutral-200 placeholder:text-neutral-300',
             'focus:border-neutral-400 focus:bg-white',
             'disabled:cursor-not-allowed disabled:opacity-60',

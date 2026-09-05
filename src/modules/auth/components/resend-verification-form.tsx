@@ -1,29 +1,25 @@
 // @/modules/auth/components/resend-verification-form.tsx
-'use client';
+'use client'
 
-import { useActionState } from 'react';
-import Link from 'next/link';
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  Mail,
-} from 'lucide-react';
+import Link from 'next/link'
 
-import { resendVerificationAction } from '@/modules/auth/actions/auth.actions';
-import { FormInput } from '@/shared/inputs/form-input';
+import { useActionState } from 'react'
+import { ArrowLeft, ArrowRight, CheckCircle2, Mail } from 'lucide-react'
+
+import { resendVerificationAction } from '@/modules/auth/actions/auth.actions'
+import { TextInput } from '@/shared/inputs/text-input'
 
 const initialState = {
   success: false,
   message: null,
   data: null,
-};
+}
 
 export function ResendVerificationForm() {
   const [state, formAction, pending] = useActionState(
     resendVerificationAction,
     initialState,
-  );
+  )
 
   return (
     <section className="w-full">
@@ -49,8 +45,8 @@ export function ResendVerificationForm() {
         </h1>
 
         <p className="mt-3 max-w-sm text-sm leading-6 text-neutral-500">
-          Ingresa el correo de tu cuenta y te enviaremos un nuevo enlace
-          de verificación.
+          Ingresa el correo de tu cuenta y te enviaremos un nuevo enlace de
+          verificación.
         </p>
       </div>
 
@@ -59,7 +55,7 @@ export function ResendVerificationForm() {
       =================== */}
 
       <form action={formAction} className="space-y-5">
-        <FormInput
+        <TextInput
           id="email"
           name="email"
           label="Correo electrónico"
@@ -95,9 +91,7 @@ export function ResendVerificationForm() {
             <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
 
             <div>
-              <p className="font-medium">
-                Correo enviado
-              </p>
+              <p className="font-medium">Correo enviado</p>
 
               <p className="mt-0.5 text-emerald-600">
                 Revisa tu bandeja de entrada para verificar tu cuenta.
@@ -137,9 +131,7 @@ export function ResendVerificationForm() {
       <div className="mt-8 flex items-center gap-4">
         <div className="h-px flex-1 bg-neutral-200" />
 
-        <span className="text-xs text-neutral-400">
-          o
-        </span>
+        <span className="text-xs text-neutral-400">o</span>
 
         <div className="h-px flex-1 bg-neutral-200" />
       </div>
@@ -154,5 +146,5 @@ export function ResendVerificationForm() {
         </Link>
       </p>
     </section>
-  );
+  )
 }

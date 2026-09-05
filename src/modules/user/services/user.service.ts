@@ -86,3 +86,56 @@ export async function changePassword(
     throw new Error(result.message ?? 'No fue posible actualizar la contraseña')
   }
 }
+
+// ===================
+// UPDATE CURRENT USER PROFILE IMAGE
+// ===================
+
+export async function updateCurrentUserProfileImage(
+  profileImageId: number,
+): Promise<User> {
+  const response = await fetchServer(
+    `/users/me/profile-image/${profileImageId}`,
+    {
+      method: 'PATCH',
+    },
+  )
+
+  const json: unknown = await response.json()
+
+  const result = createApiResponseSchema(UserSchema).parse(json)
+
+  if (!result.success) {
+    throw new Error(
+      result.message ?? 'No fue posible actualizar la imagen de perfil',
+    )
+  }
+
+  if (result.data === null) {
+    throw new Error(
+      'La respuesta de actualización de imagen de perfil no contiene datos',
+    )
+  }
+
+  return result.data
+}
+
+// ===================
+// REMOVE CURRENT USER PROFILE IMAGE
+// ===================
+
+export async function removeCurrentUserProfileImage(): Promise<void> {
+  const response = await fetchServer('/users/me/profile-image', {
+    method: 'DELETE',
+  })
+
+  const json: unknown = await response.json()
+
+  const result = createApiResponseSchema(z.null()).parse(json)
+
+  if (!result.success) {
+    throw new Error(
+      result.message ?? 'No fue posible eliminar la imagen de perfil',
+    )
+  }
+}

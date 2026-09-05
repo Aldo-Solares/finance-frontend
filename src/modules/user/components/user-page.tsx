@@ -1,25 +1,22 @@
 // @/modules/user/components/user-page.tsx
 
-import {
-  LockKeyhole,
-  Settings,
-  UserRound,
-} from 'lucide-react';
+import { LockKeyhole, Settings, UserRound } from 'lucide-react'
 
-import type { User } from '@/modules/user/schemas/user.schema';
-import { PageHeader } from '@/shared/page/page-header';
+import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
+import type { User } from '@/modules/user/schemas/user.schema'
+import { PageHeader } from '@/shared/page/page-header'
 
-import { UserAccountCard } from './user-account-card';
-import { UserPasswordForm } from './user-password-form';
-import { UserProfileForm } from './user-profile-form';
+import { ProfileImageSelector } from './profile-image/profile-image-selector'
+import { UserAccountCard } from './user-account-card'
+import { UserPasswordForm } from './user-password-form'
+import { UserProfileForm } from './user-profile-form'
 
 type UsersPageProps = {
-  user: User;
-};
+  user: User
+  profileImages: ProfileImage[]
+}
 
-export function UsersPage({
-  user,
-}: UsersPageProps) {
+export function UsersPage({ user, profileImages }: UsersPageProps) {
   return (
     <section className="w-full space-y-8">
       <PageHeader
@@ -29,15 +26,7 @@ export function UsersPage({
       />
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
-        {/* ===================
-        MAIN
-        =================== */}
-
         <div className="space-y-6">
-          {/* ===================
-          PROFILE
-          =================== */}
-
           <section className="overflow-hidden rounded-[1.75rem] border border-neutral-200 bg-white">
             <div className="flex items-center gap-3 border-b border-neutral-100 px-6 py-5">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-950 text-white">
@@ -58,9 +47,7 @@ export function UsersPage({
             <UserProfileForm user={user} />
           </section>
 
-          {/* ===================
-          SECURITY
-          =================== */}
+          <ProfileImageSelector user={user} profileImages={profileImages} />
 
           <section className="overflow-hidden rounded-[1.75rem] border border-neutral-200 bg-white">
             <div className="flex items-center gap-3 border-b border-neutral-100 px-6 py-5">
@@ -83,10 +70,6 @@ export function UsersPage({
           </section>
         </div>
 
-        {/* ===================
-        ACCOUNT
-        =================== */}
-
         <aside className="space-y-6">
           <div className="flex items-center gap-2 px-1">
             <Settings className="h-4 w-4 text-neutral-400" />
@@ -100,5 +83,5 @@ export function UsersPage({
         </aside>
       </div>
     </section>
-  );
+  )
 }

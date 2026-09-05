@@ -1,17 +1,17 @@
-// @/modules/debts/card/components/card-catalog-delete-modal.tsx
+// @/modules/user/components/profile-image-catalog-delete-modal.tsx
 
 'use client'
 
 import { useActionState, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
-import { LoaderCircle, Trash2 } from 'lucide-react'
+import { ImageOff, LoaderCircle } from 'lucide-react'
 
 import type { ActionState } from '@/core/utils/action-state'
-import { deleteCardAction } from '@/modules/debts/card/actions/card.actions'
-import type { Card } from '@/modules/debts/card/schemas/card.schema'
+import { deleteProfileImageAction } from '@/modules/user/actions/profile-image.actions'
+import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 
-type CardCatalogDeleteModalProps = {
-  card: Card
+type ProfileImageCatalogDeleteModalProps = {
+  profileImage: ProfileImage
   onClose: () => void
 }
 
@@ -21,11 +21,11 @@ const initialState: ActionState<null> = {
   data: null,
 }
 
-export function CardCatalogDeleteModal({
-  card,
+export function ProfileImageCatalogDeleteModal({
+  profileImage,
   onClose,
-}: CardCatalogDeleteModalProps) {
-  const [state, action] = useActionState(deleteCardAction, initialState)
+}: ProfileImageCatalogDeleteModalProps) {
+  const [state, action] = useActionState(deleteProfileImageAction, initialState)
 
   useEffect(() => {
     if (state.success) {
@@ -43,23 +43,27 @@ export function CardCatalogDeleteModal({
 
       <div className="relative z-10 w-full max-w-md rounded-[2rem] bg-white p-6 text-center shadow-2xl">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-red-600">
-          <Trash2 className="h-5 w-5" />
+          <ImageOff className="h-5 w-5" />
         </div>
 
         <h2 className="mt-5 text-lg font-semibold text-neutral-950">
-          Eliminar tarjeta
+          Eliminar imagen
         </h2>
 
         <p className="mt-2 text-sm leading-6 text-neutral-500">
           Se eliminará{' '}
           <span className="font-medium text-neutral-950">
-            {card.bank} · {card.cardName}
+            {profileImage.name}
           </span>{' '}
-          del catálogo de tarjetas.
+          del catálogo.
         </p>
 
         <form action={action} className="mt-6">
-          <input type="hidden" name="cardId" value={card.cardId} />
+          <input
+            type="hidden"
+            name="profileImageId"
+            value={profileImage.profileImageId}
+          />
 
           {!state.success && state.message && (
             <p className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-left text-sm text-red-600">

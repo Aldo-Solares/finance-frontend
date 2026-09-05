@@ -8,9 +8,10 @@ import {
   ChartNoAxesCombined,
   CreditCard,
   FileText,
+  ImageIcon,
   ListTree,
   Settings,
-  ShieldCheck,
+  Settings2,
   TrendingUp,
   WalletCards,
 } from 'lucide-react'
@@ -37,13 +38,11 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
   const isActive = (route: string) =>
     pathname === route || pathname.startsWith(`${route}/`)
 
-  const debtsActive =
-    isActive('/debts') || isActive('/admin/card') || isActive('/admin/concept')
+  const debtsActive = isActive('/debts')
 
-  const tradingActive =
-    isActive('/trading') ||
-    isActive('/admin/account') ||
-    isActive('/admin/instrument')
+  const tradingActive = isActive('/trading')
+
+  const adminActive = isActive('/admin')
 
   // ===================
   // CLASSES
@@ -116,7 +115,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
             className={getSubLinkClassName('/debts/card')}
           >
             <CreditCard className="h-4 w-4" />
-            Tarjetas
+            Mis tarjetas
           </Link>
 
           <Link
@@ -127,34 +126,6 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
             <FileText className="h-4 w-4" />
             Estados de cuenta
           </Link>
-
-          {isAdmin && (
-            <>
-              <div className="my-2 h-px bg-white/[0.07]" />
-
-              <p className="px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/25">
-                Administración
-              </p>
-
-              <Link
-                href="/admin/card"
-                onClick={onClose}
-                className={getSubLinkClassName('/admin/card')}
-              >
-                <WalletCards className="h-4 w-4" />
-                Catálogo de tarjetas
-              </Link>
-
-              <Link
-                href="/admin/concept"
-                onClick={onClose}
-                className={getSubLinkClassName('/admin/concept')}
-              >
-                <ListTree className="h-4 w-4" />
-                Conceptos
-              </Link>
-            </>
-          )}
         </div>
       </div>
 
@@ -199,36 +170,68 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
             <ChartCandlestick className="h-4 w-4" />
             Operaciones
           </Link>
-
-          {isAdmin && (
-            <>
-              <div className="my-2 h-px bg-white/[0.07]" />
-
-              <p className="px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/25">
-                Administración
-              </p>
-
-              <Link
-                href="/admin/account"
-                onClick={onClose}
-                className={getSubLinkClassName('/admin/account')}
-              >
-                <WalletCards className="h-4 w-4" />
-                Catálogo de cuentas
-              </Link>
-
-              <Link
-                href="/admin/instrument"
-                onClick={onClose}
-                className={getSubLinkClassName('/admin/instrument')}
-              >
-                <ChartNoAxesCombined className="h-4 w-4" />
-                Instrumentos
-              </Link>
-            </>
-          )}
         </div>
       </div>
+
+      {/* ===================
+          ADMINISTRATION
+          =================== */}
+
+      {isAdmin && (
+        <div className="pt-1">
+          <div className={getSectionClassName(adminActive)}>
+            <Settings2 className="h-4 w-4" />
+            Administración
+          </div>
+
+          <div className="ml-5 mt-2 space-y-1 border-l border-white/[0.08] pl-4">
+            <Link
+              href="/admin/card"
+              onClick={onClose}
+              className={getSubLinkClassName('/admin/card')}
+            >
+              <WalletCards className="h-4 w-4" />
+              Catálogo de tarjetas
+            </Link>
+
+            <Link
+              href="/admin/concept"
+              onClick={onClose}
+              className={getSubLinkClassName('/admin/concept')}
+            >
+              <ListTree className="h-4 w-4" />
+              Conceptos
+            </Link>
+
+            <Link
+              href="/admin/account"
+              onClick={onClose}
+              className={getSubLinkClassName('/admin/account')}
+            >
+              <WalletCards className="h-4 w-4" />
+              Catálogo de cuentas
+            </Link>
+
+            <Link
+              href="/admin/instrument"
+              onClick={onClose}
+              className={getSubLinkClassName('/admin/instrument')}
+            >
+              <ChartNoAxesCombined className="h-4 w-4" />
+              Instrumentos
+            </Link>
+
+            <Link
+              href="/admin/profile-image"
+              onClick={onClose}
+              className={getSubLinkClassName('/admin/profile-image')}
+            >
+              <ImageIcon className="h-4 w-4" />
+              Imágenes de perfil
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* ===================
           SETTINGS

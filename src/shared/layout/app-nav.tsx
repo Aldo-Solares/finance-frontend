@@ -9,7 +9,9 @@ import {
   ChevronDown,
   CreditCard,
   FileText,
+  ImageIcon,
   ListTree,
+  Settings2,
   TrendingUp,
   WalletCards,
 } from 'lucide-react'
@@ -24,7 +26,7 @@ type AppNavProps = {
   user: User
 }
 
-type OpenMenu = 'debts' | 'trading' | null
+type OpenMenu = 'debts' | 'trading' | 'admin' | null
 
 export function AppNav({ user }: AppNavProps) {
   const pathname = usePathname()
@@ -42,13 +44,11 @@ export function AppNav({ user }: AppNavProps) {
   const isActive = (route: string) =>
     pathname === route || pathname.startsWith(`${route}/`)
 
-  const debtsActive =
-    isActive('/debts') || isActive('/admin/card') || isActive('/admin/concept')
+  const debtsActive = isActive('/debts')
 
-  const tradingActive =
-    isActive('/trading') ||
-    isActive('/admin/account') ||
-    isActive('/admin/instrument')
+  const tradingActive = isActive('/trading')
+
+  const adminActive = isActive('/admin')
 
   // ===================
   // CLASSES
@@ -172,34 +172,6 @@ export function AppNav({ user }: AppNavProps) {
               <FileText className="h-4 w-4" />
               Estados de cuenta
             </Link>
-
-            {isAdmin && (
-              <>
-                <div className="my-2 h-px bg-neutral-100" />
-
-                <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
-                  Administración
-                </p>
-
-                <Link
-                  href="/admin/card"
-                  onClick={closeMenu}
-                  className={getDropdownLinkClassName('/admin/card')}
-                >
-                  <WalletCards className="h-4 w-4" />
-                  Catálogo de tarjetas
-                </Link>
-
-                <Link
-                  href="/admin/concept"
-                  onClick={closeMenu}
-                  className={getDropdownLinkClassName('/admin/concept')}
-                >
-                  <ListTree className="h-4 w-4" />
-                  Conceptos
-                </Link>
-              </>
-            )}
           </div>
         )}
       </div>
@@ -259,37 +231,85 @@ export function AppNav({ user }: AppNavProps) {
               <ChartCandlestick className="h-4 w-4" />
               Operaciones
             </Link>
-
-            {isAdmin && (
-              <>
-                <div className="my-2 h-px bg-neutral-100" />
-
-                <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
-                  Administración
-                </p>
-
-                <Link
-                  href="/admin/account"
-                  onClick={closeMenu}
-                  className={getDropdownLinkClassName('/admin/account')}
-                >
-                  <WalletCards className="h-4 w-4" />
-                  Catálogo de cuentas
-                </Link>
-
-                <Link
-                  href="/admin/instrument"
-                  onClick={closeMenu}
-                  className={getDropdownLinkClassName('/admin/instrument')}
-                >
-                  <ChartNoAxesCombined className="h-4 w-4" />
-                  Instrumentos
-                </Link>
-              </>
-            )}
           </div>
         )}
       </div>
+
+      {/* ===================
+          ADMINISTRATION
+          =================== */}
+
+      {isAdmin && (
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => toggleMenu('admin')}
+            aria-expanded={openMenu === 'admin'}
+            className={getDropdownButtonClassName(
+              adminActive,
+              openMenu === 'admin',
+            )}
+          >
+            <Settings2 className="h-4 w-4" />
+            Administración
+            <ChevronDown
+              className={[
+                'h-4 w-4 text-white/40 transition-transform duration-200',
+                openMenu === 'admin' ? 'rotate-180' : '',
+              ].join(' ')}
+            />
+          </button>
+
+          {openMenu === 'admin' && (
+            <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
+              <Link
+                href="/admin/card"
+                onClick={closeMenu}
+                className={getDropdownLinkClassName('/admin/card')}
+              >
+                <WalletCards className="h-4 w-4" />
+                Catálogo de tarjetas
+              </Link>
+
+              <Link
+                href="/admin/concept"
+                onClick={closeMenu}
+                className={getDropdownLinkClassName('/admin/concept')}
+              >
+                <ListTree className="h-4 w-4" />
+                Conceptos
+              </Link>
+
+              <Link
+                href="/admin/account"
+                onClick={closeMenu}
+                className={getDropdownLinkClassName('/admin/account')}
+              >
+                <WalletCards className="h-4 w-4" />
+                Catálogo de cuentas
+              </Link>
+
+              <Link
+                href="/admin/instrument"
+                onClick={closeMenu}
+                className={getDropdownLinkClassName('/admin/instrument')}
+              >
+                <ChartNoAxesCombined className="h-4 w-4" />
+                Instrumentos
+              </Link>
+
+              <Link
+                href="/admin/profile-image"
+                onClick={closeMenu}
+                className={getDropdownLinkClassName('/admin/profile-image')}
+              >
+                <ImageIcon className="h-4 w-4" />
+                Imágenes de perfil
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   )
 }

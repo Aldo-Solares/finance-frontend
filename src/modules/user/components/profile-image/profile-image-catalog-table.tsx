@@ -3,11 +3,15 @@
 'use client'
 
 import Image from 'next/image'
+
 import { Check, MoreHorizontal, Pencil, Power } from 'lucide-react'
+
 import { useActionState } from 'react'
 
 import type { ActionState } from '@/core/utils/action-state'
+
 import { updateProfileImageStatusAction } from '@/modules/user/actions/profile-image.actions'
+
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 
 type ProfileImageCatalogTableProps = {
@@ -22,7 +26,7 @@ export function ProfileImageCatalogTable({
   onDelete,
 }: ProfileImageCatalogTableProps) {
   return (
-    <div className="overflow-hidden rounded-[1.5rem] border border-neutral-200 bg-white">
+    <div className="overflow-visible rounded-[1.5rem] border border-neutral-200 bg-white">
       <div className="hidden grid-cols-[80px_1fr_120px_56px] gap-4 border-b border-neutral-100 bg-neutral-50/70 px-6 py-3 text-xs font-medium text-neutral-400 sm:grid">
         <span>Imagen</span>
         <span>Nombre</span>

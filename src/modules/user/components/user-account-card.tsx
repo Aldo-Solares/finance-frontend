@@ -2,9 +2,10 @@
 
 'use client'
 
-import Image from 'next/image'
 import { useActionState } from 'react'
+
 import { useFormStatus } from 'react-dom'
+
 import {
   BadgeCheck,
   CircleAlert,
@@ -15,10 +16,16 @@ import {
 } from 'lucide-react'
 
 import type { ActionState } from '@/core/utils/action-state'
+
 import {
   logoutAction,
   resendVerificationAction,
 } from '@/modules/auth/actions/auth.actions'
+
+import { useUserSettings } from '@/modules/user/providers/user-settings-provider'
+
+import { ProfileAvatar } from '@/modules/user/components/profile-image/profile-avatar'
+
 import type { User } from '@/modules/user/schemas/user.schema'
 
 type UserAccountCardProps = {
@@ -32,6 +39,8 @@ const initialState: ActionState<null> = {
 }
 
 export function UserAccountCard({ user }: UserAccountCardProps) {
+  const { userSettings } = useUserSettings()
+
   const [state, resendAction] = useActionState(
     resendVerificationAction,
     initialState,
@@ -40,20 +49,12 @@ export function UserAccountCard({ user }: UserAccountCardProps) {
   return (
     <div className="overflow-hidden rounded-[1.75rem] border border-neutral-200 bg-white">
       <div className="p-6">
-        {user.profileImage ? (
-          <Image
-            src={user.profileImage.imageUrl}
-            alt="Imagen de perfil"
-            width={56}
-            height={56}
-            unoptimized
-            className="h-14 w-14 rounded-2xl object-cover"
-          />
-        ) : (
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-950 text-lg font-semibold text-white">
-            {user.name.charAt(0).toUpperCase()}
-          </div>
-        )}
+        <ProfileAvatar
+          profileImage={user.profileImage}
+          background={userSettings.profileImageBackground}
+          size="md"
+          fallback={user.name.charAt(0).toUpperCase()}
+        />
 
         <p className="mt-4 font-semibold text-neutral-950">
           {user.name}

@@ -15,6 +15,7 @@ import Link from 'next/link'
 import { ArrowRight, CheckCircle2, Mail, UserRound } from 'lucide-react'
 
 import { registerAction } from '@/modules/auth/actions/auth.actions'
+
 import { PasswordField } from '@/shared/inputs/password-field'
 import { TextInput } from '@/shared/inputs/text-input'
 
@@ -32,10 +33,6 @@ export function RegisterForm() {
 
   const formRef = useRef<HTMLFormElement>(null)
 
-  // ===================
-  // SUBMIT
-  // ===================
-
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -46,10 +43,6 @@ export function RegisterForm() {
     })
   }
 
-  // ===================
-  // RESET ON SUCCESS
-  // ===================
-
   useEffect(() => {
     if (state.success) {
       formRef.current?.reset()
@@ -58,33 +51,25 @@ export function RegisterForm() {
 
   return (
     <section className="w-full">
-      {/* ===================
-          HEADER
-          =================== */}
-
       <div className="mb-10 pt-8">
         <div className="mb-5">
-          <p className="text-lg font-semibold tracking-[0.22em] text-[#30282c]">
+          <p className="text-lg font-semibold tracking-[0.22em] text-foreground">
             ISHA
           </p>
 
-          <p className="text-xs text-[#a49a9f]">Finance</p>
+          <p className="text-xs text-text-muted">Finance</p>
         </div>
 
-        <h1 className="max-w-sm text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-[#30282c] sm:text-[2.7rem]">
+        <h1 className="max-w-sm text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-[2.7rem]">
           Crea tu cuenta.
-          <span className="block text-[#b86f89]">Empieza aquí.</span>
+          <span className="block text-primary">Empieza aquí.</span>
         </h1>
 
-        <p className="mt-4 max-w-sm text-sm leading-6 text-[#81767b]">
+        <p className="mt-4 max-w-sm text-sm leading-6 text-text-muted">
           Crea tu espacio financiero y empieza a organizar todo desde un solo
           lugar.
         </p>
       </div>
-
-      {/* ===================
-          FORM
-          =================== */}
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
         <TextInput
@@ -139,48 +124,36 @@ export function RegisterForm() {
           required
         />
 
-        {/* ===================
-            ERROR
-            =================== */}
-
         {state.message && !state.success && (
           <div
             role="alert"
-            className="animate-in fade-in slide-in-from-top-1 rounded-xl border border-red-200 bg-red-50/90 px-4 py-3 text-sm text-red-700"
+            className="animate-in fade-in slide-in-from-top-1 rounded-xl border border-primary/30 bg-primary-soft/90 px-4 py-3 text-sm text-foreground"
           >
             {state.message}
           </div>
         )}
 
-        {/* ===================
-            SUCCESS
-            =================== */}
-
         {state.success && (
           <div
             role="status"
-            className="animate-in fade-in slide-in-from-top-1 flex items-start gap-3 rounded-xl border border-[#d9eadf] bg-[#f3faf5] px-4 py-3 text-sm text-[#477057]"
+            className="animate-in fade-in slide-in-from-top-1 flex items-start gap-3 rounded-xl border border-primary/30 bg-primary-soft px-4 py-3 text-sm text-foreground"
           >
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
 
             <div>
               <p className="font-medium">Cuenta creada correctamente</p>
 
-              <p className="mt-0.5 text-[#5d8068]">
+              <p className="mt-0.5 text-text-muted">
                 Revisa tu correo electrónico para verificar tu cuenta.
               </p>
             </div>
           </div>
         )}
 
-        {/* ===================
-            SUBMIT
-            =================== */}
-
         <button
           type="submit"
           disabled={pending}
-          className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl bg-[#b86f89] px-4 text-sm font-medium text-white shadow-[0_12px_30px_-12px_rgba(159,83,111,0.55)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#a9617b] hover:shadow-[0_16px_34px_-12px_rgba(159,83,111,0.6)] active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
+          className="group relative flex h-12 w-full items-center justify-center overflow-hidden rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover hover:shadow-xl active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <span className="relative z-10 flex items-center gap-2">
             {pending ? (
@@ -193,27 +166,23 @@ export function RegisterForm() {
             )}
           </span>
 
-          <span className="absolute inset-y-0 -left-1/3 w-1/3 skew-x-[-20deg] bg-white/15 transition-all duration-700 group-hover:left-[120%]" />
+          <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/3 -skew-x-[20deg] bg-primary-foreground/15 opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100" />
         </button>
       </form>
 
-      {/* ===================
-          LOGIN
-          =================== */}
-
       <div className="mt-8 flex items-center gap-4">
-        <div className="h-px flex-1 bg-[#ebe3e6]" />
+        <div className="h-px flex-1 bg-border" />
 
-        <span className="text-xs text-[#b2a7ac]">o</span>
+        <span className="text-xs text-text-muted">o</span>
 
-        <div className="h-px flex-1 bg-[#ebe3e6]" />
+        <div className="h-px flex-1 bg-border" />
       </div>
 
-      <p className="mt-6 text-center text-sm text-[#81767b]">
+      <p className="mt-6 text-center text-sm text-text-muted">
         ¿Ya tienes una cuenta?{' '}
         <Link
           href="/auth/login"
-          className="font-semibold text-[#9f536f] transition-colors hover:text-[#82465d]"
+          className="font-semibold text-primary transition-colors hover:text-primary-hover"
         >
           Iniciar sesión
         </Link>

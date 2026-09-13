@@ -97,7 +97,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
                     <div className="flex items-center gap-3">
                       <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-white">
                         <Image
-                          src="/icons/IshaTextBlack.png"
+                          src="/icons/app/Isha.svg"
                           alt="Isha"
                           width={44}
                           height={44}

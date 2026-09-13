@@ -30,7 +30,7 @@ export function LoggedHero({ user }: LoggedHeroProps) {
           <div className="mb-9 flex items-center gap-4">
             <div className="relative flex h-12 w-12 shrink-0 items-center justify-center">
               <Image
-                src="/icons/IshaTextWhite.png"
+                src="/icons/app/IshaS.svg"
                 alt="Isha"
                 width={48}
                 height={48}

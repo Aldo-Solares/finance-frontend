@@ -240,7 +240,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
       <div className="my-4 h-px bg-white/[0.07]" />
 
       <Link
-        href="/settings"
+        href="/user/settings"
         onClick={onClose}
         className={getLinkClassName('/settings')}
       >

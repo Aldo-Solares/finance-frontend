@@ -3,11 +3,19 @@
 'use client'
 
 import { LogOut, X } from 'lucide-react'
+
 import Image from 'next/image'
+
 import Link from 'next/link'
 
 import { logoutAction } from '@/modules/auth/actions/auth.actions'
+
 import type { User } from '@/modules/user/schemas/user.schema'
+
+import { useUserSettings } from '@/modules/user/providers/user-settings-provider'
+
+import { ProfileAvatar } from '@/modules/user/components/profile-image/profile-avatar'
+
 import { AppNavDrawerNav } from '@/shared/layout/app-nav-drawer-nav'
 
 type AppNavDrawerProps = {
@@ -17,6 +25,8 @@ type AppNavDrawerProps = {
 }
 
 export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
+  const { userSettings } = useUserSettings()
+
   if (!open) {
     return null
   }
@@ -51,7 +61,7 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
             className="flex h-11 items-center"
           >
             <Image
-              src="/icons/IshaTextWhite.png"
+              src="/icons/app/Isha.svg"
               alt="Isha"
               width={132}
               height={44}
@@ -75,22 +85,12 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
             =================== */}
 
         <div className="mt-10 flex items-center gap-4">
-          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-white/10 bg-white/[0.08]">
-            {user.profileImage ? (
-              <Image
-                src={user.profileImage.imageUrl}
-                alt={user.profileImage.name}
-                fill
-                unoptimized
-                sizes="56px"
-                className="object-cover"
-              />
-            ) : (
-              <span className="flex h-full w-full items-center justify-center text-lg font-semibold text-white">
-                {user.name.charAt(0).toUpperCase()}
-              </span>
-            )}
-          </div>
+          <ProfileAvatar
+            profileImage={user.profileImage}
+            background={userSettings.profileImageBackground}
+            size="md"
+            fallback={user.name.charAt(0).toUpperCase()}
+          />
 
           <div className="min-w-0">
             <p className="truncate text-2xl font-semibold tracking-tight">

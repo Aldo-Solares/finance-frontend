@@ -11,42 +11,113 @@ import {
 } from '@/core/utils/action-state'
 
 import {
-  UpdateUserSettingsRequestSchema,
+  UpdateDarkModeRequestSchema,
+  UpdateProfileImageBackgroundRequestSchema,
+  UpdateStatementCutoffReminderRequestSchema,
   type UserSettings,
 } from '@/modules/user/schemas/user-settings.schema'
 
-import { updateCurrentUserSettings } from '@/modules/user/services/user-settings.service'
+import {
+  updateDarkMode,
+  updateProfileImageBackground,
+  updateStatementCutoffReminder,
+} from '@/modules/user/services/user-settings.service'
 
 // ===================
-// UPDATE CURRENT USER SETTINGS
+// UPDATE STATEMENT CUTOFF REMINDER
 // ===================
 
-export async function updateCurrentUserSettingsAction(
+export async function updateStatementCutoffReminderAction(
   _previousState: ActionState<UserSettings>,
   formData: FormData,
 ): Promise<ActionState<UserSettings>> {
-  const parsed = UpdateUserSettingsRequestSchema.safeParse({
+  const parsed = UpdateStatementCutoffReminderRequestSchema.safeParse({
     statementCutoffReminder: formData.get('statementCutoffReminder') === 'true',
   })
 
   if (!parsed.success) {
     return actionError(
       parsed.error.issues[0]?.message ??
-        'Los datos de configuración no son válidos',
+        'La preferencia de recordatorio no es válida',
     )
   }
 
   try {
-    const result = await updateCurrentUserSettings(parsed.data)
+    const result = await updateStatementCutoffReminder(parsed.data)
 
-    revalidatePath('/settings')
+    revalidatePath('/user/settings')
 
     return actionSuccess(result)
   } catch (error) {
     return actionError(
       error instanceof Error
         ? error.message
-        : 'No fue posible actualizar la configuración',
+        : 'No fue posible actualizar la preferencia de recordatorio',
+    )
+  }
+}
+
+// ===================
+// UPDATE PROFILE IMAGE BACKGROUND
+// ===================
+
+export async function updateProfileImageBackgroundAction(
+  _previousState: ActionState<UserSettings>,
+  formData: FormData,
+): Promise<ActionState<UserSettings>> {
+  const parsed = UpdateProfileImageBackgroundRequestSchema.safeParse({
+    profileImageBackground: formData.get('profileImageBackground'),
+  })
+
+  if (!parsed.success) {
+    return actionError(
+      parsed.error.issues[0]?.message ??
+        'El fondo de la imagen de perfil no es válido',
+    )
+  }
+
+  try {
+    const result = await updateProfileImageBackground(parsed.data)
+
+    revalidatePath('/user/settings')
+
+    return actionSuccess(result)
+  } catch (error) {
+    return actionError(
+      error instanceof Error
+        ? error.message
+        : 'No fue posible actualizar el fondo de la imagen de perfil',
+    )
+  }
+}
+
+// ===================
+// UPDATE DARKMODE
+// ===================
+export async function updateDarkModeAction(
+  _previousState: ActionState<UserSettings>,
+  formData: FormData,
+): Promise<ActionState<UserSettings>> {
+  const parsed = UpdateDarkModeRequestSchema.safeParse({
+    active: formData.get('active') === 'true',
+  })
+
+  if (!parsed.success) {
+    return actionError(
+      parsed.error.issues[0]?.message ??
+        'La preferencia de modo oscuro no es válida',
+    )
+  }
+
+  try {
+    const result = await updateDarkMode(parsed.data)
+    revalidatePath('/user/settings')
+    return actionSuccess(result)
+  } catch (error) {
+    return actionError(
+      error instanceof Error
+        ? error.message
+        : 'No fue posible actualizar la preferencia de modo oscuro',
     )
   }
 }

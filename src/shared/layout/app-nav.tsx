@@ -4,8 +4,8 @@
 
 import {
   ChartCandlestick,
-  ChartPie,
   ChartNoAxesCombined,
+  ChartPie,
   ChevronDown,
   CreditCard,
   FileText,
@@ -30,9 +30,7 @@ type OpenMenu = 'debts' | 'trading' | 'admin' | null
 
 export function AppNav({ user }: AppNavProps) {
   const pathname = usePathname()
-
   const [openMenu, setOpenMenu] = useState<OpenMenu>(null)
-
   const navigationRef = useRef<HTMLElement>(null)
 
   const isAdmin = user.role === USER_ROLE.ADMIN
@@ -45,9 +43,7 @@ export function AppNav({ user }: AppNavProps) {
     pathname === route || pathname.startsWith(`${route}/`)
 
   const debtsActive = isActive('/debts')
-
   const tradingActive = isActive('/trading')
-
   const adminActive = isActive('/admin')
 
   // ===================
@@ -56,26 +52,29 @@ export function AppNav({ user }: AppNavProps) {
 
   const getLinkClassName = (route: string) =>
     [
-      'flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium transition-colors',
+      'flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium',
+      'transition-all duration-200',
       isActive(route)
-        ? 'bg-white/10 text-white'
-        : 'text-white/45 hover:bg-white/[0.06] hover:text-white',
+        ? 'bg-primary-soft text-primary'
+        : 'text-text-muted hover:bg-surface hover:text-foreground',
     ].join(' ')
 
   const getDropdownButtonClassName = (active: boolean, opened: boolean) =>
     [
-      'flex h-10 cursor-pointer items-center gap-2 rounded-xl px-3 text-sm font-medium transition-colors',
+      'flex h-10 cursor-pointer items-center gap-2 rounded-xl px-3',
+      'text-sm font-medium transition-all duration-200',
       active || opened
-        ? 'bg-white/10 text-white'
-        : 'text-white/45 hover:bg-white/[0.06] hover:text-white',
+        ? 'bg-primary-soft text-primary'
+        : 'text-text-muted hover:bg-surface hover:text-foreground',
     ].join(' ')
 
   const getDropdownLinkClassName = (route: string) =>
     [
-      'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors',
+      'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm',
+      'transition-all duration-200',
       isActive(route)
-        ? 'bg-neutral-100 font-medium text-neutral-950'
-        : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-950',
+        ? 'bg-primary-soft font-medium text-primary'
+        : 'text-text-muted hover:bg-surface hover:text-foreground',
     ].join(' ')
 
   // ===================
@@ -147,14 +146,14 @@ export function AppNav({ user }: AppNavProps) {
           Tarjetas
           <ChevronDown
             className={[
-              'h-4 w-4 text-white/40 transition-transform duration-200',
+              'h-4 w-4 text-text-muted transition-transform duration-200',
               openMenu === 'debts' ? 'rotate-180' : '',
             ].join(' ')}
           />
         </button>
 
         {openMenu === 'debts' && (
-          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
+          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-black/10">
             <Link
               href="/debts/card"
               onClick={closeMenu}
@@ -206,14 +205,14 @@ export function AppNav({ user }: AppNavProps) {
           Trading
           <ChevronDown
             className={[
-              'h-4 w-4 text-white/40 transition-transform duration-200',
+              'h-4 w-4 text-text-muted transition-transform duration-200',
               openMenu === 'trading' ? 'rotate-180' : '',
             ].join(' ')}
           />
         </button>
 
         {openMenu === 'trading' && (
-          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
+          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-black/10">
             <Link
               href="/trading/account"
               onClick={closeMenu}
@@ -254,14 +253,14 @@ export function AppNav({ user }: AppNavProps) {
             Administración
             <ChevronDown
               className={[
-                'h-4 w-4 text-white/40 transition-transform duration-200',
+                'h-4 w-4 text-text-muted transition-transform duration-200',
                 openMenu === 'admin' ? 'rotate-180' : '',
               ].join(' ')}
             />
           </button>
 
           {openMenu === 'admin' && (
-            <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-neutral-200 bg-white p-2 text-neutral-950 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.35)]">
+            <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-black/10">
               <Link
                 href="/admin/card"
                 onClick={closeMenu}

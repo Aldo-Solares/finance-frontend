@@ -105,6 +105,10 @@ export function DateInput({
     >
       {name && <input type="hidden" name={name} value={value} />}
 
+      {/* ===================
+          INPUT
+          =================== */}
+
       <button
         id={id}
         type="button"
@@ -113,22 +117,41 @@ export function DateInput({
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
         className={[
-          'group flex h-12 w-full items-center gap-3 rounded-2xl border bg-white px-2.5 text-left transition-all duration-200',
+          'group flex h-12 w-full items-center gap-3 rounded-xl',
+          'border bg-background px-2.5 text-left',
+          'transition-all duration-200',
           'focus:outline-none',
           error
-            ? 'border-red-200 bg-red-50/30 focus:ring-4 focus:ring-red-500/[0.06]'
-            : 'border-neutral-200 hover:border-neutral-300 focus:border-neutral-950 focus:ring-4 focus:ring-neutral-950/[0.05]',
+            ? [
+                'border-red-200 bg-red-50/30',
+                'focus:ring-4 focus:ring-red-500/[0.06]',
+                'dark:border-red-900/60',
+                'dark:bg-red-950/20',
+              ].join(' ')
+            : [
+                'border-border',
+                'hover:border-primary/30',
+                'focus:border-primary',
+                'focus:ring-4 focus:ring-primary/[0.08]',
+              ].join(' '),
           disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
         ].join(' ')}
       >
         <span
           className={[
-            'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all duration-200',
+            'flex h-9 w-9 shrink-0 items-center justify-center',
+            'rounded-lg transition-all duration-200',
             open
-              ? 'bg-neutral-950 text-white'
+              ? 'bg-primary text-primary-foreground'
               : error
-                ? 'bg-red-100 text-red-500'
-                : 'bg-neutral-100 text-neutral-500 group-hover:bg-neutral-950 group-hover:text-white',
+                ? [
+                    'bg-red-100 text-red-500',
+                    'dark:bg-red-950/40 dark:text-red-400',
+                  ].join(' ')
+                : [
+                    'bg-surface text-text-muted',
+                    'group-hover:bg-primary-soft group-hover:text-primary',
+                  ].join(' '),
           ].join(' ')}
         >
           <CalendarDays className="h-4 w-4" strokeWidth={1.8} />
@@ -137,7 +160,7 @@ export function DateInput({
         <span
           className={[
             'min-w-0 flex-1 truncate text-sm',
-            displayValue ? 'font-medium text-neutral-950' : 'text-neutral-400',
+            displayValue ? 'font-medium text-foreground' : 'text-text-muted',
           ].join(' ')}
         >
           {displayValue || placeholder}
@@ -145,34 +168,52 @@ export function DateInput({
 
         <ChevronDown
           className={[
-            'mr-1 h-4 w-4 shrink-0 text-neutral-300 transition-transform duration-200',
-            open ? 'rotate-180 text-neutral-500' : '',
+            'mr-1 h-4 w-4 shrink-0 text-text-muted',
+            'transition-transform duration-200',
+            open ? 'rotate-180 text-primary' : '',
           ].join(' ')}
         />
       </button>
+
+      {/* ===================
+          CALENDAR
+          =================== */}
 
       {open && (
         <div
           role="dialog"
           aria-label="Seleccionar fecha"
-          className="absolute left-0 top-[calc(100%+0.5rem)] z-30 w-full min-w-[300px] overflow-hidden rounded-2xl border border-neutral-200 bg-white p-4 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.28)]"
+          className={[
+            'absolute left-0 top-[calc(100%+0.5rem)] z-30',
+            'w-full min-w-[300px] overflow-hidden rounded-2xl',
+            'border border-border bg-background p-4 text-foreground',
+            'shadow-xl shadow-black/10',
+          ].join(' ')}
         >
+          {/* ===================
+              MONTH NAVIGATION
+              =================== */}
+
           <div className="mb-4 flex items-center justify-between">
             <button
               type="button"
               onClick={goToPreviousMonth}
               aria-label="Mes anterior"
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-950"
+              className={[
+                'flex h-9 w-9 items-center justify-center rounded-lg',
+                'text-text-muted transition-all duration-200',
+                'hover:bg-surface hover:text-foreground',
+              ].join(' ')}
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
 
             <div className="text-center">
-              <p className="text-sm font-semibold text-neutral-950">
+              <p className="text-sm font-semibold text-foreground">
                 {MONTH_NAMES[visibleMonth.getMonth()]}
               </p>
 
-              <p className="text-xs font-medium text-neutral-400">
+              <p className="text-xs font-medium text-text-muted">
                 {visibleMonth.getFullYear()}
               </p>
             </div>
@@ -181,22 +222,37 @@ export function DateInput({
               type="button"
               onClick={goToNextMonth}
               aria-label="Mes siguiente"
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-950"
+              className={[
+                'flex h-9 w-9 items-center justify-center rounded-lg',
+                'text-text-muted transition-all duration-200',
+                'hover:bg-surface hover:text-foreground',
+              ].join(' ')}
             >
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
 
+          {/* ===================
+              WEEK DAYS
+              =================== */}
+
           <div className="mb-2 grid grid-cols-7">
             {WEEK_DAYS.map((day) => (
               <span
                 key={day}
-                className="py-1 text-center text-[10px] font-semibold tracking-wide text-neutral-400"
+                className={[
+                  'py-1 text-center text-[10px] font-semibold',
+                  'tracking-wide text-text-muted',
+                ].join(' ')}
               >
                 {day}
               </span>
             ))}
           </div>
+
+          {/* ===================
+              DAYS
+              =================== */}
 
           <div className="grid grid-cols-7 gap-1">
             {calendarDays.map((calendarDay, index) => {
@@ -217,27 +273,42 @@ export function DateInput({
                   type="button"
                   onClick={() => selectDate(year, month - 1, day)}
                   className={[
-                    'relative flex h-9 items-center justify-center rounded-xl text-sm transition-all',
+                    'relative flex h-9 items-center justify-center',
+                    'rounded-lg text-sm transition-all duration-150',
                     selected
-                      ? 'bg-neutral-950 font-semibold text-white shadow-sm'
-                      : 'text-neutral-700 hover:bg-neutral-100 hover:text-neutral-950',
+                      ? [
+                          'bg-primary font-semibold',
+                          'text-primary-foreground shadow-sm',
+                        ].join(' ')
+                      : [
+                          'text-foreground',
+                          'hover:bg-surface hover:text-foreground',
+                        ].join(' '),
                   ].join(' ')}
                 >
                   {day}
 
                   {today && !selected && (
-                    <span className="absolute bottom-1 h-1 w-1 rounded-full bg-neutral-950" />
+                    <span className="absolute bottom-1 h-1 w-1 rounded-full bg-primary" />
                   )}
                 </button>
               )
             })}
           </div>
 
-          <div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-3">
+          {/* ===================
+              ACTIONS
+              =================== */}
+
+          <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
             <button
               type="button"
               onClick={goToToday}
-              className="rounded-xl px-3 py-2 text-xs font-medium text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-950"
+              className={[
+                'rounded-lg px-3 py-2 text-xs font-medium',
+                'text-text-muted transition-all duration-200',
+                'hover:bg-primary-soft hover:text-primary',
+              ].join(' ')}
             >
               Hoy
             </button>
@@ -246,7 +317,12 @@ export function DateInput({
               <button
                 type="button"
                 onClick={clearDate}
-                className="inline-flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-medium text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700"
+                className={[
+                  'inline-flex items-center gap-1.5 rounded-lg',
+                  'px-3 py-2 text-xs font-medium text-text-muted',
+                  'transition-all duration-200',
+                  'hover:bg-surface hover:text-foreground',
+                ].join(' ')}
               >
                 <X className="h-3.5 w-3.5" />
                 Limpiar
@@ -258,6 +334,10 @@ export function DateInput({
     </div>
   )
 }
+
+// ===================
+// DATE PARSING
+// ===================
 
 function parseDate(value: string) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value)
@@ -281,6 +361,10 @@ function parseDate(value: string) {
   }
 }
 
+// ===================
+// DATE FORMAT
+// ===================
+
 function formatInputDate(year: number, month: number, day: number) {
   return [
     year,
@@ -303,6 +387,10 @@ function formatDisplayDate(value: string) {
   ].join('-')
 }
 
+// ===================
+// CALENDAR
+// ===================
+
 type CalendarDay = {
   year: number
   month: number
@@ -314,7 +402,6 @@ function getCalendarDays(
   monthIndex: number,
 ): Array<CalendarDay | null> {
   const firstDay = new Date(year, monthIndex, 1)
-
   const daysInMonth = new Date(year, monthIndex + 1, 0).getDate()
 
   const firstWeekDay = (firstDay.getDay() + 6) % 7

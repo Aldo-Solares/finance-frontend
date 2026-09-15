@@ -94,20 +94,32 @@ export function SelectInput({
         readOnly
       />
 
+      {/* ===================
+          SELECT
+          =================== */}
+
       <button
         type="button"
         disabled={disabled}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
-        // className="flex h-11 w-full cursor-pointer items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-left text-sm text-neutral-950 outline-none transition hover:bg-white focus:border-neutral-400 disabled:cursor-not-allowed disabled:opacity-60"
-        className="flex h-11 w-full cursor-pointer items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-amber-600 px-4 text-left text-sm text-neutral-950 outline-none transition hover:bg-white focus:border-neutral-400 disabled:cursor-not-allowed disabled:opacity-60"
+        className={[
+          'group flex h-11 w-full cursor-pointer items-center justify-between',
+          'gap-3 rounded-xl border border-border bg-surface px-4',
+          'text-left text-sm text-foreground outline-none',
+          'transition-all duration-200',
+          'hover:border-primary/30 hover:bg-background',
+          'focus:border-primary focus:bg-background',
+          'focus:ring-4 focus:ring-primary/[0.08]',
+          'disabled:cursor-not-allowed disabled:opacity-60',
+        ].join(' ')}
       >
         <span
           className={
             selectedOption
-              ? 'truncate text-neutral-950'
-              : 'truncate text-neutral-300'
+              ? 'truncate text-foreground'
+              : 'truncate text-text-muted'
           }
         >
           {selectedOption?.label ?? placeholder}
@@ -115,27 +127,37 @@ export function SelectInput({
 
         <ChevronDown
           className={[
-            'h-4 w-4 shrink-0 text-neutral-400 transition-transform',
-            open ? 'rotate-180' : '',
+            'h-4 w-4 shrink-0 text-text-muted',
+            'transition-transform duration-200',
+            open ? 'rotate-180 text-primary' : '',
           ].join(' ')}
         />
       </button>
 
+      {/* ===================
+          OPTIONS
+          =================== */}
+
       {open && (
-        <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl shadow-neutral-950/10">
+        <div
+          className={[
+            'absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden',
+            'rounded-2xl border border-border bg-background',
+            'text-foreground shadow-xl shadow-black/10',
+          ].join(' ')}
+        >
           <div
             role="listbox"
             aria-labelledby={id}
-            className="max-h-60 overflow-y-auto p-1"
+            className="select-scrollbar max-h-60 overflow-y-auto p-1"
           >
             {options.length === 0 ? (
-              <p className="px-3 py-6 text-center text-sm text-neutral-400">
+              <p className="px-3 py-6 text-center text-sm text-text-muted">
                 No hay opciones disponibles.
               </p>
             ) : (
               options.map((option) => {
                 const optionValue = String(option.value)
-
                 const selected = optionValue === selectedValue
 
                 return (
@@ -146,16 +168,21 @@ export function SelectInput({
                     aria-selected={selected}
                     onClick={() => handleSelect(option)}
                     className={[
-                      'flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition',
+                      'flex w-full cursor-pointer items-center justify-between',
+                      'gap-3 rounded-xl px-3 py-2.5 text-left text-sm',
+                      'transition-all duration-150',
                       selected
-                        ? 'bg-neutral-100 text-neutral-950'
-                        : 'text-neutral-700 hover:bg-neutral-50 hover:text-neutral-950',
+                        ? 'bg-primary-soft font-medium text-primary'
+                        : [
+                            'text-text-muted',
+                            'hover:bg-surface hover:text-foreground',
+                          ].join(' '),
                     ].join(' ')}
                   >
                     <span className="truncate">{option.label}</span>
 
                     {selected && (
-                      <Check className="h-4 w-4 shrink-0 text-neutral-950" />
+                      <Check className="h-4 w-4 shrink-0 text-primary" />
                     )}
                   </button>
                 )

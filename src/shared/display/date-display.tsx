@@ -17,12 +17,14 @@ export function DateDisplay({
     return (
       <span
         className={[
-          'inline-flex items-center gap-2 text-sm text-neutral-300',
+          'inline-flex items-center gap-2 text-sm text-text-muted',
           className,
         ].join(' ')}
       >
         {showIcon && (
-          <CalendarDays className="h-3.5 w-3.5 text-neutral-300" />
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface text-text-muted">
+            <CalendarDays className="h-3.5 w-3.5" />
+          </span>
         )}
 
         <span>—</span>
@@ -30,18 +32,17 @@ export function DateDisplay({
     )
   }
 
-  const formattedDate =
-    formatDisplayDate(value)
+  const formattedDate = formatDisplayDate(value)
 
   return (
     <span
       className={[
-        'inline-flex items-center gap-2 text-sm font-medium text-neutral-600',
+        'inline-flex items-center gap-2 text-sm font-medium text-foreground',
         className,
       ].join(' ')}
     >
       {showIcon && (
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-100 text-neutral-400">
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface text-text-muted">
           <CalendarDays className="h-3.5 w-3.5" />
         </span>
       )}
@@ -55,12 +56,8 @@ export function DateDisplay({
 // DATE FORMAT
 // ===================
 
-function formatDisplayDate(
-  value: string,
-): string {
-  const match = value.match(
-    /^(\d{4})-(\d{2})-(\d{2})$/,
-  )
+function formatDisplayDate(value: string): string {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/)
 
   if (!match) {
     return value

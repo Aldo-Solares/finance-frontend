@@ -51,7 +51,7 @@ export function TextInput({
       {label && (
         <label
           htmlFor={id}
-          className="block text-sm font-medium text-neutral-800"
+          className="block text-sm font-medium text-foreground"
         >
           {label}
         </label>
@@ -61,7 +61,7 @@ export function TextInput({
         {Icon && (
           <Icon
             aria-hidden="true"
-            className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400"
+            className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted"
           />
         )}
 
@@ -82,13 +82,23 @@ export function TextInput({
           }
           onChange={handleChange}
           className={[
-            'h-11 w-full rounded-xl border bg-neutral-50 px-4 text-sm text-neutral-950 outline-none transition-colors',
-            'border-neutral-200 placeholder:text-neutral-300',
-            'focus:border-neutral-400 focus:bg-white',
+            'h-11 w-full rounded-xl border bg-surface px-4',
+            'text-sm text-foreground outline-none',
+            'transition-all duration-200',
+            'border-border placeholder:text-text-muted',
+            'focus:border-primary focus:bg-background',
+            'focus:ring-4 focus:ring-primary/[0.08]',
             'disabled:cursor-not-allowed disabled:opacity-60',
             'read-only:cursor-default',
             Icon ? 'pl-10' : '',
-            error ? 'border-red-300 focus:border-red-400' : '',
+            error
+              ? [
+                  'border-red-300',
+                  'focus:border-red-400',
+                  'focus:ring-red-500/[0.08]',
+                  'dark:border-red-900/60',
+                ].join(' ')
+              : '',
             className,
           ].join(' ')}
         />
@@ -99,7 +109,7 @@ export function TextInput({
           id={`${id}-description`}
           className={[
             'text-xs leading-5',
-            error ? 'text-red-600' : 'text-neutral-400',
+            error ? 'text-red-600 dark:text-red-400' : 'text-text-muted',
           ].join(' ')}
         >
           {error ?? description}

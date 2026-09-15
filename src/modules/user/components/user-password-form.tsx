@@ -18,7 +18,6 @@ const initialState: ActionState<null> = {
 
 export function UserPasswordForm() {
   const formRef = useRef<HTMLFormElement>(null)
-
   const [state, formAction] = useActionState(changePasswordAction, initialState)
 
   useEffect(() => {
@@ -31,7 +30,7 @@ export function UserPasswordForm() {
 
   return (
     <form ref={formRef} action={formAction}>
-      <div className="space-y-5 p-6">
+      <div className="space-y-5 px-6 py-7 sm:px-8 sm:py-8">
         {/* ===================
             CURRENT PASSWORD
             =================== */}
@@ -56,7 +55,7 @@ export function UserPasswordForm() {
           required
         />
 
-        <p className="-mt-2 text-xs leading-5 text-neutral-400">
+        <p className="-mt-2 text-xs leading-5 text-text-muted">
           Mínimo 8 caracteres, una mayúscula, una minúscula, un número y un
           carácter especial.
         </p>
@@ -68,15 +67,20 @@ export function UserPasswordForm() {
         {state.message && (
           <div
             className={[
-              'flex items-center gap-2 rounded-xl border px-4 py-3 text-sm',
+              'flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm',
               state.success
-                ? 'border-emerald-100 bg-emerald-50 text-emerald-700'
-                : 'border-red-100 bg-red-50 text-red-600',
+                ? [
+                    'border-emerald-200 bg-emerald-50 text-emerald-700',
+                    'dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-400',
+                  ].join(' ')
+                : [
+                    'border-red-200 bg-red-50 text-red-600',
+                    'dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400',
+                  ].join(' '),
             ].join(' ')}
           >
             {state.success && <Check className="h-4 w-4 shrink-0" />}
-
-            {state.message}
+            <span>{state.message}</span>
           </div>
         )}
       </div>
@@ -85,7 +89,7 @@ export function UserPasswordForm() {
           ACTIONS
           =================== */}
 
-      <div className="flex justify-end border-t border-neutral-100 bg-neutral-50/60 px-6 py-4">
+      <div className="flex items-center justify-end border-t border-border bg-surface/50 px-6 py-4 sm:px-8">
         <PasswordSaveButton />
       </div>
     </form>
@@ -103,10 +107,19 @@ function PasswordSaveButton() {
     <button
       type="submit"
       disabled={pending}
-      className="flex min-w-44 cursor-pointer items-center justify-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
+      className={[
+        'inline-flex min-w-44 items-center justify-center gap-2',
+        'rounded-xl bg-primary px-5 py-2.5',
+        'text-sm font-semibold text-primary-foreground',
+        'shadow-sm transition-all duration-200',
+        'hover:bg-primary-hover hover:shadow-md',
+        'focus-visible:outline-none focus-visible:ring-2',
+        'focus-visible:ring-primary/40 focus-visible:ring-offset-2',
+        'focus-visible:ring-offset-background',
+        'disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none',
+      ].join(' ')}
     >
       {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
-
       {pending ? 'Actualizando...' : 'Cambiar contraseña'}
     </button>
   )

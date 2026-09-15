@@ -21,16 +21,16 @@ export const TradingAccountItem = ({
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <article className="relative rounded-2xl border border-zinc-200 bg-white p-5">
+    <article className="group relative rounded-2xl border border-border bg-background p-5 transition-all duration-200 hover:border-primary">
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
-          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100">
-            <Building2 className="size-5 text-zinc-700" />
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface text-text-muted transition-colors duration-200 group-hover:bg-primary-soft group-hover:text-primary">
+            <Building2 className="h-5 w-5" />
           </div>
 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="truncate font-semibold text-zinc-950">
+              <h2 className="truncate font-semibold text-foreground">
                 {tradingAccount.name}
               </h2>
 
@@ -38,41 +38,52 @@ export const TradingAccountItem = ({
                 className={[
                   'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
                   tradingAccount.active
-                    ? 'bg-emerald-50 text-emerald-700'
-                    : 'bg-zinc-100 text-zinc-500',
+                    ? 'bg-primary-soft text-primary'
+                    : 'bg-surface text-text-muted',
                 ].join(' ')}
               >
                 {tradingAccount.active ? 'Activa' : 'Inactiva'}
               </span>
             </div>
 
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 truncate text-sm text-text-muted">
               {tradingAccount.institution}
             </p>
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative shrink-0">
           <button
             type="button"
             onClick={() => setMenuOpen((current) => !current)}
-            className="flex size-9 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-950"
+            className={[
+              'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg',
+              'text-text-muted transition-colors duration-200',
+              'hover:bg-surface hover:text-foreground',
+              'focus:outline-none focus:ring-2 focus:ring-primary',
+            ].join(' ')}
             aria-label="Opciones de la cuenta"
+            aria-expanded={menuOpen}
           >
-            <MoreVertical className="size-5" />
+            <MoreVertical className="h-5 w-5" />
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 top-10 z-20 w-40 rounded-xl border border-zinc-200 bg-white p-1 shadow-lg">
+            <div className="absolute right-0 top-10 z-20 w-40 rounded-xl border border-border bg-background p-1 shadow-sm">
               <button
                 type="button"
                 onClick={() => {
                   setMenuOpen(false)
                   onEdit(tradingAccount)
                 }}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-zinc-700 transition hover:bg-zinc-100"
+                className={[
+                  'flex w-full cursor-pointer items-center gap-2 rounded-lg',
+                  'px-3 py-2 text-left text-sm text-text-muted',
+                  'transition-colors duration-150',
+                  'hover:bg-surface hover:text-foreground',
+                ].join(' ')}
               >
-                <Pencil className="size-4" />
+                <Pencil className="h-4 w-4" />
                 Editar
               </button>
 
@@ -82,9 +93,14 @@ export const TradingAccountItem = ({
                   setMenuOpen(false)
                   onDelete(tradingAccount)
                 }}
-                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left text-sm text-red-600 transition hover:bg-red-50"
+                className={[
+                  'flex w-full cursor-pointer items-center gap-2 rounded-lg',
+                  'px-3 py-2 text-left text-sm text-primary',
+                  'transition-colors duration-150',
+                  'hover:bg-primary-soft',
+                ].join(' ')}
               >
-                <Trash2 className="size-4" />
+                <Trash2 className="h-4 w-4" />
                 Eliminar
               </button>
             </div>
@@ -92,12 +108,12 @@ export const TradingAccountItem = ({
         </div>
       </div>
 
-      <div className="mt-5 border-t border-zinc-100 pt-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">
+      <div className="mt-5 border-t border-border pt-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-text-muted">
           Moneda
         </p>
 
-        <p className="mt-1 text-sm font-semibold text-zinc-900">
+        <p className="mt-1 text-sm font-semibold text-foreground">
           {tradingAccount.currencyCode} — {tradingAccount.currencySymbol}
         </p>
       </div>

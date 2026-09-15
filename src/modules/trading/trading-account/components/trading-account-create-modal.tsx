@@ -8,6 +8,7 @@ import { useState } from 'react'
 
 import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'
 import { createTradingAccountAction } from '@/modules/trading/trading-account/actions/trading-account.actions'
+
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 import { TextInput } from '@/shared/inputs/text-input'
 
@@ -28,7 +29,6 @@ export function TradingAccountCreateModal({
     currencies[0]?.currencyId ?? null,
   )
   const [active, setActive] = useState(true)
-
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
@@ -69,15 +69,15 @@ export function TradingAccountCreateModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-neutral-100 px-6 py-5">
-          <div>
-            <h2 className="text-lg font-semibold text-neutral-950">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/55 p-4">
+      <div className="w-full max-w-md overflow-visible rounded-2xl border border-border bg-background shadow-xl">
+        <div className="flex items-center justify-between gap-4 border-b border-border px-6 py-5">
+          <div className="min-w-0">
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
               Nueva cuenta de trading
             </h2>
 
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-text-muted">
               Agrega una cuenta al catálogo de trading.
             </p>
           </div>
@@ -86,10 +86,15 @@ export function TradingAccountCreateModal({
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex size-9 items-center justify-center rounded-lg text-neutral-500 transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className={[
+              'flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center',
+              'rounded-lg text-text-muted transition-colors duration-200',
+              'hover:bg-surface hover:text-foreground',
+              'disabled:cursor-not-allowed disabled:opacity-50',
+            ].join(' ')}
             aria-label="Cerrar"
           >
-            <X className="size-5" />
+            <X className="h-5 w-5" />
           </button>
         </div>
 
@@ -116,10 +121,10 @@ export function TradingAccountCreateModal({
             required
           />
 
-          <div>
+          <div className="relative z-20">
             <label
               htmlFor="trading-account-currency"
-              className="mb-2 block text-sm font-medium text-neutral-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               Moneda
             </label>
@@ -140,38 +145,44 @@ export function TradingAccountCreateModal({
             />
           </div>
 
-          <label className="flex items-center gap-3 rounded-xl border border-neutral-200 px-4 py-3">
+          <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-surface/50 px-4 py-3 transition-colors duration-200 hover:bg-surface">
             <input
               type="checkbox"
               checked={active}
               onChange={(event) => setActive(event.target.checked)}
               disabled={pending}
-              className="size-4"
+              className="h-4 w-4 accent-primary"
             />
 
             <div>
-              <p className="text-sm font-medium text-neutral-800">
+              <p className="text-sm font-medium text-foreground">
                 Cuenta activa
               </p>
 
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-text-muted">
                 Permite utilizar esta cuenta dentro del sistema.
               </p>
             </div>
           </label>
 
           {error && (
-            <p className="rounded-xl border border-red-100 bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-xl border border-border bg-primary-soft px-3 py-2 text-sm text-primary">
               {error}
             </p>
           )}
 
-          <div className="flex justify-end gap-3 border-t border-neutral-100 pt-5">
+          <div className="flex justify-end gap-3 border-t border-border pt-5">
             <button
               type="button"
               onClick={onClose}
               disabled={pending}
-              className="h-10 rounded-xl border border-neutral-200 px-4 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className={[
+                'h-10 cursor-pointer rounded-xl border border-border',
+                'bg-background px-4 text-sm font-medium text-text-muted',
+                'transition-colors duration-200',
+                'hover:bg-surface hover:text-foreground',
+                'disabled:cursor-not-allowed disabled:opacity-50',
+              ].join(' ')}
             >
               Cancelar
             </button>
@@ -179,7 +190,13 @@ export function TradingAccountCreateModal({
             <button
               type="submit"
               disabled={pending || currencyId === null}
-              className="h-10 rounded-xl bg-neutral-950 px-4 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className={[
+                'h-10 cursor-pointer rounded-xl bg-primary px-4',
+                'text-sm font-semibold text-primary-foreground',
+                'transition-all duration-200',
+                'hover:bg-primary-hover',
+                'disabled:cursor-not-allowed disabled:opacity-50',
+              ].join(' ')}
             >
               {pending ? 'Creando...' : 'Crear cuenta'}
             </button>

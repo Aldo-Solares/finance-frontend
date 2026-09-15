@@ -12,7 +12,7 @@ export default function Page() {
         description="Mantén segura tu cuenta y actualiza tu contraseña."
       />
 
-      <section className="overflow-hidden rounded-[2rem] border border-[#eee7e9] bg-white">
+      <section className="overflow-hidden rounded-2xl border border-border bg-background">
         <div className="p-6 sm:p-8">
           <UserPasswordForm />
         </div>

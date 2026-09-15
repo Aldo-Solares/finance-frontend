@@ -6,6 +6,7 @@ import { useActionState, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { ImagePlus, LoaderCircle, Upload, X } from 'lucide-react'
 import Image from 'next/image'
+
 import type { ActionState } from '@/core/utils/action-state'
 import { createProfileImageAction } from '@/modules/user/actions/profile-image.actions'
 import {
@@ -28,7 +29,6 @@ export function ProfileImageCatalogCreateModal({
   onClose,
 }: ProfileImageCatalogCreateModalProps) {
   const [state, action] = useActionState(createProfileImageAction, initialState)
-
   const [preview, setPreview] = useState<string | null>(null)
   const [fileError, setFileError] = useState<string | null>(null)
 
@@ -71,17 +71,17 @@ export function ProfileImageCatalogCreateModal({
       <button
         type="button"
         onClick={onClose}
-        className="absolute inset-0 bg-neutral-950/55 backdrop-blur-sm"
+        className="absolute inset-0 bg-foreground/55 backdrop-blur-sm"
       />
 
-      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-[2rem] bg-white shadow-2xl">
-        <div className="flex items-start justify-between border-b border-neutral-100 px-6 py-5">
+      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-background text-foreground shadow-2xl">
+        <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
-            <h2 className="font-semibold text-neutral-950">
+            <h2 className="font-semibold text-foreground">
               Nueva imagen de perfil
             </h2>
 
-            <p className="mt-1 text-sm text-neutral-400">
+            <p className="mt-1 text-sm text-text-muted">
               Agrega una imagen al catálogo global.
             </p>
           </div>
@@ -89,7 +89,11 @@ export function ProfileImageCatalogCreateModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-neutral-400 hover:bg-neutral-100"
+            className={[
+              'flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl',
+              'text-text-muted transition-colors',
+              'hover:bg-surface hover:text-foreground',
+            ].join(' ')}
           >
             <X className="h-4 w-4" />
           </button>
@@ -100,7 +104,7 @@ export function ProfileImageCatalogCreateModal({
             <div>
               <label
                 htmlFor="profileImageName"
-                className="mb-2 block text-xs font-medium text-neutral-500"
+                className="mb-2 block text-xs font-medium text-text-muted"
               >
                 Nombre
               </label>
@@ -112,24 +116,36 @@ export function ProfileImageCatalogCreateModal({
                 required
                 maxLength={100}
                 placeholder="Ej. Gato negro"
-                className="h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-sm text-neutral-950 outline-none placeholder:text-neutral-300 focus:border-neutral-400"
+                className={[
+                  'h-11 w-full rounded-xl border border-border bg-surface px-4',
+                  'text-sm text-foreground outline-none',
+                  'placeholder:text-text-muted',
+                  'transition-all duration-200',
+                  'focus:border-primary focus:bg-background',
+                  'focus:ring-4 focus:ring-primary/[0.08]',
+                ].join(' ')}
               />
             </div>
 
             <div>
               <label
                 htmlFor="profileImageFile"
-                className="mb-2 block text-xs font-medium text-neutral-500"
+                className="mb-2 block text-xs font-medium text-text-muted"
               >
                 Imagen
               </label>
 
               <label
                 htmlFor="profileImageFile"
-                className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-neutral-300 bg-neutral-50 px-6 py-8 text-center transition-colors hover:border-neutral-400 hover:bg-neutral-100"
+                className={[
+                  'flex cursor-pointer flex-col items-center justify-center',
+                  'rounded-2xl border border-dashed border-border bg-surface',
+                  'px-6 py-8 text-center transition-all duration-200',
+                  'hover:border-primary/30 hover:bg-primary-soft',
+                ].join(' ')}
               >
                 {preview ? (
-                  <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+                  <div className="overflow-hidden rounded-2xl border border-border bg-background">
                     <Image
                       src={preview}
                       alt="Vista previa"
@@ -141,17 +157,17 @@ export function ProfileImageCatalogCreateModal({
                   </div>
                 ) : (
                   <>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-neutral-500 shadow-sm">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-background text-text-muted shadow-sm">
                       <Upload className="h-5 w-5" />
                     </div>
 
-                    <p className="mt-4 text-sm font-medium text-neutral-700">
+                    <p className="mt-4 text-sm font-medium text-foreground">
                       Selecciona una imagen
                     </p>
                   </>
                 )}
 
-                <p className="mt-2 text-xs text-neutral-400">
+                <p className="mt-2 text-xs text-text-muted">
                   PNG, JPG, JPEG o WebP · Máximo 5 MB
                 </p>
 
@@ -167,22 +183,28 @@ export function ProfileImageCatalogCreateModal({
               </label>
 
               {fileError && (
-                <p className="mt-2 text-xs text-red-600">{fileError}</p>
+                <p className="mt-2 text-xs text-red-600 dark:text-red-400">
+                  {fileError}
+                </p>
               )}
             </div>
 
             {!state.success && state.message && (
-              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
+              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400">
                 {state.message}
               </div>
             )}
           </div>
 
-          <div className="flex justify-end gap-3 border-t border-neutral-100 bg-neutral-50/60 px-6 py-4">
+          <div className="flex justify-end gap-3 border-t border-border bg-surface/50 px-6 py-4">
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm text-neutral-500 hover:bg-neutral-200"
+              className={[
+                'cursor-pointer rounded-xl px-4 py-2.5 text-sm',
+                'text-text-muted transition-colors',
+                'hover:bg-background hover:text-foreground',
+              ].join(' ')}
             >
               Cancelar
             </button>
@@ -202,7 +224,14 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
     <button
       type="submit"
       disabled={pending || disabled}
-      className="flex min-w-36 cursor-pointer items-center justify-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-60"
+      className={[
+        'inline-flex min-w-36 cursor-pointer items-center justify-center gap-2',
+        'rounded-xl bg-primary px-4 py-2.5',
+        'text-sm font-semibold text-primary-foreground',
+        'shadow-sm transition-all duration-200',
+        'hover:bg-primary-hover hover:shadow-md',
+        'disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none',
+      ].join(' ')}
     >
       {pending ? (
         <LoaderCircle className="h-4 w-4 animate-spin" />

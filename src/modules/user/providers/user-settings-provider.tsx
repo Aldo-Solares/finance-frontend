@@ -2,7 +2,8 @@
 
 'use client'
 
-import { createContext, useContext, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, type ReactNode } from 'react'
+
 import type { UserSettings } from '@/modules/user/schemas/user-settings.schema'
 
 type UserSettingsContextValue = {
@@ -20,6 +21,10 @@ export function UserSettingsProvider({
   userSettings,
   children,
 }: UserSettingsProviderProps) {
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', userSettings.darkMode)
+  }, [userSettings.darkMode])
+
   return (
     <UserSettingsContext.Provider value={{ userSettings }}>
       {children}

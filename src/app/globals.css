@@ -77,3 +77,26 @@ select {
     transform: translateY(0);
   }
 }
+
+/* Select dropdown scrollbar */
+.select-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.select-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.select-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.select-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+.select-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

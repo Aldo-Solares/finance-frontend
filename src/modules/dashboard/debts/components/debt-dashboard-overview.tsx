@@ -1,159 +1,128 @@
 // @/modules/dashboard/debts/components/debt-dashboard-overview.tsx
 
-import {
-  Clock3,
-  CreditCard,
-  ReceiptText,
-  WalletCards,
-} from 'lucide-react';
+import { Clock3, CreditCard, ReceiptText, WalletCards } from 'lucide-react'
 
-import type { DebtDashboard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema';
+import type { DebtDashboard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
 
 type DebtDashboardOverviewProps = {
-  dashboard: DebtDashboard;
-};
+  dashboard: DebtDashboard
+}
 
 function formatMoney(value: number) {
-  return new Intl.NumberFormat(
-    'es-MX',
-    {
-      style: 'currency',
-      currency: 'MXN',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    },
-  ).format(value);
+  return new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value)
 }
 
 export function DebtDashboardOverview({
   dashboard,
 }: DebtDashboardOverviewProps) {
-  const topCard =
-    dashboard.cards[0];
-
-  const topConcept =
-    dashboard.concepts[0];
+  const topCard = dashboard.cards[0]
+  const topConcept = dashboard.concepts[0]
 
   return (
     <section className="space-y-4">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold text-neutral-950">
-            Gastos del mes
-          </h2>
+      <div>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
+          Resumen
+        </p>
 
-          <p className="mt-1 text-sm text-neutral-500">
-            Resumen rápido de tus tarjetas.
-          </p>
+        <div className="mt-1 flex items-end justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight text-foreground">
+              Gastos del mes
+            </h2>
+
+            <p className="mt-1 text-sm text-text-muted">
+              Resumen rápido de tus tarjetas.
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-sm text-neutral-500">
-                Gasto total
-              </p>
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <OverviewCard
+          icon={CreditCard}
+          label="Gasto total"
+          value={formatMoney(dashboard.totalExpenses)}
+          detail={`${dashboard.totalEntries} movimientos`}
+        />
 
-              <p className="mt-2 text-2xl font-semibold tracking-tight text-neutral-950">
-                {formatMoney(
-                  dashboard.totalExpenses,
-                )}
-              </p>
+        <OverviewCard
+          icon={Clock3}
+          label="Pendiente"
+          value={formatMoney(dashboard.totalPending)}
+          detail="Por pagar"
+        />
 
-              <p className="mt-1 text-xs text-neutral-400">
-                {dashboard.totalEntries}{' '}
-                movimientos
-              </p>
-            </div>
+        <OverviewCard
+          icon={WalletCards}
+          label="Mayor gasto"
+          value={
+            topCard ? `${topCard.bank} · ${topCard.cardName}` : 'Sin datos'
+          }
+          detail={
+            topCard ? formatMoney(topCard.totalExpenses) : 'Sin movimientos'
+          }
+        />
 
-            <div className="flex size-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-600">
-              <CreditCard className="size-4" />
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-sm text-neutral-500">
-                Pendiente
-              </p>
-
-              <p className="mt-2 text-2xl font-semibold tracking-tight text-neutral-950">
-                {formatMoney(
-                  dashboard.totalPending,
-                )}
-              </p>
-
-              <p className="mt-1 text-xs text-neutral-400">
-                Por pagar
-              </p>
-            </div>
-
-            <div className="flex size-10 items-center justify-center rounded-xl bg-neutral-100 text-neutral-600">
-              <Clock3 className="size-4" />
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className="text-sm text-neutral-500">
-                Mayor gasto
-              </p>
-
-              <p className="mt-2 truncate text-lg font-semibold text-neutral-950">
-                {topCard
-                  ? `${topCard.bank} · ${topCard.cardName}`
-                  : 'Sin datos'}
-              </p>
-
-              <p className="mt-1 text-xs text-neutral-400">
-                {topCard
-                  ? formatMoney(
-                      topCard.totalExpenses,
-                    )
-                  : 'Sin movimientos'}
-              </p>
-            </div>
-
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-neutral-600">
-              <WalletCards className="size-4" />
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className="text-sm text-neutral-500">
-                Principal concepto
-              </p>
-
-              <p className="mt-2 truncate text-lg font-semibold text-neutral-950">
-                {topConcept
-                  ? topConcept.conceptName
-                  : 'Sin datos'}
-              </p>
-
-              <p className="mt-1 text-xs text-neutral-400">
-                {topConcept
-                  ? formatMoney(
-                      topConcept.totalExpenses,
-                    )
-                  : 'Sin movimientos'}
-              </p>
-            </div>
-
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-neutral-600">
-              <ReceiptText className="size-4" />
-            </div>
-          </div>
-        </div>
+        <OverviewCard
+          icon={ReceiptText}
+          label="Principal concepto"
+          value={topConcept ? topConcept.conceptName : 'Sin datos'}
+          detail={
+            topConcept
+              ? formatMoney(topConcept.totalExpenses)
+              : 'Sin movimientos'
+          }
+        />
       </div>
     </section>
-  );
+  )
+}
+
+type OverviewCardProps = {
+  icon: typeof CreditCard
+  label: string
+  value: string
+  detail: string
+}
+
+function OverviewCard({ icon: Icon, label, value, detail }: OverviewCardProps) {
+  return (
+    <div
+      className={[
+        'group relative overflow-hidden rounded-2xl',
+        'border border-border bg-background p-4',
+        'transition-all duration-200',
+        'hover:border-primary/20 hover:shadow-sm',
+      ].join(' ')}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-text-muted">
+          {label}
+        </p>
+
+        <div
+          className={[
+            'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
+            'bg-surface text-text-muted',
+            'transition-colors duration-200',
+            'group-hover:bg-primary-soft group-hover:text-primary',
+          ].join(' ')}
+        >
+          <Icon className="h-3.5 w-3.5" />
+        </div>
+      </div>
+
+      <p className="mt-4 truncate text-lg font-semibold tracking-tight text-foreground">
+        {value}
+      </p>
+
+      <p className="mt-1 truncate text-[11px] text-text-muted">{detail}</p>
+    </div>
+  )
 }

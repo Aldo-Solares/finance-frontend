@@ -4,18 +4,10 @@
 
 import { LogOut, X } from 'lucide-react'
 
-import Image from 'next/image'
-
-import Link from 'next/link'
-
 import { logoutAction } from '@/modules/auth/actions/auth.actions'
-
-import type { User } from '@/modules/user/schemas/user.schema'
-
-import { useUserSettings } from '@/modules/user/providers/user-settings-provider'
-
 import { ProfileAvatar } from '@/modules/user/components/profile-image/profile-avatar'
-
+import { useUserSettings } from '@/modules/user/providers/user-settings-provider'
+import type { User } from '@/modules/user/schemas/user.schema'
 import { AppNavDrawerNav } from '@/shared/layout/app-nav-drawer-nav'
 
 type AppNavDrawerProps = {
@@ -32,7 +24,7 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 select-scrollbar overflow-y-auto p-1">
       {/* ===================
           OVERLAY
           =================== */}
@@ -41,40 +33,29 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
         type="button"
         aria-label="Cerrar navegación"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-neutral-950/45 backdrop-blur-[2px]"
+        className="absolute inset-0 cursor-default bg-foreground/30 backdrop-blur-[2px]"
       />
 
       {/* ===================
           DRAWER
           =================== */}
 
-      <aside className="absolute inset-y-0 left-0 flex w-full max-w-[390px] flex-col overflow-y-auto bg-neutral-950 px-6 py-6 text-white shadow-[30px_0_80px_-30px_rgba(0,0,0,0.7)]">
+      <aside className="absolute inset-y-0 left-0 flex w-full max-w-[390px] flex-col overflow-y-auto border-r border-border bg-background px-6 py-6 text-foreground shadow-2xl shadow-black/10">
         {/* ===================
             TOP
             =================== */}
 
         <div className="flex items-center justify-between">
-          <Link
-            href="/main"
-            onClick={onClose}
-            aria-label="Isha"
-            className="flex h-11 items-center"
-          >
-            <Image
-              src="/icons/app/Isha.svg"
-              alt="Isha"
-              width={132}
-              height={44}
-              className="h-11 w-auto object-contain"
-              priority
-            />
-          </Link>
-
           <button
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-white/[0.07] text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+            className={[
+              'flex h-11 w-11 items-center justify-center rounded-xl',
+              'border border-border bg-surface text-text-muted',
+              'transition-all duration-200',
+              'hover:border-primary/30 hover:bg-primary-soft hover:text-primary',
+            ].join(' ')}
           >
             <X className="h-5 w-5" />
           </button>
@@ -93,12 +74,14 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
           />
 
           <div className="min-w-0">
-            <p className="truncate text-2xl font-semibold tracking-tight">
+            <p className="truncate text-xl font-semibold tracking-tight text-foreground">
               {user.name}
               {user.lastName ? ` ${user.lastName}` : ''}
             </p>
 
-            <p className="mt-1 truncate text-sm text-white/35">{user.email}</p>
+            <p className="mt-1 truncate text-sm text-text-muted">
+              {user.email}
+            </p>
           </div>
         </div>
 
@@ -112,11 +95,17 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
             LOGOUT
             =================== */}
 
-        <div className="mt-auto border-t border-white/[0.07] pt-5">
+        <div className="mt-auto border-t border-border pt-5">
           <form action={logoutAction}>
             <button
               type="submit"
-              className="flex w-full cursor-pointer items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-white/55 transition-colors hover:bg-red-500/10 hover:text-red-300"
+              className={[
+                'flex w-full cursor-pointer items-center gap-3 rounded-xl',
+                'px-4 py-3 text-sm font-medium text-text-muted',
+                'transition-all duration-200',
+                'hover:bg-red-50 hover:text-red-600',
+                'dark:hover:bg-red-950/30 dark:hover:text-red-400',
+              ].join(' ')}
             >
               <LogOut className="h-4 w-4" />
               Cerrar sesión

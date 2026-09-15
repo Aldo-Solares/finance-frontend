@@ -8,10 +8,12 @@ import {
   UserRound,
 } from 'lucide-react'
 import Link from 'next/link'
+
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 import type { User } from '@/modules/user/schemas/user.schema'
 import type { UserSettings } from '@/modules/user/schemas/user-settings.schema'
 import { PageHeader } from '@/shared/page/page-header'
+
 import { UserAccountCard } from './user-account-card'
 
 type UsersPageProps = {
@@ -69,22 +71,40 @@ export function UsersPage({
             <Link
               key={href}
               href={href}
-              className="group rounded-[2rem] border border-[#eee7e9] bg-white p-6 transition hover:border-neutral-300 hover:shadow-sm sm:p-7"
+              className={[
+                'group rounded-2xl border border-border bg-background p-6',
+                'transition-all duration-200',
+                'hover:border-primary/30 hover:shadow-sm',
+                'sm:p-7',
+              ].join(' ')}
             >
               <div className="flex items-start justify-between gap-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-neutral-100 transition group-hover:bg-neutral-950">
-                  <Icon className="h-5 w-5 text-neutral-700 transition group-hover:text-white" />
+                <div
+                  className={[
+                    'flex h-11 w-11 items-center justify-center rounded-xl',
+                    'bg-surface text-text-muted',
+                    'transition-all duration-200',
+                    'group-hover:bg-primary group-hover:text-primary-foreground',
+                  ].join(' ')}
+                >
+                  <Icon className="h-5 w-5" />
                 </div>
 
-                <ChevronRight className="h-5 w-5 text-neutral-300 transition group-hover:translate-x-1 group-hover:text-neutral-700" />
+                <ChevronRight
+                  className={[
+                    'h-5 w-5 text-text-muted/50',
+                    'transition-all duration-200',
+                    'group-hover:translate-x-1 group-hover:text-primary',
+                  ].join(' ')}
+                />
               </div>
 
               <div className="mt-8">
-                <h2 className="text-base font-semibold text-neutral-950">
+                <h2 className="text-base font-semibold text-foreground">
                   {title}
                 </h2>
 
-                <p className="mt-2 max-w-sm text-sm leading-6 text-neutral-500">
+                <p className="mt-2 max-w-sm text-sm leading-6 text-text-muted">
                   {description}
                 </p>
               </div>

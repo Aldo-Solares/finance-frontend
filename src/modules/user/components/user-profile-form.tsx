@@ -42,40 +42,88 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
   }, [state.success, router])
 
   return (
-    <form action={formAction}>
-      <div className="space-y-5 p-6">
+    <form action={formAction} className="overflow-hidden">
+      <div className="px-6 py-7 sm:px-8 sm:py-8">
+        {/* ===================
+            PERSONAL INFORMATION
+            =================== */}
+
+        <div className="mb-7">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-soft text-primary">
+              <UserRound className="h-4 w-4" />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">
+                Datos personales
+              </h3>
+
+              <p className="mt-0.5 text-xs text-text-muted">
+                Mantén actualizada tu información personal.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* ===================
             NAME
             =================== */}
 
-        <TextInput
-          id="name"
-          name="name"
-          label="Nombre"
-          defaultValue={user.name}
-          autoComplete="given-name"
-          icon={UserRound}
-        />
+        <div className="space-y-5">
+          <TextInput
+            id="name"
+            name="name"
+            label="Nombre"
+            defaultValue={user.name}
+            autoComplete="given-name"
+            icon={UserRound}
+          />
+
+          {/* ===================
+              LAST NAMES
+              =================== */}
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <TextInput
+              id="lastName"
+              name="lastName"
+              label="Primer apellido"
+              defaultValue={user.lastName ?? ''}
+              autoComplete="family-name"
+            />
+
+            <TextInput
+              id="secondLastName"
+              name="secondLastName"
+              label="Segundo apellido"
+              defaultValue={user.secondLastName ?? ''}
+            />
+          </div>
+        </div>
 
         {/* ===================
-            LAST NAMES
+            CONTACT
             =================== */}
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TextInput
-            id="lastName"
-            name="lastName"
-            label="Primer apellido"
-            defaultValue={user.lastName ?? ''}
-            autoComplete="family-name"
-          />
+        <div className="my-8 border-t border-border" />
 
-          <TextInput
-            id="secondLastName"
-            name="secondLastName"
-            label="Segundo apellido"
-            defaultValue={user.secondLastName ?? ''}
-          />
+        <div className="mb-7">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-soft text-primary">
+              <Mail className="h-4 w-4" />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">
+                Información de contacto
+              </h3>
+
+              <p className="mt-0.5 text-xs text-text-muted">
+                Utiliza una dirección de correo que tengas disponible.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* ===================
@@ -100,15 +148,14 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
         {state.message && (
           <div
             className={[
-              'flex items-center gap-2 rounded-xl border px-4 py-3 text-sm',
+              'mt-6 flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm',
               state.success
-                ? 'border-emerald-100 bg-emerald-50 text-emerald-700'
-                : 'border-red-100 bg-red-50 text-red-600',
+                ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-400'
+                : 'border-red-200 bg-red-50 text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400',
             ].join(' ')}
           >
             {state.success && <Check className="h-4 w-4 shrink-0" />}
-
-            {state.message}
+            <span>{state.message}</span>
           </div>
         )}
       </div>
@@ -117,7 +164,7 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
           ACTIONS
           =================== */}
 
-      <div className="flex justify-end border-t border-neutral-100 bg-neutral-50/60 px-6 py-4">
+      <div className="flex items-center justify-end border-t border-border bg-surface/50 px-6 py-4 sm:px-8">
         <ProfileSaveButton />
       </div>
     </form>
@@ -135,10 +182,18 @@ function ProfileSaveButton() {
     <button
       type="submit"
       disabled={pending}
-      className="flex min-w-40 cursor-pointer items-center justify-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
+      className={[
+        'inline-flex min-w-40 items-center justify-center gap-2 rounded-xl',
+        'bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground',
+        'shadow-sm transition-all duration-200',
+        'hover:bg-primary-hover hover:shadow-md',
+        'focus-visible:outline-none focus-visible:ring-2',
+        'focus-visible:ring-primary/40 focus-visible:ring-offset-2',
+        'focus-visible:ring-offset-background',
+        'disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none',
+      ].join(' ')}
     >
       {pending && <LoaderCircle className="h-4 w-4 animate-spin" />}
-
       {pending ? 'Guardando...' : 'Guardar cambios'}
     </button>
   )

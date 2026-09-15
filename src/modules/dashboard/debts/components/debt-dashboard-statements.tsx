@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 
+import { ArrowUpRight, CalendarDays, CircleCheck, Clock3 } from 'lucide-react'
+
 import type {
   DebtDashboardStatement,
   DebtDashboardStatus,
@@ -42,22 +44,26 @@ function formatDate(value: string | null) {
 
 function getStatusClassName(statement: DebtDashboardStatement) {
   if (statement.paid) {
-    return 'bg-emerald-50 text-emerald-700'
+    return 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-400'
   }
 
   switch (statement.status) {
     case 'UPCOMING':
-      return 'bg-neutral-100 text-neutral-600'
+      return 'border-border bg-surface text-text-muted'
 
     case 'ACTIVE':
-      return 'bg-blue-50 text-blue-700'
+      return 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900/60 dark:bg-blue-950/30 dark:text-blue-400'
 
     case 'PAYMENT_PENDING':
-      return 'bg-amber-50 text-amber-700'
+      return 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-400'
 
     case 'CLOSED':
-      return 'bg-red-50 text-red-700'
+      return 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400'
   }
+}
+
+function getStatusIcon(statement: DebtDashboardStatement) {
+  return statement.paid ? CircleCheck : Clock3
 }
 
 export function DebtDashboardStatements({
@@ -65,80 +71,118 @@ export function DebtDashboardStatements({
 }: DebtDashboardStatementsProps) {
   return (
     <section>
-      <div>
-        <h2 className="text-lg font-semibold text-neutral-950">
+      <div className="mb-4">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
+          Detalle
+        </p>
+
+        <h2 className="mt-1 text-xl font-semibold tracking-tight text-foreground">
           Estados de cuenta
         </h2>
 
-        <p className="mt-1 text-sm text-neutral-500">
+        <p className="mt-1 text-sm text-text-muted">
           Estado de tus tarjetas para el periodo seleccionado.
         </p>
       </div>
 
       {statements.length === 0 ? (
-        <div className="mt-4 rounded-2xl border border-neutral-200 bg-white p-6 text-sm text-neutral-500">
-          No hay estados de cuenta para este periodo.
+        <div className="flex min-h-32 items-center justify-center rounded-2xl border border-dashed border-border bg-surface/40 px-6 text-center">
+          <p className="text-sm text-text-muted">
+            No hay estados de cuenta para este periodo.
+          </p>
         </div>
       ) : (
-        <div className="mt-4 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-          {statements.map((statement) => (
-            <Link
-              key={statement.statementId}
-              href={`/debts/statement/${statement.statementId}`}
-              className="rounded-2xl border border-neutral-200 bg-white p-5 transition hover:border-neutral-300 hover:shadow-sm"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="font-semibold text-neutral-950">
-                    {statement.cardName}
-                  </p>
+        <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-3">
+          {statements.map((statement) => {
+            const StatusIcon = getStatusIcon(statement)
 
-                  <p className="mt-1 text-xs text-neutral-400">
-                    {statement.month}/{statement.year}
-                  </p>
+            return (
+              <Link
+                key={statement.statementId}
+                href={`/debts/statement/${statement.statementId}`}
+                className={[
+                  'group relative overflow-hidden rounded-2xl',
+                  'border border-border bg-background p-5',
+                  'transition-all duration-200',
+                  'hover:-translate-y-0.5 hover:border-primary/25',
+                  'hover:shadow-sm',
+                ].join(' ')}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {statement.cardName}
+                    </p>
+
+                    <div className="mt-1.5 flex items-center gap-1.5 text-[11px] text-text-muted">
+                      <CalendarDays className="h-3 w-3" />
+                      <span>
+                        {statement.month}/{statement.year}
+                      </span>
+                    </div>
+                  </div>
+
+                  <ArrowUpRight
+                    className={[
+                      'h-4 w-4 shrink-0 text-text-muted/60',
+                      'transition-all duration-200',
+                      'group-hover:-translate-y-0.5 group-hover:translate-x-0.5',
+                      'group-hover:text-primary',
+                    ].join(' ')}
+                  />
                 </div>
 
-                <span
-                  className={[
-                    'rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em]',
-                    getStatusClassName(statement),
-                  ].join(' ')}
-                >
-                  {statement.paid ? 'Pagado' : statusLabels[statement.status]}
-                </span>
-              </div>
+                <div className="mt-5 flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-muted">
+                      Gastos
+                    </p>
 
-              <p className="mt-6 text-2xl font-semibold tracking-tight text-neutral-950">
-                {formatMoney(statement.totalExpenses)}
-              </p>
+                    <p className="mt-1 text-xl font-semibold tracking-tight text-foreground">
+                      {formatMoney(statement.totalExpenses)}
+                    </p>
+                  </div>
 
-              <div className="mt-4 space-y-2 border-t border-neutral-100 pt-4 text-sm">
-                <div className="flex justify-between gap-4">
-                  <span className="text-neutral-500">Pagado</span>
-
-                  <span className="font-medium text-neutral-900">
-                    {formatMoney(statement.totalPaid)}
+                  <span
+                    className={[
+                      'inline-flex shrink-0 items-center gap-1.5 rounded-full',
+                      'border px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.06em]',
+                      getStatusClassName(statement),
+                    ].join(' ')}
+                  >
+                    <StatusIcon className="h-3 w-3" />
+                    {statement.paid ? 'Pagado' : statusLabels[statement.status]}
                   </span>
                 </div>
 
-                <div className="flex justify-between gap-4">
-                  <span className="text-neutral-500">Pendiente</span>
+                <div className="mt-5 grid grid-cols-3 divide-x divide-border border-t border-border pt-4">
+                  <div className="pr-3">
+                    <p className="text-[10px] text-text-muted">Pagado</p>
 
-                  <span className="font-medium text-neutral-900">
-                    {formatMoney(statement.totalPending)}
-                  </span>
+                    <p className="mt-1 truncate text-xs font-semibold text-foreground">
+                      {formatMoney(statement.totalPaid)}
+                    </p>
+                  </div>
+
+                  <div className="px-3">
+                    <p className="text-[10px] text-text-muted">Pendiente</p>
+
+                    <p className="mt-1 truncate text-xs font-semibold text-foreground">
+                      {formatMoney(statement.totalPending)}
+                    </p>
+                  </div>
+
+                  <div className="pl-3">
+                    <p className="text-[10px] text-text-muted">Pago</p>
+
+                    <p className="mt-1 truncate text-xs font-semibold text-foreground">
+                      {formatDate(statement.paymentDate)}
+                    </p>
+                  </div>
                 </div>
-
-                <div className="flex justify-between gap-4">
-                  <span className="text-neutral-500">Fecha de pago</span>
-
-                  <span className="font-medium text-neutral-900">
-                    {formatDate(statement.paymentDate)}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            )
+          })}
         </div>
       )}
     </section>

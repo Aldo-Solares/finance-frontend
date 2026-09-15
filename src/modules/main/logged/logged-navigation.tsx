@@ -1,12 +1,13 @@
 // @/modules/main/logged/components/logged-navigation.tsx
 
 import Link from 'next/link'
+
 import {
   ArrowUpRight,
+  CandlestickChart,
   CreditCard,
   Settings,
   TrendingUp,
-  CandlestickChart,
 } from 'lucide-react'
 
 const navigationItems = [
@@ -34,31 +35,32 @@ const navigationItems = [
     href: '/trading/trade',
     icon: CandlestickChart,
   },
-]
+] as const
 
 export function LoggedNavigation() {
   return (
     <section>
       <div className="mb-5 flex items-end justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-rose-400">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
             Explorar
           </p>
 
-          <h2 className="mt-1 text-xl font-semibold tracking-tight text-neutral-950">
+          <h2 className="mt-1 text-xl font-semibold tracking-tight text-foreground">
             ¿A dónde quieres ir?
           </h2>
         </div>
 
         <div className="hidden items-center gap-2 sm:flex">
-          <span className="h-1.5 w-1.5 rounded-full bg-rose-400" />
-          <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-neutral-300">
+          <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+
+          <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-text-muted">
             Isha Finance
           </span>
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {navigationItems.map((item) => {
           const Icon = item.icon
 
@@ -66,30 +68,50 @@ export function LoggedNavigation() {
             <Link
               key={item.href}
               href={item.href}
-              className="group relative flex min-h-56 flex-col justify-between overflow-hidden rounded-[1.6rem] border border-neutral-200 bg-white p-5 transition-all duration-300 hover:-translate-y-1 hover:border-rose-200 hover:shadow-[0_20px_50px_-30px_rgba(244,63,94,0.3)]"
+              className={[
+                'group relative flex min-h-44 flex-col justify-between',
+                'overflow-hidden rounded-2xl border border-border',
+                'bg-background p-5',
+                'transition-all duration-200',
+                'hover:-translate-y-0.5 hover:border-primary/25',
+                'hover:shadow-sm',
+              ].join(' ')}
             >
-              <div className="pointer-events-none absolute -right-12 -top-12 h-28 w-28 rounded-full bg-rose-50 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100" />
-
-              <div className="relative flex items-start justify-between">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-neutral-100 text-neutral-600 transition-all duration-300 group-hover:bg-rose-400 group-hover:text-neutral-950">
+              <div className="flex items-start justify-between gap-4">
+                <div
+                  className={[
+                    'flex h-10 w-10 items-center justify-center rounded-xl',
+                    'bg-surface text-text-muted',
+                    'transition-all duration-200',
+                    'group-hover:bg-primary group-hover:text-primary-foreground',
+                  ].join(' ')}
+                >
                   <Icon className="h-4 w-4" />
                 </div>
 
-                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-300 transition-all duration-300 group-hover:border-rose-300 group-hover:bg-rose-400 group-hover:text-neutral-950">
-                  <ArrowUpRight className="h-4 w-4" />
+                <div
+                  className={[
+                    'flex h-8 w-8 items-center justify-center rounded-full',
+                    'border border-border text-text-muted',
+                    'transition-all duration-200',
+                    'group-hover:border-primary/30 group-hover:bg-primary-soft',
+                    'group-hover:text-primary',
+                  ].join(' ')}
+                >
+                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </div>
               </div>
 
-              <div className="relative mt-8">
-                <h3 className="text-base font-semibold text-neutral-950">
+              <div className="mt-7">
+                <h3 className="text-sm font-semibold text-foreground">
                   {item.title}
                 </h3>
 
-                <p className="mt-2 text-sm leading-6 text-neutral-400">
+                <p className="mt-1.5 text-xs leading-5 text-text-muted">
                   {item.description}
                 </p>
 
-                <div className="mt-5 h-px w-8 bg-rose-400/60 transition-all duration-300 group-hover:w-14" />
+                <div className="mt-4 h-px w-7 bg-primary/40 transition-all duration-200 group-hover:w-12" />
               </div>
             </Link>
           )

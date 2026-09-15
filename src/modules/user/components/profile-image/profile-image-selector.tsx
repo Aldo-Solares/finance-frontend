@@ -5,6 +5,7 @@
 import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Check, LoaderCircle, X } from 'lucide-react'
+
 import type { ActionState } from '@/core/utils/action-state'
 import {
   removeCurrentUserProfileImageAction,
@@ -19,6 +20,7 @@ import { useUserSettings } from '@/modules/user/providers/user-settings-provider
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 import type { User } from '@/modules/user/schemas/user.schema'
 import type { UserSettings } from '@/modules/user/schemas/user-settings.schema'
+
 import { ProfileAvatar } from './profile-avatar'
 
 type ProfileImageSelectorProps = {
@@ -104,57 +106,69 @@ export function ProfileImageSelector({
   const isAnyPending = isImagePending || isRemovePending || isBackgroundPending
 
   return (
-    <section className="overflow-hidden rounded-[2rem] border border-[#eee7e9] bg-white">
-      <div className="border-b border-[#f3edef] px-6 py-6 sm:px-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-neutral-400">
+    <section className="overflow-hidden rounded-2xl border border-border bg-background">
+      <div className="border-b border-border px-5 py-5 sm:px-6">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
           Personalización
         </p>
 
-        <h2 className="mt-2 text-xl font-semibold text-neutral-950">
-          Imagen de perfil
-        </h2>
+        <div className="mt-1.5 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
+              Imagen de perfil
+            </h2>
 
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-neutral-500">
-          Elige la imagen que quieres utilizar en tu perfil y personaliza su
-          apariencia.
-        </p>
-      </div>
-
-      <div className="space-y-10 p-6 sm:p-8">
-        <div>
-          <div className="mb-5">
-            <h3 className="text-sm font-semibold text-neutral-950">
-              Selecciona una imagen
-            </h3>
-
-            <p className="mt-1 text-sm text-neutral-500">
-              Puedes cambiarla cuando quieras.
+            <p className="mt-1 text-xs leading-5 text-text-muted">
+              Elige una imagen y ajusta su fondo.
             </p>
           </div>
 
+          {user.profileImage && (
+            <ProfileAvatar
+              profileImage={user.profileImage}
+              background={selectedBackground}
+              size="sm"
+              shape="circle"
+            />
+          )}
+        </div>
+      </div>
+
+      <div className="space-y-7 p-5 sm:p-6">
+        <div>
+          <div className="mb-3 flex items-end justify-between gap-4">
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">Imagen</h3>
+
+              <p className="mt-0.5 text-xs text-text-muted">
+                Selecciona la imagen de tu perfil.
+              </p>
+            </div>
+
+            {user.profileImage && (
+              <span className="text-[11px] text-text-muted">Imagen actual</span>
+            )}
+          </div>
+
           {profileImages.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-neutral-200 px-6 py-10 text-center">
-              <p className="text-sm font-medium text-neutral-700">
+            <div className="rounded-xl border border-dashed border-border px-5 py-7 text-center">
+              <p className="text-sm font-medium text-foreground">
                 No hay imágenes disponibles
               </p>
 
-              <p className="mt-1 text-sm text-neutral-500">
+              <p className="mt-1 text-xs text-text-muted">
                 No tienes imágenes de perfil para seleccionar.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="flex flex-wrap gap-2.5">
               {profileImages.map((profileImage) => {
                 const isSelected =
                   user.profileImage?.profileImageId ===
                   profileImage.profileImageId
 
                 return (
-                  <form
-                    key={profileImage.profileImageId}
-                    action={imageAction}
-                    className="group"
-                  >
+                  <form key={profileImage.profileImageId} action={imageAction}>
                     <input
                       type="hidden"
                       name="profileImageId"
@@ -164,48 +178,77 @@ export function ProfileImageSelector({
                     <button
                       type="submit"
                       disabled={isAnyPending}
-                      className="relative block w-full overflow-hidden rounded-2xl border border-[#eee7e9] bg-neutral-50 p-3 transition hover:border-neutral-300 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
+                      aria-label={`Seleccionar ${profileImage.name}`}
+                      className={[
+                        'group relative cursor-pointer rounded-xl p-1',
+                        'transition-all duration-200',
+                        isSelected
+                          ? 'bg-primary'
+                          : 'bg-transparent hover:bg-surface',
+                        'disabled:cursor-not-allowed disabled:opacity-60',
+                      ].join(' ')}
                     >
-                      <div className="relative aspect-square w-full overflow-hidden rounded-xl">
+                      <div
+                        className={[
+                          'relative h-16 w-16 overflow-hidden rounded-lg sm:h-[4.5rem] sm:w-[4.5rem]',
+                          'border bg-surface',
+                          isSelected
+                            ? 'border-primary-foreground/20'
+                            : 'border-border',
+                        ].join(' ')}
+                      >
                         <ProfileAvatar
                           profileImage={profileImage}
                           background={selectedBackground}
                           size="fill"
                           shape="rounded"
                         />
-                      </div>
-
-                      <div className="mt-3 flex items-center justify-between gap-3">
-                        <span className="truncate text-sm font-medium text-neutral-800">
-                          {profileImage.name}
-                        </span>
 
                         {isSelected && (
-                          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-neutral-950 text-white">
-                            <Check className="h-3.5 w-3.5" />
+                          <span className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
+                            <Check className="h-3 w-3" />
                           </span>
                         )}
                       </div>
+
+                      <span
+                        className={[
+                          'mt-1.5 block max-w-[4.5rem] truncate text-center text-[10px] font-medium',
+                          isSelected
+                            ? 'text-primary'
+                            : 'text-text-muted group-hover:text-foreground',
+                        ].join(' ')}
+                      >
+                        {profileImage.name}
+                      </span>
                     </button>
                   </form>
                 )
               })}
 
               {user.profileImage && (
-                <form action={removeAction} className="group">
+                <form action={removeAction}>
                   <button
                     type="submit"
                     disabled={isAnyPending}
-                    className="flex aspect-[1/1.16] w-full flex-col items-center justify-center rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 text-neutral-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60"
+                    className={[
+                      'group flex h-[4.75rem] w-[4.75rem] cursor-pointer flex-col',
+                      'items-center justify-center rounded-xl',
+                      'border border-dashed border-border bg-surface/40',
+                      'text-text-muted transition-all duration-200',
+                      'hover:border-red-200 hover:bg-red-50 hover:text-red-600',
+                      'disabled:cursor-not-allowed disabled:opacity-60',
+                      'dark:hover:border-red-900/60 dark:hover:bg-red-950/30 dark:hover:text-red-400',
+                    ].join(' ')}
                   >
                     {isRemovePending ? (
-                      <LoaderCircle className="h-5 w-5 animate-spin" />
+                      <LoaderCircle className="h-4 w-4 animate-spin" />
                     ) : (
-                      <X className="h-5 w-5" />
+                      <X className="h-4 w-4" />
                     )}
 
-                    <span className="mt-2 text-sm font-medium">
-                      Quitar imagen
+                    <span className="mt-1.5 text-[10px] font-medium">
+                      Quitar
                     </span>
                   </button>
                 </form>
@@ -214,18 +257,16 @@ export function ProfileImageSelector({
           )}
         </div>
 
-        <div className="border-t border-[#f3edef] pt-8">
-          <div className="mb-5">
-            <h3 className="text-sm font-semibold text-neutral-950">
-              Fondo de la imagen
-            </h3>
+        <div className="border-t border-border pt-6">
+          <div className="mb-4">
+            <h3 className="text-sm font-semibold text-foreground">Fondo</h3>
 
-            <p className="mt-1 text-sm text-neutral-500">
-              Selecciona el color que aparecerá detrás de tu imagen de perfil.
+            <p className="mt-0.5 text-xs text-text-muted">
+              Elige el color que aparecerá detrás de tu imagen.
             </p>
           </div>
 
-          <div className="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-9">
+          <div className="flex flex-wrap items-center gap-2.5">
             {PROFILE_IMAGE_BACKGROUNDS.map((background) => {
               const isSelected = selectedBackground === background
 
@@ -243,36 +284,41 @@ export function ProfileImageSelector({
                     aria-label={backgroundLabels[background]}
                     aria-pressed={isSelected}
                     onClick={() => setSelectedBackground(background)}
-                    className="group flex w-full flex-col items-center gap-2 disabled:cursor-not-allowed disabled:opacity-60"
+                    className={[
+                      'group relative flex h-9 w-9 cursor-pointer items-center justify-center rounded-full',
+                      'transition-all duration-200',
+                      'disabled:cursor-not-allowed disabled:opacity-60',
+                      isSelected
+                        ? 'scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background'
+                        : 'hover:scale-110',
+                    ].join(' ')}
                   >
                     <span
                       className={[
-                        'flex h-11 w-11 items-center justify-center rounded-full border-2 transition',
+                        'h-full w-full rounded-full border',
                         PROFILE_IMAGE_BACKGROUND_CLASSES[background],
-                        isSelected
-                          ? 'border-neutral-950 ring-2 ring-neutral-950 ring-offset-2'
-                          : 'border-transparent group-hover:scale-105',
+                        isSelected ? 'border-foreground' : 'border-transparent',
                       ].join(' ')}
-                    >
-                      {isSelected && (
-                        <Check
-                          className={[
-                            'h-4 w-4',
-                            background === 'BLACK' ||
-                            background === 'INDIGO' ||
-                            background === 'PURPLE' ||
-                            background === 'VIOLET' ||
-                            background === 'BLUE' ||
-                            background === 'TEAL' ||
-                            background === 'SLATE'
-                              ? 'text-white'
-                              : 'text-neutral-950',
-                          ].join(' ')}
-                        />
-                      )}
-                    </span>
+                    />
 
-                    <span className="text-[11px] font-medium text-neutral-500">
+                    {isSelected && (
+                      <Check
+                        className={[
+                          'absolute h-3.5 w-3.5',
+                          background === 'BLACK' ||
+                          background === 'INDIGO' ||
+                          background === 'PURPLE' ||
+                          background === 'VIOLET' ||
+                          background === 'BLUE' ||
+                          background === 'TEAL' ||
+                          background === 'SLATE'
+                            ? 'text-white'
+                            : 'text-foreground',
+                        ].join(' ')}
+                      />
+                    )}
+
+                    <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-2 py-1 text-[9px] font-medium text-background opacity-0 transition-opacity group-hover:opacity-100">
                       {backgroundLabels[background]}
                     </span>
                   </button>
@@ -285,10 +331,10 @@ export function ProfileImageSelector({
         {message && (
           <div
             className={[
-              'rounded-xl px-4 py-3 text-sm',
+              'rounded-lg border px-3 py-2.5 text-xs font-medium',
               success
-                ? 'bg-emerald-50 text-emerald-700'
-                : 'bg-red-50 text-red-700',
+                ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-400'
+                : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400',
             ].join(' ')}
           >
             {message}

@@ -51,7 +51,7 @@ export function ProfileAvatar({
         'relative shrink-0 overflow-hidden',
         sizeClasses[size],
         shapeClasses[shape],
-        profileImage ? backgroundClass : 'bg-neutral-100',
+        profileImage ? backgroundClass : 'border border-border bg-surface',
       ].join(' ')}
     >
       {profileImage ? (
@@ -64,8 +64,8 @@ export function ProfileAvatar({
           className="object-contain"
         />
       ) : (
-        <span className="flex h-full w-full items-center justify-center text-sm font-semibold text-neutral-500">
-          {fallback}
+        <span className="flex h-full w-full items-center justify-center text-sm font-semibold text-text-muted">
+          {fallback ?? '?'}
         </span>
       )}
     </div>

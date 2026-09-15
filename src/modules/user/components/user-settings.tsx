@@ -55,13 +55,13 @@ export function UserSettings({ userSettings }: UserSettingsProps) {
 
       <div className="divide-y divide-border">
         <form action={darkModeFormAction}>
-          <div className="flex items-center justify-between gap-6 px-6 py-5">
+          <div className="flex items-center justify-between gap-6 px-6 py-5 transition-colors hover:bg-surface/50">
             <div className="flex min-w-0 items-start gap-3">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface text-text-muted">
                 <Moon className="h-4 w-4" />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-foreground">
                   Modo oscuro
                 </p>
@@ -83,13 +83,13 @@ export function UserSettings({ userSettings }: UserSettingsProps) {
         </form>
 
         <form action={reminderFormAction}>
-          <div className="flex items-center justify-between gap-6 px-6 py-5">
+          <div className="flex items-center justify-between gap-6 px-6 py-5 transition-colors hover:bg-surface/50">
             <div className="flex min-w-0 items-start gap-3">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-surface text-text-muted">
                 <Mail className="h-4 w-4" />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-foreground">
                   Fecha de corte de tarjetas
                 </p>
@@ -113,7 +113,7 @@ export function UserSettings({ userSettings }: UserSettingsProps) {
       </div>
 
       {(darkModeState.message || reminderState.message) && (
-        <div className="border-t border-border px-6 py-4">
+        <div className="border-t border-border bg-surface/50 px-6 py-4">
           <p className="text-sm text-foreground">
             {darkModeState.message || reminderState.message}
           </p>
@@ -132,7 +132,9 @@ function SettingsToggle({ enabled }: { enabled: boolean }) {
       disabled={pending}
       aria-pressed={enabled}
       className={[
-        'relative flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 transition-colors',
+        'relative flex h-6 w-11 shrink-0 items-center rounded-full p-0.5',
+        'transition-all duration-200',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         enabled ? 'bg-primary' : 'bg-border',
         pending ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
       ].join(' ')}
@@ -142,7 +144,8 @@ function SettingsToggle({ enabled }: { enabled: boolean }) {
       ) : (
         <span
           className={[
-            'block h-5 w-5 rounded-full bg-background shadow-sm transition-transform',
+            'block h-5 w-5 rounded-full bg-background shadow-sm',
+            'transition-transform duration-200',
             enabled ? 'translate-x-5' : 'translate-x-0',
           ].join(' ')}
         />

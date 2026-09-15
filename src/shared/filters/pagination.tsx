@@ -23,8 +23,8 @@ export function Pagination({
   const canGoNext = currentPage < totalPages
 
   return (
-    <div className="flex items-center justify-between gap-4 border-t border-neutral-100 pt-4">
-      <p className="text-xs text-neutral-400">
+    <div className="flex items-center justify-between gap-4 border-t border-border pt-4">
+      <p className="text-xs text-text-muted">
         Página {currentPage} de {totalPages}
       </p>
 
@@ -34,7 +34,13 @@ export function Pagination({
           onClick={() => onPageChange(currentPage - 1)}
           disabled={!canGoPrevious}
           aria-label="Página anterior"
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-500 transition hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-950 disabled:cursor-not-allowed disabled:opacity-40"
+          className={[
+            'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg',
+            'border border-border bg-background text-text-muted',
+            'transition-all duration-200',
+            'hover:border-primary/30 hover:bg-primary-soft hover:text-primary',
+            'disabled:cursor-not-allowed disabled:opacity-40',
+          ].join(' ')}
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -50,10 +56,11 @@ export function Pagination({
                 onClick={() => onPageChange(page)}
                 aria-current={active ? 'page' : undefined}
                 className={[
-                  'flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-lg px-2 text-xs font-medium transition',
+                  'flex h-9 min-w-9 cursor-pointer items-center justify-center',
+                  'rounded-lg px-2 text-xs font-medium transition-all duration-200',
                   active
-                    ? 'bg-neutral-950 text-white'
-                    : 'text-neutral-500 hover:bg-neutral-100 hover:text-neutral-950',
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-text-muted hover:bg-surface hover:text-foreground',
                 ].join(' ')}
               >
                 {page}
@@ -67,7 +74,13 @@ export function Pagination({
           onClick={() => onPageChange(currentPage + 1)}
           disabled={!canGoNext}
           aria-label="Página siguiente"
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-500 transition hover:border-neutral-300 hover:bg-neutral-50 hover:text-neutral-950 disabled:cursor-not-allowed disabled:opacity-40"
+          className={[
+            'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg',
+            'border border-border bg-background text-text-muted',
+            'transition-all duration-200',
+            'hover:border-primary/30 hover:bg-primary-soft hover:text-primary',
+            'disabled:cursor-not-allowed disabled:opacity-40',
+          ].join(' ')}
         >
           <ChevronRight className="h-4 w-4" />
         </button>

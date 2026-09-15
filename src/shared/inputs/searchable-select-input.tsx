@@ -40,7 +40,6 @@ export function SearchableSelectInput({
   className = '',
 }: SearchableSelectInputProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-
   const searchRef = useRef<HTMLInputElement>(null)
 
   const isControlled = value !== undefined
@@ -52,7 +51,6 @@ export function SearchableSelectInput({
   const selectedValue = isControlled ? value : internalValue
 
   const [open, setOpen] = useState(false)
-
   const [search, setSearch] = useState('')
 
   useEffect(() => {
@@ -108,7 +106,6 @@ export function SearchableSelectInput({
 
     setOpen(false)
     setSearch('')
-
     onChange?.(nextValue)
   }
 
@@ -123,6 +120,10 @@ export function SearchableSelectInput({
         readOnly
       />
 
+      {/* ===================
+          SELECT
+          =================== */}
+
       <button
         type="button"
         disabled={disabled}
@@ -131,13 +132,21 @@ export function SearchableSelectInput({
         onClick={() => {
           setOpen((current) => !current)
         }}
-        className="flex h-11 w-full items-center justify-between gap-3 rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-left text-sm text-neutral-950 outline-none transition hover:bg-white focus:border-neutral-400 disabled:cursor-not-allowed disabled:opacity-60"
+        className={[
+          'group flex h-11 w-full items-center justify-between gap-3',
+          'rounded-xl border border-border bg-surface px-4 text-left',
+          'text-sm text-foreground outline-none transition-all duration-200',
+          'hover:border-primary/30 hover:bg-background',
+          'focus:border-primary focus:bg-background',
+          'focus:ring-4 focus:ring-primary/[0.08]',
+          'disabled:cursor-not-allowed disabled:opacity-60',
+        ].join(' ')}
       >
         <span
           className={
             selectedOption
-              ? 'truncate text-neutral-950'
-              : 'truncate text-neutral-300'
+              ? 'truncate text-foreground'
+              : 'truncate text-text-muted'
           }
         >
           {selectedOption?.label ?? placeholder}
@@ -145,17 +154,32 @@ export function SearchableSelectInput({
 
         <ChevronDown
           className={[
-            'h-4 w-4 shrink-0 text-neutral-400 transition-transform',
-            open ? 'rotate-180' : '',
+            'h-4 w-4 shrink-0 text-text-muted',
+            'transition-transform duration-200',
+            open ? 'rotate-180 text-primary' : '',
           ].join(' ')}
         />
       </button>
 
+      {/* ===================
+          DROPDOWN
+          =================== */}
+
       {open && (
-        <div className="absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-xl shadow-neutral-950/10">
-          <div className="border-b border-neutral-100 p-2">
+        <div
+          className={[
+            'absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden',
+            'rounded-2xl border border-border bg-background text-foreground',
+            'shadow-xl shadow-black/10',
+          ].join(' ')}
+        >
+          {/* ===================
+              SEARCH
+              =================== */}
+
+          <div className="border-b border-border p-2">
             <div className="relative">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
 
               <input
                 ref={searchRef}
@@ -163,24 +187,34 @@ export function SearchableSelectInput({
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder={searchPlaceholder}
-                className="h-10 w-full rounded-xl border border-neutral-200 bg-neutral-50 pl-9 pr-3 text-sm text-neutral-950 outline-none transition placeholder:text-neutral-300 focus:border-neutral-400 focus:bg-white"
+                className={[
+                  'h-10 w-full rounded-xl border border-border',
+                  'bg-surface pl-9 pr-3 text-sm text-foreground',
+                  'outline-none transition-all duration-200',
+                  'placeholder:text-text-muted',
+                  'focus:border-primary focus:bg-background',
+                  'focus:ring-4 focus:ring-primary/[0.08]',
+                ].join(' ')}
               />
             </div>
           </div>
 
+          {/* ===================
+              OPTIONS
+              =================== */}
+
           <div
             role="listbox"
             aria-labelledby={id}
-            className="max-h-60 overflow-y-auto p-1"
+            className="select-scrollbar max-h-60 overflow-y-auto p-1"
           >
             {filteredOptions.length === 0 ? (
-              <p className="px-3 py-6 text-center text-sm text-neutral-400">
+              <p className="px-3 py-6 text-center text-sm text-text-muted">
                 {emptyMessage}
               </p>
             ) : (
               filteredOptions.map((option) => {
                 const optionValue = String(option.value)
-
                 const selected = optionValue === selectedValue
 
                 return (
@@ -191,16 +225,21 @@ export function SearchableSelectInput({
                     aria-selected={selected}
                     onClick={() => handleSelect(option)}
                     className={[
-                      'flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition',
+                      'flex w-full cursor-pointer items-center justify-between',
+                      'gap-3 rounded-xl px-3 py-2.5 text-left text-sm',
+                      'transition-all duration-150',
                       selected
-                        ? 'bg-neutral-100 text-neutral-950'
-                        : 'text-neutral-700 hover:bg-neutral-50 hover:text-neutral-950',
+                        ? 'bg-primary-soft font-medium text-primary'
+                        : [
+                            'text-text-muted',
+                            'hover:bg-surface hover:text-foreground',
+                          ].join(' '),
                     ].join(' ')}
                   >
                     <span className="truncate">{option.label}</span>
 
                     {selected && (
-                      <Check className="h-4 w-4 shrink-0 text-neutral-950" />
+                      <Check className="h-4 w-4 shrink-0 text-primary" />
                     )}
                   </button>
                 )

@@ -217,82 +217,84 @@ export function DebtDashboardFilters({
   ]
 
   return (
-    <FilterBar
-      title="Filtros del dashboard"
-      description="Refina la información del periodo que deseas consultar."
-      hasActiveFilters={hasActiveFilters}
-      onReset={handleReset}
-    >
-      <FilterField label="Año" htmlFor="dashboard-year">
-        <SelectInput
-          id="dashboard-year"
-          name="dashboard-year"
-          options={yearOptions}
-          value={selectedYear}
-          onChange={handleYearChange}
-        />
-      </FilterField>
+    <div className="relative z-20 overflow-visible">
+      <FilterBar
+        title="Filtros del dashboard"
+        description="Refina la información del periodo que deseas consultar."
+        hasActiveFilters={hasActiveFilters}
+        onReset={handleReset}
+      >
+        <FilterField label="Año" htmlFor="dashboard-year">
+          <SelectInput
+            id="dashboard-year"
+            name="dashboard-year"
+            options={yearOptions}
+            value={selectedYear}
+            onChange={handleYearChange}
+          />
+        </FilterField>
 
-      <FilterField label="Mes" htmlFor="dashboard-month">
-        <SearchableSelectInput
-          id="dashboard-month"
-          name="dashboard-month"
-          options={monthOptions}
-          value={selectedMonth}
-          onChange={(value) => updateFilter('month', value)}
-        />
-      </FilterField>
+        <FilterField label="Mes" htmlFor="dashboard-month">
+          <SearchableSelectInput
+            id="dashboard-month"
+            name="dashboard-month"
+            options={monthOptions}
+            value={selectedMonth}
+            onChange={(value) => updateFilter('month', value)}
+          />
+        </FilterField>
 
-      <FilterField label="Tarjeta" htmlFor="dashboard-user-card">
-        <SelectInput
-          id="dashboard-user-card"
-          name="dashboard-user-card"
-          options={userCardOptions}
-          value={searchParams.get('userCardId') ?? ''}
-          onChange={(value) => updateFilter('userCardId', value)}
-        />
-      </FilterField>
+        <FilterField label="Tarjeta" htmlFor="dashboard-user-card">
+          <SelectInput
+            id="dashboard-user-card"
+            name="dashboard-user-card"
+            options={userCardOptions}
+            value={searchParams.get('userCardId') ?? ''}
+            onChange={(value) => updateFilter('userCardId', value)}
+          />
+        </FilterField>
 
-      <FilterField label="Concepto" htmlFor="dashboard-concept">
-        <SearchableSelectInput
-          id="dashboard-concept"
-          name="dashboard-concept"
-          options={conceptOptions}
-          value={searchParams.get('conceptId') ?? ''}
-          onChange={(value) => updateFilter('conceptId', value)}
-        />
-      </FilterField>
+        <FilterField label="Concepto" htmlFor="dashboard-concept">
+          <SearchableSelectInput
+            id="dashboard-concept"
+            name="dashboard-concept"
+            options={conceptOptions}
+            value={searchParams.get('conceptId') ?? ''}
+            onChange={(value) => updateFilter('conceptId', value)}
+          />
+        </FilterField>
 
-      <FilterField label="Pago" htmlFor="dashboard-paid">
-        <SelectInput
-          id="dashboard-paid"
-          name="dashboard-paid"
-          options={paymentOptions}
-          value={searchParams.get('paid') ?? ''}
-          onChange={(value) => updateFilter('paid', value)}
-        />
-      </FilterField>
+        <FilterField label="Pago" htmlFor="dashboard-paid">
+          <SelectInput
+            id="dashboard-paid"
+            name="dashboard-paid"
+            options={paymentOptions}
+            value={searchParams.get('paid') ?? ''}
+            onChange={(value) => updateFilter('paid', value)}
+          />
+        </FilterField>
 
-      <FilterField label="Estado" htmlFor="dashboard-status">
-        <SelectInput
-          id="dashboard-status"
-          name="dashboard-status"
-          options={statusOptions}
-          value={searchParams.get('status') ?? ''}
-          onChange={(value) => updateFilter('status', value)}
-        />
-      </FilterField>
+        <FilterField label="Estado" htmlFor="dashboard-status">
+          <SelectInput
+            id="dashboard-status"
+            name="dashboard-status"
+            options={statusOptions}
+            value={searchParams.get('status') ?? ''}
+            onChange={(value) => updateFilter('status', value)}
+          />
+        </FilterField>
 
-      <FilterField label="Deudor" htmlFor="dashboard-debtor">
-        <SelectInput
-          id="dashboard-debtor"
-          name="dashboard-debtor"
-          options={debtorOptions}
-          value={searchParams.get('debtor') ?? ''}
-          onChange={(value) => updateFilter('debtor', value)}
-        />
-      </FilterField>
-    </FilterBar>
+        <FilterField label="Deudor" htmlFor="dashboard-debtor">
+          <SelectInput
+            id="dashboard-debtor"
+            name="dashboard-debtor"
+            options={debtorOptions}
+            value={searchParams.get('debtor') ?? ''}
+            onChange={(value) => updateFilter('debtor', value)}
+          />
+        </FilterField>
+      </FilterBar>
+    </div>
   )
 }
 

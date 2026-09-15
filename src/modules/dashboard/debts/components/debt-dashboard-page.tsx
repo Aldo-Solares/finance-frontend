@@ -5,11 +5,14 @@ import { DebtDashboardConceptBreakdown } from '@/modules/dashboard/debts/compone
 import { DebtDashboardFilters } from '@/modules/dashboard/debts/components/debt-dashboard-filters'
 import { DebtDashboardStatements } from '@/modules/dashboard/debts/components/debt-dashboard-statements'
 import { DebtDashboardSummary } from '@/modules/dashboard/debts/components/debt-dashboard-summary'
+
 import type { DebtDashboard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
+
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
+
 import { PageHeader } from '@/shared/page/page-header'
 
 type DebtDashboardPageProps = {
@@ -35,30 +38,20 @@ const monthNames: Record<number, string> = {
   12: 'Diciembre',
 }
 
-function getPeriodLabel(
-  year: number,
-  month: number,
-) {
-  if (
-    year === 0 &&
-    month === 0
-  ) {
+function getPeriodLabel(year: number, month: number) {
+  if (year === 0 && month === 0) {
     return 'Todo el histórico'
   }
 
   if (year === 0) {
-    return `${
-      monthNames[month] ?? 'Todos los meses'
-    } · Todos los años`
+    return `${monthNames[month] ?? 'Todos los meses'} · Todos los años`
   }
 
   if (month === 0) {
     return `Todo ${year}`
   }
 
-  return `${
-    monthNames[month] ?? month
-  } ${year}`
+  return `${monthNames[month] ?? month} ${year}`
 }
 
 export function DebtDashboardPage({
@@ -68,14 +61,10 @@ export function DebtDashboardPage({
   statements,
   statementEntries,
 }: DebtDashboardPageProps) {
-  const periodLabel =
-    getPeriodLabel(
-      dashboard.year,
-      dashboard.month,
-    )
+  const periodLabel = getPeriodLabel(dashboard.year, dashboard.month)
 
   return (
-    <div className="w-full space-y-8">
+    <div className="w-full space-y-6">
       <PageHeader
         eyebrow="Dashboard"
         title="Gastos de tarjetas"
@@ -88,32 +77,18 @@ export function DebtDashboardPage({
         userCards={userCards}
         concepts={concepts}
         statements={statements}
-        statementEntries={
-          statementEntries
-        }
+        statementEntries={statementEntries}
       />
 
-      <DebtDashboardSummary
-        dashboard={dashboard}
-      />
+      <DebtDashboardSummary dashboard={dashboard} />
 
       <div className="grid gap-6 xl:grid-cols-2">
-        <DebtDashboardCardBreakdown
-          cards={dashboard.cards}
-        />
+        <DebtDashboardCardBreakdown cards={dashboard.cards} />
 
-        <DebtDashboardConceptBreakdown
-          concepts={
-            dashboard.concepts
-          }
-        />
+        <DebtDashboardConceptBreakdown concepts={dashboard.concepts} />
       </div>
 
-      <DebtDashboardStatements
-        statements={
-          dashboard.statements
-        }
-      />
+      <DebtDashboardStatements statements={dashboard.statements} />
     </div>
   )
 }

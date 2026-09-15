@@ -38,7 +38,7 @@ export function NumberInput({
   return (
     <div className="relative">
       {prefix && (
-        <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm text-neutral-400">
+        <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm text-text-muted">
           {prefix}
         </span>
       )}
@@ -58,9 +58,11 @@ export function NumberInput({
         readOnly={readOnly}
         onChange={(event) => onChange?.(event.target.value)}
         className={[
-          'h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-sm text-neutral-950 outline-none transition',
-          'placeholder:text-neutral-300',
-          'focus:border-neutral-400 focus:bg-white',
+          'h-11 w-full rounded-xl border border-border bg-surface px-4',
+          'text-sm text-foreground outline-none transition-all duration-200',
+          'placeholder:text-text-muted',
+          'focus:border-primary focus:bg-background',
+          'focus:ring-4 focus:ring-primary/[0.08]',
           'disabled:cursor-not-allowed disabled:opacity-60',
           '[appearance:textfield]',
           '[&::-webkit-inner-spin-button]:appearance-none',

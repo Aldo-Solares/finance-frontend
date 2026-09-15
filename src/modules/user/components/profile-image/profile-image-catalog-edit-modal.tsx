@@ -127,7 +127,7 @@ export function ProfileImageCatalogEditModal({
             </div>
 
             {!state.success && state.message && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400">
+              <div className="rounded-xl border border-primary bg-primary-soft px-4 py-3 text-sm text-primary border-primary/60 bg-primary-soft/30 text-primary">
                 {state.message}
               </div>
             )}

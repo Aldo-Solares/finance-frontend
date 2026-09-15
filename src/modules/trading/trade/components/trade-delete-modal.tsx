@@ -56,22 +56,22 @@ export function TradeDeleteModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-background shadow-xl">
         <div className="flex items-start justify-between p-6">
           <div className="flex gap-4">
-            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-red-50">
-              <AlertTriangle className="size-5 text-red-600" />
+            <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-soft">
+              <AlertTriangle className="size-5 text-primary" />
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold text-neutral-950">
+              <h2 className="text-lg font-semibold text-foreground">
                 Eliminar compra
               </h2>
 
-              <p className="mt-2 text-sm leading-6 text-neutral-500">
+              <p className="mt-2 text-sm leading-6 text-text-muted">
                 Se eliminará la compra de{' '}
-                <span className="font-medium text-neutral-900">
+                <span className="font-medium text-foreground">
                   {
                     trade.instrumentSymbol
                   }
@@ -85,7 +85,7 @@ export function TradeDeleteModal({
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex size-9 items-center justify-center rounded-lg text-neutral-500 hover:bg-neutral-100"
+            className="flex size-9 items-center justify-center rounded-lg text-text-muted hover:bg-surface"
           >
             <X className="size-5" />
           </button>
@@ -93,18 +93,18 @@ export function TradeDeleteModal({
 
         {error && (
           <div className="px-6 pb-2">
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-lg bg-primary-soft px-3 py-2 text-sm text-primary">
               {error}
             </p>
           </div>
         )}
 
-        <div className="flex justify-end gap-3 border-t border-neutral-100 px-6 py-4">
+        <div className="flex justify-end gap-3 border-t border-border px-6 py-4">
           <button
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="h-10 rounded-lg border border-neutral-300 px-4 text-sm font-medium text-neutral-700"
+            className="h-10 rounded-lg border border-border px-4 text-sm font-medium text-foreground"
           >
             Cancelar
           </button>
@@ -113,7 +113,7 @@ export function TradeDeleteModal({
             type="button"
             onClick={handleDelete}
             disabled={pending}
-            className="h-10 rounded-lg bg-red-600 px-4 text-sm font-medium text-white disabled:opacity-50"
+            className="h-10 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground disabled:opacity-50"
           >
             {pending
               ? 'Eliminando...'

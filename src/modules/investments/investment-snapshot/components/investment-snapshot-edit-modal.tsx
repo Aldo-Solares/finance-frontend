@@ -51,21 +51,21 @@ export function InvestmentSnapshotEditModal({
         type="button"
         onClick={onClose}
         aria-label="Cerrar modal"
-        className="absolute inset-0 cursor-default bg-neutral-950/55 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-foreground/55 backdrop-blur-sm"
       />
 
-      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-[2rem] border border-white/20 bg-white shadow-2xl">
-        <div className="flex items-start justify-between border-b border-neutral-100 px-6 py-5">
+      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-[2rem] border border-border bg-background shadow-2xl">
+        <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-text-muted">
               Inversiones
             </p>
 
-            <h2 className="mt-0.5 text-xl font-semibold tracking-tight text-neutral-950">
+            <h2 className="mt-0.5 text-xl font-semibold tracking-tight text-foreground">
               Editar actualización
             </h2>
 
-            <p className="mt-3 text-sm text-neutral-400">
+            <p className="mt-3 text-sm text-text-muted">
               Modifica los datos de esta actualización de SmartCash.
             </p>
           </div>
@@ -75,7 +75,7 @@ export function InvestmentSnapshotEditModal({
             onClick={onClose}
             disabled={state.success}
             aria-label="Cerrar"
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-text-muted transition hover:bg-surface hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
           >
             ×
           </button>
@@ -92,7 +92,7 @@ export function InvestmentSnapshotEditModal({
             <div>
               <label
                 htmlFor="edit-balance-date"
-                className="mb-2 block text-xs font-medium text-neutral-500"
+                className="mb-2 block text-xs font-medium text-text-muted"
               >
                 Fecha
               </label>
@@ -108,7 +108,7 @@ export function InvestmentSnapshotEditModal({
             <div>
               <label
                 htmlFor="edit-balance"
-                className="mb-2 block text-xs font-medium text-neutral-500"
+                className="mb-2 block text-xs font-medium text-text-muted"
               >
                 ¿Cuánto tienes actualmente?
               </label>
@@ -127,7 +127,7 @@ export function InvestmentSnapshotEditModal({
             <div>
               <label
                 htmlFor="edit-contribution"
-                className="mb-2 block text-xs font-medium text-neutral-500"
+                className="mb-2 block text-xs font-medium text-text-muted"
               >
                 ¿Cuánto depositaste desde la última actualización?
               </label>
@@ -146,7 +146,7 @@ export function InvestmentSnapshotEditModal({
             <div>
               <label
                 htmlFor="edit-withdrawal"
-                className="mb-2 block text-xs font-medium text-neutral-500"
+                className="mb-2 block text-xs font-medium text-text-muted"
               >
                 ¿Cuánto retiraste desde la última actualización?
               </label>
@@ -163,17 +163,17 @@ export function InvestmentSnapshotEditModal({
             </div>
 
             {!state.success && state.message && (
-              <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+              <div className="rounded-xl border border-primary bg-primary-soft px-4 py-3 text-sm text-primary">
                 {state.message}
               </div>
             )}
           </div>
 
-          <div className="flex justify-end gap-2 border-t border-neutral-100 bg-neutral-50/60 px-6 py-4">
+          <div className="flex justify-end gap-2 border-t border-border bg-surface/60 px-6 py-4">
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm font-medium text-neutral-500 transition hover:bg-neutral-200 hover:text-neutral-800"
+              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm font-medium text-text-muted transition hover:bg-surface hover:text-foreground"
             >
               Cancelar
             </button>
@@ -181,7 +181,7 @@ export function InvestmentSnapshotEditModal({
             <button
               type="submit"
               disabled={false}
-              className="cursor-pointer rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800"
+              className="cursor-pointer rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover"
             >
               Guardar cambios
             </button>

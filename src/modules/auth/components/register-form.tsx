@@ -182,7 +182,7 @@ export function RegisterForm() {
         ¿Ya tienes una cuenta?{' '}
         <Link
           href="/auth/login"
-          className="font-semibold text-primary transition-colors hover:text-primary-hover"
+          className="font-semibold text-primary transition-colors hover:text-primary"
         >
           Iniciar sesión
         </Link>

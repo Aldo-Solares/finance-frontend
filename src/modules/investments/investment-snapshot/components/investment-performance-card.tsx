@@ -13,24 +13,24 @@ export function InvestmentPerformanceCard({
     performance.generatedTotal >= 0
 
   return (
-    <section className="rounded-2xl border border-neutral-200 bg-white p-6">
-      <p className="text-xs font-medium uppercase tracking-[0.14em] text-neutral-400">
+    <section className="rounded-2xl border border-border bg-background p-6">
+      <p className="text-xs font-medium uppercase tracking-[0.14em] text-text-muted">
         SmartCash
       </p>
 
-      <p className="mt-3 text-sm text-neutral-500">
+      <p className="mt-3 text-sm text-text-muted">
         Saldo actual
       </p>
 
-      <p className="mt-1 text-4xl font-semibold tracking-[-0.04em] text-neutral-950">
+      <p className="mt-1 text-4xl font-semibold tracking-[-0.04em] text-foreground">
         {formatMoney(
           performance.currentBalance,
         )}
       </p>
 
-      <div className="mt-7 grid gap-5 border-t border-neutral-100 pt-6 sm:grid-cols-3">
+      <div className="mt-7 grid gap-5 border-t border-border pt-6 sm:grid-cols-3">
         <div>
-          <p className="text-xs text-neutral-400">
+          <p className="text-xs text-text-muted">
             Ganancia acumulada
           </p>
 
@@ -38,8 +38,8 @@ export function InvestmentPerformanceCard({
             className={[
               'mt-1 text-lg font-semibold',
               positive
-                ? 'text-emerald-700'
-                : 'text-red-600',
+                ? 'text-primary'
+                : 'text-foreground',
             ].join(' ')}
           >
             {formatSignedMoney(
@@ -49,11 +49,11 @@ export function InvestmentPerformanceCard({
         </div>
 
         <div>
-          <p className="text-xs text-neutral-400">
+          <p className="text-xs text-text-muted">
             Último periodo
           </p>
 
-          <p className="mt-1 text-lg font-semibold text-neutral-800">
+          <p className="mt-1 text-lg font-semibold text-foreground">
             {formatSignedMoney(
               performance.generatedLastPeriod,
             )}
@@ -61,11 +61,11 @@ export function InvestmentPerformanceCard({
         </div>
 
         <div>
-          <p className="text-xs text-neutral-400">
+          <p className="text-xs text-text-muted">
             Última actualización
           </p>
 
-          <p className="mt-1 text-sm font-medium text-neutral-700">
+          <p className="mt-1 text-sm font-medium text-foreground">
             {performance.lastBalanceDate
               ? formatDate(
                   performance.lastBalanceDate,

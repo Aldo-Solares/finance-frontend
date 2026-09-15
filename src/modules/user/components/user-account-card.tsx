@@ -73,9 +73,9 @@ export function UserAccountCard({ user }: UserAccountCardProps) {
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-text-muted">
             {user.emailVerified ? (
-              <BadgeCheck className="h-4 w-4 text-emerald-500" />
+              <BadgeCheck className="h-4 w-4 text-primary" />
             ) : (
-              <CircleAlert className="h-4 w-4 text-amber-500" />
+              <CircleAlert className="h-4 w-4 text-primary" />
             )}
             Correo
           </div>
@@ -84,8 +84,8 @@ export function UserAccountCard({ user }: UserAccountCardProps) {
             className={[
               'rounded-full px-2.5 py-1 text-[10px] font-semibold',
               user.emailVerified
-                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400'
-                : 'bg-amber-50 text-amber-700 dark:bg-amber-950/30 dark:text-amber-400',
+                ? 'bg-primary-soft text-primary bg-primary-soft/30 text-primary'
+                : 'bg-primary-soft text-primary bg-primary-soft/30 text-primary',
             ].join(' ')}
           >
             {user.emailVerified ? 'Verificado' : 'Pendiente'}
@@ -100,16 +100,16 @@ export function UserAccountCard({ user }: UserAccountCardProps) {
         >
           <input type="hidden" name="email" value={user.email} />
 
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/50 dark:bg-amber-950/20">
+          <div className="rounded-2xl border border-primary bg-primary-soft p-4 border-primary/50 bg-primary-soft/20">
             <div className="flex gap-3">
-              <MailCheck className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+              <MailCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary text-primary" />
 
               <div>
-                <p className="text-xs font-semibold text-amber-800 dark:text-amber-300">
+                <p className="text-xs font-semibold text-primary text-primary">
                   Verifica tu correo
                 </p>
 
-                <p className="mt-1 text-xs leading-5 text-amber-700/70 dark:text-amber-300/70">
+                <p className="mt-1 text-xs leading-5 text-primary/70 text-primary/70">
                   Tu dirección todavía necesita ser verificada.
                 </p>
               </div>
@@ -123,8 +123,8 @@ export function UserAccountCard({ user }: UserAccountCardProps) {
               className={[
                 'mt-3 text-xs',
                 state.success
-                  ? 'text-emerald-600 dark:text-emerald-400'
-                  : 'text-red-600 dark:text-red-400',
+                  ? 'text-primary text-primary'
+                  : 'text-primary text-primary',
               ].join(' ')}
             >
               {state.message}
@@ -141,8 +141,8 @@ export function UserAccountCard({ user }: UserAccountCardProps) {
               'flex w-full cursor-pointer items-center gap-3 rounded-xl',
               'px-3 py-2.5 text-sm font-medium text-text-muted',
               'transition-all duration-200',
-              'hover:bg-red-50 hover:text-red-600',
-              'dark:hover:bg-red-950/30 dark:hover:text-red-400',
+              'hover:bg-primary-soft hover:text-primary',
+              'hover:bg-primary-soft/30 hover:text-primary',
             ].join(' ')}
           >
             <LogOut className="h-4 w-4" />
@@ -163,10 +163,10 @@ function ResendButton() {
       disabled={pending}
       className={[
         'mt-4 inline-flex cursor-pointer items-center gap-2',
-        'text-xs font-semibold text-amber-800',
+        'text-xs font-semibold text-primary',
         'transition-opacity hover:opacity-70',
         'disabled:cursor-not-allowed disabled:opacity-50',
-        'dark:text-amber-300',
+        'text-primary',
       ].join(' ')}
     >
       {pending && <LoaderCircle className="h-3.5 w-3.5 animate-spin" />}

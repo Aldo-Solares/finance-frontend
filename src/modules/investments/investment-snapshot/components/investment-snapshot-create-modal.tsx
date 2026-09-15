@@ -35,14 +35,14 @@ export function InvestmentSnapshotCreateModal({
   }, [state.success, onClose])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
-        <div className="border-b border-neutral-100 px-6 py-5">
-          <h2 className="text-lg font-semibold text-neutral-950">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-background shadow-xl">
+        <div className="border-b border-border px-6 py-5">
+          <h2 className="text-lg font-semibold text-foreground">
             Actualizar SmartCash
           </h2>
 
-          <p className="mt-1 text-sm text-neutral-500">
+          <p className="mt-1 text-sm text-text-muted">
             Indica cuánto tienes actualmente y si desde el registro anterior
             depositaste o retiraste dinero.
           </p>
@@ -52,7 +52,7 @@ export function InvestmentSnapshotCreateModal({
           <div>
             <label
               htmlFor="balanceDate"
-              className="mb-2 block text-sm font-medium text-neutral-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               Fecha
             </label>
@@ -68,7 +68,7 @@ export function InvestmentSnapshotCreateModal({
           <div>
             <label
               htmlFor="balance"
-              className="mb-2 block text-sm font-medium text-neutral-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               ¿Cuánto tienes actualmente?
             </label>
@@ -86,7 +86,7 @@ export function InvestmentSnapshotCreateModal({
           <div>
             <label
               htmlFor="contribution"
-              className="mb-2 block text-sm font-medium text-neutral-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               ¿Cuánto depositaste desde la última actualización?
             </label>
@@ -104,7 +104,7 @@ export function InvestmentSnapshotCreateModal({
           <div>
             <label
               htmlFor="withdrawal"
-              className="mb-2 block text-sm font-medium text-neutral-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               ¿Cuánto retiraste desde la última actualización?
             </label>
@@ -120,17 +120,17 @@ export function InvestmentSnapshotCreateModal({
           </div>
 
           {!state.success && state.message && (
-            <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
+            <p className="rounded-xl bg-primary-soft px-3 py-2 text-sm text-primary">
               {state.message}
             </p>
           )}
 
-          <div className="flex justify-end gap-3 border-t border-neutral-100 pt-5">
+          <div className="flex justify-end gap-3 border-t border-border pt-5">
             <button
               type="button"
               onClick={onClose}
               disabled={pending}
-              className="cursor-pointer rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-600 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-text-muted transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -138,7 +138,7 @@ export function InvestmentSnapshotCreateModal({
             <button
               type="submit"
               disabled={pending}
-              className="cursor-pointer rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {pending ? 'Guardando...' : 'Guardar actualización'}
             </button>

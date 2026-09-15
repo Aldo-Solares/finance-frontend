@@ -18,7 +18,7 @@ export function NotLoggedHeroVisual() {
       <div className="pointer-events-none absolute bottom-[5%] left-[10%] h-72 w-72 rounded-full border border-primary/10" />
 
       <div className="relative z-10 w-[min(68%,380px)] rotate-[4deg]">
-        <div className="rounded-[2.75rem] border border-border bg-background p-3 shadow-2xl shadow-black/15">
+        <div className="rounded-[2.75rem] border border-border bg-background p-3 shadow-2xl shadow-foreground/15">
           <div className="overflow-hidden rounded-[2.25rem] border border-border bg-surface">
             <div className="px-5 pb-6 pt-7">
               <div className="flex items-start justify-between">
@@ -170,7 +170,7 @@ export function NotLoggedHeroVisual() {
         </div>
       </div>
 
-      <div className="absolute left-[2%] top-[18%] z-20 hidden w-40 -rotate-6 rounded-2xl border border-border bg-background p-4 shadow-xl shadow-black/10 sm:block">
+      <div className="absolute left-[2%] top-[18%] z-20 hidden w-40 -rotate-6 rounded-2xl border border-border bg-background p-4 shadow-xl shadow-foreground/10 sm:block">
         <div className="flex items-center justify-between">
           <p className="text-xs text-text-muted">Gastos</p>
 
@@ -186,7 +186,7 @@ export function NotLoggedHeroVisual() {
         </div>
       </div>
 
-      <div className="absolute right-[-2%] top-[38%] z-20 hidden w-44 rotate-3 rounded-2xl border border-border bg-background p-4 shadow-xl shadow-black/10 sm:block">
+      <div className="absolute right-[-2%] top-[38%] z-20 hidden w-44 rotate-3 rounded-2xl border border-border bg-background p-4 shadow-xl shadow-foreground/10 sm:block">
         <p className="text-xs text-text-muted">Tu progreso</p>
 
         <div className="mt-4 flex items-end gap-1.5">
@@ -205,7 +205,7 @@ export function NotLoggedHeroVisual() {
         </div>
       </div>
 
-      <div className="absolute bottom-[9%] right-[2%] z-20 hidden w-48 rounded-2xl bg-foreground p-5 text-background shadow-xl shadow-black/20 sm:block">
+      <div className="absolute bottom-[9%] right-[2%] z-20 hidden w-48 rounded-2xl bg-foreground p-5 text-background shadow-xl shadow-foreground/20 sm:block">
         <span className="mb-8 block h-2 w-2 rounded-full bg-primary" />
 
         <p className="text-sm font-medium leading-6">

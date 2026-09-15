@@ -170,7 +170,7 @@ export function SearchableSelectInput({
           className={[
             'absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden',
             'rounded-2xl border border-border bg-background text-foreground',
-            'shadow-xl shadow-black/10',
+            'shadow-xl shadow-foreground/10',
           ].join(' ')}
         >
           {/* ===================

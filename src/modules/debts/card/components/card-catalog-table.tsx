@@ -20,8 +20,8 @@ export function CardCatalogTable({
   onDelete,
 }: CardCatalogTableProps) {
   return (
-    <div className="overflow-hidden rounded-[1.5rem] border border-neutral-200 bg-white">
-      <div className="hidden grid-cols-[1fr_1fr_120px_56px] gap-4 border-b border-neutral-100 bg-neutral-50/70 px-6 py-3 text-xs font-medium text-neutral-400 sm:grid">
+    <div className="overflow-visible rounded-[1.5rem] border border-border bg-background">
+      <div className="hidden grid-cols-[1fr_1fr_120px_56px] gap-4 border-b border-border bg-surface/70 px-6 py-3 text-xs font-medium text-text-muted sm:grid">
         <span>Banco</span>
         <span>Tarjeta</span>
         <span>Estado</span>
@@ -59,28 +59,28 @@ function CardCatalogRow({
   return (
     <div
       className={[
-        'grid gap-4 px-5 py-4 transition-colors hover:bg-neutral-50/70 sm:grid-cols-[1fr_1fr_120px_56px] sm:items-center sm:px-6',
+        'grid gap-4 px-5 py-4 transition-colors hover:bg-surface/70 sm:grid-cols-[1fr_1fr_120px_56px] sm:items-center sm:px-6',
         separated
-          ? 'border-t border-neutral-100'
+          ? 'border-t border-border'
           : '',
       ].join(' ')}
     >
       <div>
-        <p className="text-xs text-neutral-400 sm:hidden">
+        <p className="text-xs text-text-muted sm:hidden">
           Banco
         </p>
 
-        <p className="mt-1 text-sm font-medium text-neutral-950 sm:mt-0">
+        <p className="mt-1 text-sm font-medium text-foreground sm:mt-0">
           {card.bank}
         </p>
       </div>
 
       <div>
-        <p className="text-xs text-neutral-400 sm:hidden">
+        <p className="text-xs text-text-muted sm:hidden">
           Tarjeta
         </p>
 
-        <p className="mt-1 text-sm font-medium text-neutral-700 sm:mt-0">
+        <p className="mt-1 text-sm font-medium text-foreground sm:mt-0">
           {card.cardName}
         </p>
       </div>
@@ -112,8 +112,8 @@ function CardStatusBadge({
       className={[
         'inline-flex rounded-full px-2.5 py-1 text-[10px] font-medium',
         active
-          ? 'bg-emerald-50 text-emerald-700'
-          : 'bg-neutral-100 text-neutral-500',
+          ? 'bg-primary-soft text-primary'
+          : 'bg-surface text-text-muted',
       ].join(' ')}
     >
       {active ? 'Activa' : 'Inactiva'}
@@ -134,17 +134,17 @@ function CardCatalogMenu({
 }: CardCatalogMenuProps) {
   return (
     <details className="relative">
-      <summary className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-950">
+      <summary className="flex h-9 w-9 cursor-pointer list-none items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface hover:text-foreground">
         <MoreHorizontal className="h-4 w-4" />
       </summary>
 
-      <div className="absolute right-0 top-11 z-20 w-44 overflow-hidden rounded-xl border border-neutral-200 bg-white p-1 shadow-xl">
+      <div className="absolute right-0 top-11 z-20 w-44 overflow-hidden rounded-xl border border-border bg-background p-1 shadow-xl">
         <button
           type="button"
           onClick={() =>
             onEdit(card)
           }
-          className="w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950"
+          className="w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm text-text-muted hover:bg-surface hover:text-foreground"
         >
           Editar
         </button>
@@ -154,7 +154,7 @@ function CardCatalogMenu({
           onClick={() =>
             onDelete(card)
           }
-          className="w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+          className="w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm text-primary hover:bg-primary-soft"
         >
           Eliminar
         </button>

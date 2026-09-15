@@ -107,7 +107,7 @@ export function TradePage({
               <button
                 type="button"
                 onClick={handleCreate}
-                className="inline-flex h-10 items-center gap-2 rounded-xl bg-neutral-950 px-4 text-sm font-medium text-white transition hover:bg-neutral-800"
+                className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover"
               >
                 <Plus className="h-4 w-4" />
                 Nueva compra
@@ -216,9 +216,9 @@ function TradeSection({
   return (
     <section className="space-y-4">
       <div>
-        <h2 className="text-xl font-semibold text-neutral-950">{title}</h2>
+        <h2 className="text-xl font-semibold text-foreground">{title}</h2>
 
-        <p className="mt-1 text-sm text-neutral-500">{description}</p>
+        <p className="mt-1 text-sm text-text-muted">{description}</p>
       </div>
 
       <TradeList

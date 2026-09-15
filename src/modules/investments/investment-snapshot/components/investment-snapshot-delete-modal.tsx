@@ -38,13 +38,13 @@ export function InvestmentSnapshotDeleteModal({
   }, [state.success, onClose])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-        <h2 className="text-lg font-semibold text-neutral-950">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-background p-6 shadow-xl">
+        <h2 className="text-lg font-semibold text-foreground">
           Eliminar actualización
         </h2>
 
-        <p className="mt-2 text-sm leading-6 text-neutral-500">
+        <p className="mt-2 text-sm leading-6 text-text-muted">
           Los rendimientos posteriores serán recalculados automáticamente.
         </p>
 
@@ -62,7 +62,7 @@ export function InvestmentSnapshotDeleteModal({
 
           {!state.success &&
             state.message && (
-              <p className="mb-4 text-sm text-red-600">
+              <p className="mb-4 text-sm text-primary">
                 {state.message}
               </p>
             )}
@@ -72,7 +72,7 @@ export function InvestmentSnapshotDeleteModal({
               type="button"
               onClick={onClose}
               disabled={pending}
-              className="cursor-pointer rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-600"
+              className="cursor-pointer rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-text-muted"
             >
               Cancelar
             </button>
@@ -80,7 +80,7 @@ export function InvestmentSnapshotDeleteModal({
             <button
               type="submit"
               disabled={pending}
-              className="cursor-pointer rounded-xl bg-red-600 px-4 py-2.5 text-sm font-medium text-white"
+              className="cursor-pointer rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground"
             >
               {pending
                 ? 'Eliminando...'

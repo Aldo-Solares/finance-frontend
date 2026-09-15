@@ -236,9 +236,9 @@ export function ProfileImageSelector({
                       'items-center justify-center rounded-xl',
                       'border border-dashed border-border bg-surface/40',
                       'text-text-muted transition-all duration-200',
-                      'hover:border-red-200 hover:bg-red-50 hover:text-red-600',
+                      'hover:border-primary hover:bg-primary-soft hover:text-primary',
                       'disabled:cursor-not-allowed disabled:opacity-60',
-                      'dark:hover:border-red-900/60 dark:hover:bg-red-950/30 dark:hover:text-red-400',
+                      'hover:border-primary/60 hover:bg-primary-soft/30 hover:text-primary',
                     ].join(' ')}
                   >
                     {isRemovePending ? (
@@ -289,7 +289,7 @@ export function ProfileImageSelector({
                       'transition-all duration-200',
                       'disabled:cursor-not-allowed disabled:opacity-60',
                       isSelected
-                        ? 'scale-110 ring-2 ring-foreground ring-offset-2 ring-offset-background'
+                        ? 'scale-110 ring-2 ring-primary ring-offset-2 ring-offset-background'
                         : 'hover:scale-110',
                     ].join(' ')}
                   >
@@ -297,7 +297,7 @@ export function ProfileImageSelector({
                       className={[
                         'h-full w-full rounded-full border',
                         PROFILE_IMAGE_BACKGROUND_CLASSES[background],
-                        isSelected ? 'border-foreground' : 'border-transparent',
+                        isSelected ? 'border-primary' : 'border-transparent',
                       ].join(' ')}
                     />
 
@@ -312,7 +312,7 @@ export function ProfileImageSelector({
                           background === 'BLUE' ||
                           background === 'TEAL' ||
                           background === 'SLATE'
-                            ? 'text-white'
+                            ? 'text-primary-foreground'
                             : 'text-foreground',
                         ].join(' ')}
                       />
@@ -333,8 +333,8 @@ export function ProfileImageSelector({
             className={[
               'rounded-lg border px-3 py-2.5 text-xs font-medium',
               success
-                ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-400'
-                : 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400',
+                ? 'border-primary bg-primary-soft text-primary'
+                : 'border-primary/60 bg-primary-soft/30 text-primary',
             ].join(' ')}
           >
             {message}

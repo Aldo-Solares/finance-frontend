@@ -49,7 +49,7 @@ export function ConceptPage({
             <button
               type="button"
               onClick={handleCreate}
-              className="flex cursor-pointer items-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white"
+              className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground"
             >
               <Plus className="h-4 w-4" />
               Nuevo concepto

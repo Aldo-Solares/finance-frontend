@@ -30,20 +30,20 @@ export function StatementEntryItem({
   const hasMsi = entry.msiCurrent !== null && entry.msiTotal !== null
 
   return (
-    <tr className="transition-colors hover:bg-neutral-50/70">
+    <tr className="transition-colors hover:bg-surface/70">
       <td className="px-5 py-4">
-        <p className="text-sm font-medium text-neutral-950">
+        <p className="text-sm font-medium text-foreground">
           {entry.conceptName}
         </p>
       </td>
 
       <td className="px-5 py-4">
-        <p className="max-w-56 truncate text-sm text-neutral-600">
+        <p className="max-w-56 truncate text-sm text-text-muted">
           {entry.specification ?? '—'}
         </p>
       </td>
 
-      <td className="px-5 py-4 text-sm text-neutral-600">{entry.debtor}</td>
+      <td className="px-5 py-4 text-sm text-text-muted">{entry.debtor}</td>
 
       <td className="px-5 py-4">
         <DateDisplay value={entry.date} />
@@ -54,8 +54,8 @@ export function StatementEntryItem({
           className={[
             'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
             isPurchase
-              ? 'bg-violet-50 text-violet-700'
-              : 'bg-cyan-50 text-cyan-700',
+              ? 'bg-primary-soft text-primary'
+              : 'bg-surface text-text-muted',
           ].join(' ')}
         >
           {isPurchase ? (
@@ -71,29 +71,29 @@ export function StatementEntryItem({
       <td className="px-5 py-4">
         {hasMsi ? (
           <div>
-            <p className="text-sm font-medium text-violet-700">
+            <p className="text-sm font-medium text-primary">
               {entry.msiCurrent}/{entry.msiTotal}
             </p>
 
             {entry.remainingMsi !== null && (
-              <p className="mt-0.5 text-xs text-neutral-400">
+              <p className="mt-0.5 text-xs text-text-muted">
                 {entry.remainingMsi}{' '}
                 {entry.remainingMsi === 1 ? 'restante' : 'restantes'}
               </p>
             )}
           </div>
         ) : (
-          <span className="text-sm text-neutral-300">—</span>
+          <span className="text-sm text-text-muted">—</span>
         )}
       </td>
 
       <td className="px-5 py-4 text-right">
-        <p className="text-sm font-medium text-neutral-700">
+        <p className="text-sm font-medium text-foreground">
           {formatMoney(entry.amount)}
         </p>
 
         {entry.purchaseAmount !== null && (
-          <p className="mt-0.5 text-xs text-neutral-400">
+          <p className="mt-0.5 text-xs text-text-muted">
             Total {formatMoney(entry.purchaseAmount)}
           </p>
         )}
@@ -101,11 +101,11 @@ export function StatementEntryItem({
 
       <td className="px-5 py-4 text-right">
         {entry.remainingMsiAmount !== null ? (
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-text-muted">
             {formatMoney(entry.remainingMsiAmount)}
           </p>
         ) : (
-          <span className="text-sm text-neutral-300">—</span>
+          <span className="text-sm text-text-muted">—</span>
         )}
       </td>
 
@@ -114,8 +114,8 @@ export function StatementEntryItem({
           className={[
             'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
             entry.paid
-              ? 'bg-emerald-50 text-emerald-700'
-              : 'bg-amber-50 text-amber-700',
+              ? 'bg-primary-soft text-primary'
+              : 'bg-surface text-text-muted',
           ].join(' ')}
         >
           {entry.paid ? (
@@ -129,7 +129,7 @@ export function StatementEntryItem({
       </td>
 
       <td className="px-5 py-4">
-        <p className="max-w-56 truncate text-sm text-neutral-600">
+        <p className="max-w-56 truncate text-sm text-text-muted">
           {entry.notes ?? '—'}
         </p>
       </td>
@@ -140,7 +140,7 @@ export function StatementEntryItem({
             type="button"
             onClick={() => onEdit(entry)}
             aria-label="Editar movimiento"
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface hover:text-foreground"
           >
             <Pencil className="h-3.5 w-3.5" />
           </button>
@@ -149,7 +149,7 @@ export function StatementEntryItem({
             type="button"
             onClick={() => onDelete(entry)}
             aria-label="Eliminar movimiento"
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-red-50 hover:text-red-600"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-primary-soft hover:text-primary"
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>

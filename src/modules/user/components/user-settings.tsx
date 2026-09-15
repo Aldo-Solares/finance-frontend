@@ -135,7 +135,7 @@ function SettingsToggle({ enabled }: { enabled: boolean }) {
         'relative flex h-6 w-11 shrink-0 items-center rounded-full p-0.5',
         'transition-all duration-200',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
-        enabled ? 'bg-primary' : 'bg-border',
+        enabled ? 'bg-primary' : 'bg-surface',
         pending ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
       ].join(' ')}
     >

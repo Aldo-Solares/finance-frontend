@@ -56,20 +56,20 @@ export function StatementTable({
       {groups.map((group) => (
         <section
           key={group.year}
-          className="overflow-hidden rounded-2xl border border-neutral-200 bg-white"
+          className="overflow-hidden rounded-2xl border border-border bg-background"
         >
-          <div className="flex items-center justify-between gap-4 border-b border-neutral-100 px-5 py-4 sm:px-6">
+          <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-950 text-xs font-semibold text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-xs font-semibold text-primary-foreground">
                 {String(group.year).slice(-2)}
               </div>
 
               <div>
-                <h2 className="text-sm font-semibold text-neutral-950">
+                <h2 className="text-sm font-semibold text-foreground">
                   {group.year}
                 </h2>
 
-                <p className="mt-0.5 text-xs text-neutral-400">
+                <p className="mt-0.5 text-xs text-text-muted">
                   {group.statements.length}{' '}
                   {group.statements.length === 1
                     ? 'estado de cuenta'
@@ -82,38 +82,38 @@ export function StatementTable({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[860px]">
               <thead>
-                <tr className="border-b border-neutral-100 bg-neutral-50/70">
+                <tr className="border-b border-border bg-surface/70">
                   <th
                     scope="col"
-                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-400 sm:px-6"
+                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted sm:px-6"
                   >
                     Periodo
                   </th>
 
                   <th
                     scope="col"
-                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-400"
+                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted"
                   >
                     Inicio / corte
                   </th>
 
                   <th
                     scope="col"
-                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-400"
+                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted"
                   >
                     Pago
                   </th>
 
                   <th
                     scope="col"
-                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-400"
+                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted"
                   >
                     Estado
                   </th>
 
                   <th
                     scope="col"
-                    className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-neutral-400 sm:px-6"
+                    className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted sm:px-6"
                   >
                     Acciones
                   </th>

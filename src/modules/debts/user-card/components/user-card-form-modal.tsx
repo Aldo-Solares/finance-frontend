@@ -75,18 +75,18 @@ export function UserCardFormModal({
       <button
         type="button"
         onClick={onClose}
-        className="absolute inset-0 bg-neutral-950/55 backdrop-blur-sm"
+        className="absolute inset-0 bg-foreground/55 backdrop-blur-sm"
         aria-label="Cerrar"
       />
 
-      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-[2rem] bg-white shadow-2xl">
-        <div className="flex items-start justify-between border-b border-neutral-100 px-6 py-5">
+      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-[2rem] border border-border bg-background shadow-2xl">
+        <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
-            <h2 className="font-semibold text-neutral-950">
+            <h2 className="font-semibold text-foreground">
               Agregar tarjeta
             </h2>
 
-            <p className="mt-1 text-sm text-neutral-400">
+            <p className="mt-1 text-sm text-text-muted">
               Selecciona una tarjeta del catálogo para agregarla a tu cuenta.
             </p>
           </div>
@@ -95,7 +95,7 @@ export function UserCardFormModal({
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-neutral-400 transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-text-muted transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Cerrar"
           >
             <X className="h-4 w-4" />
@@ -107,7 +107,7 @@ export function UserCardFormModal({
             <div>
               <label
                 htmlFor="user-card"
-                className="mb-2 block text-xs font-medium text-neutral-500"
+                className="mb-2 block text-xs font-medium text-text-muted"
               >
                 Tarjeta
               </label>
@@ -124,7 +124,7 @@ export function UserCardFormModal({
                 }
                 disabled={pending}
                 required
-                className="h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-sm text-neutral-950 outline-none transition focus:border-neutral-400"
+                className="h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none transition focus:border-primary"
               >
                 {cards.map((card) => (
                   <option
@@ -138,14 +138,14 @@ export function UserCardFormModal({
               </select>
             </div>
 
-            <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3">
+            <div className="rounded-xl border border-border bg-surface px-4 py-3">
               <label className="flex cursor-pointer items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm font-medium text-neutral-800">
+                  <p className="text-sm font-medium text-foreground">
                     Tarjeta activa
                   </p>
 
-                  <p className="mt-0.5 text-xs text-neutral-400">
+                  <p className="mt-0.5 text-xs text-text-muted">
                     La tarjeta estará disponible para estados de cuenta y movimientos.
                   </p>
                 </div>
@@ -162,23 +162,23 @@ export function UserCardFormModal({
                   className="peer sr-only"
                 />
 
-                <span className="relative h-6 w-11 shrink-0 rounded-full bg-neutral-300 transition-colors peer-checked:bg-neutral-950 after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-white after:transition-transform peer-checked:after:translate-x-5" />
+                <span className="relative h-6 w-11 shrink-0 rounded-full bg-surface transition-colors peer-checked:bg-primary after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-background after:transition-transform peer-checked:after:translate-x-5" />
               </label>
             </div>
 
             {error && (
-              <div className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
+              <div className="rounded-xl bg-primary-soft px-4 py-3 text-sm text-primary">
                 {error}
               </div>
             )}
           </div>
 
-          <div className="flex justify-end gap-3 border-t border-neutral-100 bg-neutral-50/60 px-6 py-4">
+          <div className="flex justify-end gap-3 border-t border-border bg-surface/60 px-6 py-4">
             <button
               type="button"
               onClick={onClose}
               disabled={pending}
-              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm text-neutral-500 transition hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm text-text-muted transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -189,7 +189,7 @@ export function UserCardFormModal({
                 pending ||
                 cards.length === 0
               }
-              className="flex min-w-36 cursor-pointer items-center justify-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex min-w-36 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition disabled:cursor-not-allowed disabled:opacity-60"
             >
               <Plus className="h-4 w-4" />
 

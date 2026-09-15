@@ -60,15 +60,15 @@ export function UserTradingAccountCreateModal({
   }))
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
-        <div className="flex items-start justify-between border-b border-neutral-100 px-6 py-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-background shadow-xl">
+        <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
-            <h2 className="text-lg font-semibold text-neutral-950">
+            <h2 className="text-lg font-semibold text-foreground">
               Agregar cuenta
             </h2>
 
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-text-muted">
               Selecciona una cuenta del catálogo para agregarla a tus cuentas.
             </p>
           </div>
@@ -77,7 +77,7 @@ export function UserTradingAccountCreateModal({
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex size-9 items-center justify-center rounded-xl text-neutral-500 transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex size-9 items-center justify-center rounded-xl text-text-muted transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Cerrar"
           >
             <X className="size-5" />
@@ -88,7 +88,7 @@ export function UserTradingAccountCreateModal({
           <div>
             <label
               htmlFor="user-trading-account-create"
-              className="mb-2 block text-sm font-medium text-neutral-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               Cuenta
             </label>
@@ -108,17 +108,17 @@ export function UserTradingAccountCreateModal({
           </div>
 
           {error && (
-            <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600">
+            <p className="rounded-xl bg-primary-soft px-3 py-2 text-sm text-primary">
               {error}
             </p>
           )}
 
-          <div className="flex justify-end gap-3 border-t border-neutral-100 pt-5">
+          <div className="flex justify-end gap-3 border-t border-border pt-5">
             <button
               type="button"
               onClick={onClose}
               disabled={pending}
-              className="cursor-pointer rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-600 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-text-muted transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -130,7 +130,7 @@ export function UserTradingAccountCreateModal({
                 tradingAccounts.length === 0 ||
                 tradingAccountId === 0
               }
-              className="cursor-pointer rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {pending ? 'Agregando...' : 'Agregar cuenta'}
             </button>

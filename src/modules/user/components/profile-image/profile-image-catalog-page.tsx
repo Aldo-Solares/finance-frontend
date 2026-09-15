@@ -67,7 +67,7 @@ export function ProfileImageCatalogPage({
           />
         </div>
 
-        <div className="overflow-hidden rounded-[2rem] border border-border bg-background">
+        <div className="overflow-visible rounded-[2rem] border border-border bg-background">
           <div className="flex flex-col gap-5 border-b border-border px-6 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-8">
             <div>
               <h2 className="text-lg font-semibold tracking-tight text-foreground">

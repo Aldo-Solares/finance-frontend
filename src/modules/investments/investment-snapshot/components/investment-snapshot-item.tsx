@@ -25,9 +25,9 @@ export function InvestmentSnapshotItem({
   onDelete,
 }: InvestmentSnapshotItemProps) {
   return (
-    <div className="grid gap-4 border-b border-neutral-100 px-5 py-4 last:border-b-0 md:grid-cols-[140px_1fr_1fr_1fr_auto] md:items-center">
+    <div className="grid gap-4 border-b border-border px-5 py-4 last:border-b-0 md:grid-cols-[140px_1fr_1fr_1fr_auto] md:items-center">
       <div>
-        <p className="text-sm font-medium text-neutral-950">
+        <p className="text-sm font-medium text-foreground">
           {formatDate(
             snapshot.balanceDate,
           )}
@@ -35,21 +35,21 @@ export function InvestmentSnapshotItem({
       </div>
 
       <div>
-        <p className="text-xs text-neutral-400">
+        <p className="text-xs text-text-muted">
           Saldo
         </p>
 
-        <p className="mt-1 text-sm font-semibold text-neutral-800">
+        <p className="mt-1 text-sm font-semibold text-foreground">
           {formatMoney(snapshot.balance)}
         </p>
       </div>
 
       <div>
-        <p className="text-xs text-neutral-400">
+        <p className="text-xs text-text-muted">
           Aportación / retiro
         </p>
 
-        <p className="mt-1 text-sm text-neutral-600">
+        <p className="mt-1 text-sm text-text-muted">
           +{formatMoney(
             snapshot.contribution,
           )}
@@ -61,7 +61,7 @@ export function InvestmentSnapshotItem({
       </div>
 
       <div>
-        <p className="text-xs text-neutral-400">
+        <p className="text-xs text-text-muted">
           Generado
         </p>
 
@@ -69,8 +69,8 @@ export function InvestmentSnapshotItem({
           className={[
             'mt-1 text-sm font-semibold',
             snapshot.generatedAmount >= 0
-              ? 'text-emerald-700'
-              : 'text-red-600',
+              ? 'text-primary'
+              : 'text-foreground',
           ].join(' ')}
         >
           {formatSignedMoney(
@@ -84,7 +84,7 @@ export function InvestmentSnapshotItem({
           type="button"
           onClick={() => onEdit(snapshot)}
           aria-label="Editar registro"
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-neutral-400 hover:bg-neutral-100 hover:text-neutral-950"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-text-muted hover:bg-surface hover:text-foreground"
         >
           <Pencil className="h-4 w-4" />
         </button>
@@ -95,7 +95,7 @@ export function InvestmentSnapshotItem({
             onDelete(snapshot)
           }
           aria-label="Eliminar registro"
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-neutral-400 hover:bg-red-50 hover:text-red-600"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-text-muted hover:bg-primary-soft hover:text-primary"
         >
           <Trash2 className="h-4 w-4" />
         </button>

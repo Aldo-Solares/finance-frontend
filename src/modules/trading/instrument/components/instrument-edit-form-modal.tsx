@@ -70,15 +70,15 @@ export const InstrumentEditFormModal = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
-        <div className="flex items-start justify-between border-b border-zinc-100 px-6 py-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-background shadow-xl">
+        <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
-            <h2 className="text-lg font-semibold text-zinc-950">
+            <h2 className="text-lg font-semibold text-foreground">
               Editar instrumento
             </h2>
 
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-text-muted">
               Modifica la información del instrumento.
             </p>
           </div>
@@ -87,7 +87,7 @@ export const InstrumentEditFormModal = ({
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-text-muted transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Cerrar"
           >
             <X className="size-5" />
@@ -98,7 +98,7 @@ export const InstrumentEditFormModal = ({
           <div>
             <label
               htmlFor="instrument-edit-symbol"
-              className="mb-2 block text-sm font-medium text-zinc-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               Símbolo
             </label>
@@ -110,14 +110,14 @@ export const InstrumentEditFormModal = ({
               onChange={(event) => setSymbol(event.target.value.toUpperCase())}
               disabled={pending}
               required
-              className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm uppercase text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:opacity-60"
+              className="h-11 w-full rounded-lg border border-border px-3 text-sm uppercase text-foreground outline-none transition placeholder:text-text-muted focus:border-primary disabled:cursor-not-allowed disabled:bg-surface disabled:opacity-60"
             />
           </div>
 
           <div>
             <label
               htmlFor="instrument-edit-name"
-              className="mb-2 block text-sm font-medium text-zinc-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               Nombre
             </label>
@@ -129,14 +129,14 @@ export const InstrumentEditFormModal = ({
               onChange={(event) => setName(event.target.value)}
               disabled={pending}
               required
-              className="h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm text-zinc-950 outline-none transition placeholder:text-zinc-400 focus:border-zinc-950 disabled:cursor-not-allowed disabled:bg-zinc-50 disabled:opacity-60"
+              className="h-11 w-full rounded-lg border border-border px-3 text-sm text-foreground outline-none transition placeholder:text-text-muted focus:border-primary disabled:cursor-not-allowed disabled:bg-surface disabled:opacity-60"
             />
           </div>
 
           <div>
             <label
               htmlFor="instrument-edit-currency"
-              className="mb-2 block text-sm font-medium text-zinc-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               Moneda
             </label>
@@ -158,17 +158,17 @@ export const InstrumentEditFormModal = ({
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-lg bg-primary-soft px-3 py-2 text-sm text-primary">
               {error}
             </p>
           )}
 
-          <div className="flex justify-end gap-3 border-t border-zinc-100 pt-5">
+          <div className="flex justify-end gap-3 border-t border-border pt-5">
             <button
               type="button"
               onClick={onClose}
               disabled={pending}
-              className="h-10 rounded-lg border border-zinc-300 px-4 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-10 rounded-lg border border-border px-4 text-sm font-medium text-foreground transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -176,7 +176,7 @@ export const InstrumentEditFormModal = ({
             <button
               type="submit"
               disabled={pending || currencyId === null}
-              className="h-10 rounded-lg bg-zinc-950 px-4 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-10 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {pending ? 'Guardando...' : 'Guardar cambios'}
             </button>

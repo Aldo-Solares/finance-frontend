@@ -24,16 +24,16 @@ export const InstrumentList = ({
 
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h2 className="text-sm font-semibold text-zinc-950">
+          <h2 className="text-sm font-semibold text-foreground">
             Instrumentos disponibles
           </h2>
 
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-text-muted">
             Catálogo utilizado para tus operaciones de trading.
           </p>
         </div>
 
-        <span className="shrink-0 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-500">
+        <span className="shrink-0 rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-text-muted">
           {instruments.length}
         </span>
       </div>

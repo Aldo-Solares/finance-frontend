@@ -42,7 +42,7 @@ export function ProfileImageCatalogDeleteModal({
       />
 
       <div className="relative z-10 w-full max-w-md rounded-2xl border border-border bg-background p-6 text-center text-foreground shadow-2xl">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-red-600 dark:bg-red-950/30 dark:text-red-400">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-soft text-primary bg-primary-soft/30 text-primary">
           <ImageOff className="h-5 w-5" />
         </div>
 
@@ -66,7 +66,7 @@ export function ProfileImageCatalogDeleteModal({
           />
 
           {!state.success && state.message && (
-            <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left text-sm text-red-600 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400">
+            <p className="mb-4 rounded-xl border border-primary bg-primary-soft px-4 py-3 text-left text-sm text-primary border-primary/60 bg-primary-soft/30 text-primary">
               {state.message}
             </p>
           )}
@@ -102,9 +102,9 @@ function DeleteButton() {
       disabled={pending}
       className={[
         'flex flex-1 cursor-pointer items-center justify-center gap-2',
-        'rounded-xl bg-red-600 px-4 py-2.5',
-        'text-sm font-medium text-white',
-        'transition-colors hover:bg-red-700',
+        'rounded-xl bg-primary px-4 py-2.5',
+        'text-sm font-medium text-primary-foreground',
+        'transition-colors hover:bg-primary-hover',
         'disabled:cursor-not-allowed disabled:opacity-60',
       ].join(' ')}
     >

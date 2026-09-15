@@ -80,29 +80,29 @@ export function StatementEntryEditModal({
         type="button"
         onClick={onClose}
         aria-label="Cerrar modal"
-        className="absolute inset-0 cursor-default bg-neutral-950/60 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-foreground/60 backdrop-blur-sm"
       />
 
-      <div className="relative z-10 flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-[2rem] border border-white/20 bg-white shadow-2xl">
-        <div className="flex shrink-0 items-start justify-between border-b border-neutral-100 px-6 py-5 sm:px-7">
+      <div className="relative z-10 flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-[2rem] border border-border bg-background shadow-2xl">
+        <div className="flex shrink-0 items-start justify-between border-b border-border px-6 py-5 sm:px-7">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-950 text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                 <ReceiptText className="h-4 w-4" />
               </div>
 
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-text-muted">
                   Movimiento #{entry.entryId}
                 </p>
 
-                <h2 className="mt-0.5 text-xl font-semibold tracking-tight text-neutral-950">
+                <h2 className="mt-0.5 text-xl font-semibold tracking-tight text-foreground">
                   Editar movimiento
                 </h2>
               </div>
             </div>
 
-            <p className="mt-3 text-sm text-neutral-500">
+            <p className="mt-3 text-sm text-text-muted">
               Actualiza la información registrada para este movimiento.
             </p>
           </div>
@@ -111,7 +111,7 @@ export function StatementEntryEditModal({
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700"
+            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl text-text-muted transition hover:bg-surface hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
@@ -125,7 +125,7 @@ export function StatementEntryEditModal({
           <input type="hidden" name="paid" value={paid ? 'true' : 'false'} />
 
           <div className="min-h-0 flex-1 overflow-y-auto">
-            <div className="space-y-4 bg-neutral-50/50 p-5 sm:p-7">
+            <div className="space-y-4 bg-surface/50 p-5 sm:p-7">
               <FormSection
                 icon={ReceiptText}
                 title="Información del movimiento"
@@ -231,7 +231,7 @@ export function StatementEntryEditModal({
                       onChange={setDate}
                     />
 
-                    <p className="mt-1.5 text-xs text-neutral-400">
+                    <p className="mt-1.5 text-xs text-text-muted">
                       Puedes dejar la fecha vacía si no deseas registrarla.
                     </p>
                   </div>
@@ -315,15 +315,15 @@ export function StatementEntryEditModal({
                 <button
                   type="button"
                   onClick={() => setPaid((current) => !current)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-neutral-200 bg-white px-4 py-3.5 text-left transition hover:border-neutral-300 hover:bg-neutral-50"
+                  className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-border bg-background px-4 py-3.5 text-left transition hover:border-primary/20 hover:bg-surface"
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     <div
                       className={[
                         'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition',
                         paid
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : 'bg-neutral-100 text-neutral-500',
+                          ? 'bg-primary-soft text-primary'
+                          : 'bg-surface text-text-muted',
                       ].join(' ')}
                     >
                       <Check className="h-4 w-4" />
@@ -331,7 +331,7 @@ export function StatementEntryEditModal({
 
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-neutral-900">
+                        <p className="text-sm font-semibold text-foreground">
                           {paid ? 'Movimiento pagado' : 'Pago pendiente'}
                         </p>
 
@@ -339,15 +339,15 @@ export function StatementEntryEditModal({
                           className={[
                             'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
                             paid
-                              ? 'bg-emerald-50 text-emerald-700'
-                              : 'bg-amber-50 text-amber-700',
+                              ? 'bg-primary-soft text-primary'
+                              : 'bg-surface text-text-muted',
                           ].join(' ')}
                         >
                           {paid ? 'Pagado' : 'Pendiente'}
                         </span>
                       </div>
 
-                      <p className="mt-1 text-xs text-neutral-400">
+                      <p className="mt-1 text-xs text-text-muted">
                         {paid
                           ? 'Este movimiento ya fue cubierto.'
                           : 'Todavía tienes este importe pendiente de pago.'}
@@ -358,12 +358,12 @@ export function StatementEntryEditModal({
                   <div
                     className={[
                       'relative h-6 w-11 shrink-0 rounded-full transition-colors',
-                      paid ? 'bg-emerald-600' : 'bg-neutral-300',
+                      paid ? 'bg-primary' : 'bg-surface',
                     ].join(' ')}
                   >
                     <div
                       className={[
-                        'absolute top-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform',
+                        'absolute top-1 h-4 w-4 rounded-full bg-background shadow-sm transition-transform',
                         paid ? 'translate-x-6' : 'translate-x-1',
                       ].join(' ')}
                     />
@@ -372,18 +372,18 @@ export function StatementEntryEditModal({
               </CollapsibleSection>
 
               {!state.success && state.message && (
-                <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+                <div className="rounded-xl border border-primary bg-primary-soft px-4 py-3 text-sm text-primary">
                   {state.message}
                 </div>
               )}
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center justify-end gap-2 border-t border-neutral-100 bg-white px-6 py-4 sm:px-7">
+          <div className="flex shrink-0 items-center justify-end gap-2 border-t border-border bg-background px-6 py-4 sm:px-7">
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm font-medium text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-800"
+              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm font-medium text-text-muted transition hover:bg-surface hover:text-foreground"
             >
               Cancelar
             </button>
@@ -410,16 +410,16 @@ function FormSection({
   children,
 }: FormSectionProps) {
   return (
-    <section className="rounded-[1.5rem] border border-neutral-200 bg-white p-5 shadow-sm shadow-neutral-950/[0.02] sm:p-6">
+    <section className="rounded-[1.5rem] border border-border bg-background p-5 shadow-sm sm:p-6">
       <div className="mb-5 flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface text-foreground">
           <Icon className="h-4 w-4" />
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-neutral-950">{title}</h3>
+          <h3 className="text-sm font-semibold text-foreground">{title}</h3>
 
-          <p className="mt-1 text-xs leading-5 text-neutral-400">
+          <p className="mt-1 text-xs leading-5 text-text-muted">
             {description}
           </p>
         </div>
@@ -450,18 +450,18 @@ function CollapsibleSection({
   children,
 }: CollapsibleSectionProps) {
   return (
-    <section className="overflow-hidden rounded-[1.5rem] border border-neutral-200 bg-white shadow-sm shadow-neutral-950/[0.02]">
+    <section className="overflow-hidden rounded-[1.5rem] border border-border bg-background shadow-sm">
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full cursor-pointer items-center gap-3 p-5 text-left transition hover:bg-neutral-50 sm:p-6"
+        className="flex w-full cursor-pointer items-center gap-3 p-5 text-left transition hover:bg-surface sm:p-6"
       >
         <div
           className={[
             'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl',
             active
-              ? 'bg-neutral-950 text-white'
-              : 'bg-neutral-100 text-neutral-700',
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-surface text-foreground',
           ].join(' ')}
         >
           <Icon className="h-4 w-4" />
@@ -469,21 +469,21 @@ function CollapsibleSection({
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-sm font-semibold text-neutral-950">{title}</h3>
+            <h3 className="text-sm font-semibold text-foreground">{title}</h3>
 
             {active && (
-              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-700">
+              <span className="rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary">
                 Configurado
               </span>
             )}
           </div>
 
-          <p className="mt-1 text-xs leading-5 text-neutral-400">
+          <p className="mt-1 text-xs leading-5 text-text-muted">
             {description}
           </p>
         </div>
 
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-neutral-400">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-text-muted">
           {open ? (
             <ChevronUp className="h-4 w-4" />
           ) : (
@@ -493,7 +493,7 @@ function CollapsibleSection({
       </button>
 
       {open && (
-        <div className="border-t border-neutral-100 bg-neutral-50/40 p-5 sm:p-6">
+        <div className="border-t border-border bg-surface/40 p-5 sm:p-6">
           {children}
         </div>
       )}
@@ -530,7 +530,7 @@ function Field({
 
       <div className="relative">
         {prefix && (
-          <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm text-neutral-400">
+          <span className="pointer-events-none absolute inset-y-0 left-4 flex items-center text-sm text-text-muted">
             {prefix}
           </span>
         )}
@@ -565,12 +565,12 @@ function CalculatedField({ label, value, prefix }: CalculatedFieldProps) {
       <div
         className={[
           fieldClassName,
-          'flex cursor-not-allowed items-center bg-neutral-100 text-neutral-500',
+          'flex cursor-not-allowed items-center bg-surface text-text-muted',
           prefix ? 'pl-8' : '',
         ].join(' ')}
       >
         {prefix && (
-          <span className="pointer-events-none absolute text-sm text-neutral-400">
+          <span className="pointer-events-none absolute text-sm text-text-muted">
             {prefix}
           </span>
         )}
@@ -591,7 +591,7 @@ function FieldLabel({
   return (
     <label
       htmlFor={htmlFor}
-      className="mb-2 block text-xs font-medium text-neutral-500"
+      className="mb-2 block text-xs font-medium text-text-muted"
     >
       {children}
     </label>
@@ -605,7 +605,7 @@ function SaveButton() {
     <button
       type="submit"
       disabled={pending}
-      className="flex min-w-40 cursor-pointer items-center justify-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
+      className="flex min-w-40 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? (
         <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -619,4 +619,4 @@ function SaveButton() {
 }
 
 const fieldClassName =
-  'h-11 w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 text-sm text-neutral-950 outline-none transition placeholder:text-neutral-300 focus:border-neutral-400 focus:bg-white'
+  'h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none transition placeholder:text-text-muted focus:border-primary focus:bg-background'

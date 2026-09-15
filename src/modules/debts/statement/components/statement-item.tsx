@@ -52,17 +52,17 @@ export function StatementItem({
     <tr
       onClick={handleRowClick}
       className={[
-        'group cursor-pointer transition-colors hover:bg-neutral-50/60',
-        separated ? 'border-t border-neutral-100' : '',
+        'group cursor-pointer transition-colors hover:bg-surface/60',
+        separated ? 'border-t border-border' : '',
       ].join(' ')}
     >
       <td className="px-5 py-4 sm:px-6">
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-neutral-950">
+          <p className="truncate text-sm font-semibold text-foreground">
             {monthName} {statement.year}
           </p>
 
-          <p className="mt-0.5 truncate text-xs text-neutral-400">
+          <p className="mt-0.5 truncate text-xs text-text-muted">
             {statement.bank} · {statement.cardName}
           </p>
         </div>
@@ -71,15 +71,15 @@ export function StatementItem({
       <td className="px-5 py-4">
         <div className="flex items-center gap-3">
           <div>
-            <p className="text-xs font-medium text-neutral-600">Inicio</p>
+            <p className="text-xs font-medium text-text-muted">Inicio</p>
 
             <DateDisplay value={statement.periodStart} />
           </div>
 
-          <span className="text-neutral-300">→</span>
+          <span className="text-text-muted">→</span>
 
           <div>
-            <p className="text-xs font-medium text-neutral-600">Corte</p>
+            <p className="text-xs font-medium text-text-muted">Corte</p>
 
             <DateDisplay value={statement.periodEnd} />
           </div>
@@ -109,7 +109,7 @@ export function StatementItem({
               {STATEMENT_STATUS_LABELS[statement.status]}
             </p>
 
-            <p className="mt-0.5 text-xs text-neutral-400">
+            <p className="mt-0.5 text-xs text-text-muted">
               {statement.paid ? 'Pago registrado' : 'Pago pendiente'}
             </p>
           </div>
@@ -125,7 +125,7 @@ export function StatementItem({
               onEdit(statement)
             }}
             aria-label={`Editar estado de cuenta de ${monthName} ${statement.year}`}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-950"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-text-muted transition hover:bg-surface hover:text-foreground"
           >
             <Pencil className="h-4 w-4" />
           </button>
@@ -137,7 +137,7 @@ export function StatementItem({
               onDelete(statement)
             }}
             aria-label={`Eliminar estado de cuenta de ${monthName} ${statement.year}`}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-neutral-400 transition hover:bg-red-50 hover:text-red-600"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-text-muted transition hover:bg-primary-soft hover:text-primary"
           >
             <Trash2 className="h-4 w-4" />
           </button>
@@ -150,31 +150,31 @@ export function StatementItem({
 function getStatusDotClass(status: Statement['status']): string {
   switch (status) {
     case STATEMENT_STATUS.UPCOMING:
-      return 'bg-blue-500'
+      return 'bg-primary'
 
     case STATEMENT_STATUS.ACTIVE:
-      return 'bg-emerald-500'
+      return 'bg-primary'
 
     case STATEMENT_STATUS.PAYMENT_PENDING:
-      return 'bg-amber-500'
+      return 'bg-primary'
 
     case STATEMENT_STATUS.CLOSED:
-      return 'bg-neutral-400'
+      return 'bg-surface'
   }
 }
 
 function getStatusTextClass(status: Statement['status']): string {
   switch (status) {
     case STATEMENT_STATUS.UPCOMING:
-      return 'text-blue-700'
+      return 'text-primary'
 
     case STATEMENT_STATUS.ACTIVE:
-      return 'text-emerald-700'
+      return 'text-primary'
 
     case STATEMENT_STATUS.PAYMENT_PENDING:
-      return 'text-amber-700'
+      return 'text-primary'
 
     case STATEMENT_STATUS.CLOSED:
-      return 'text-neutral-600'
+      return 'text-text-muted'
   }
 }

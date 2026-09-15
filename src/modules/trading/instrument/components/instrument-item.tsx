@@ -23,19 +23,19 @@ export const InstrumentItem = ({
   )
 
   return (
-    <article className="rounded-2xl border border-zinc-200 bg-white p-5">
+    <article className="rounded-2xl border border-border bg-background p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-start gap-3">
-          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100">
-            <ChartCandlestick className="size-5 text-zinc-700" />
+          <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface">
+            <ChartCandlestick className="size-5 text-foreground" />
           </div>
 
           <div className="min-w-0">
-            <h2 className="text-lg font-semibold text-zinc-950">
+            <h2 className="text-lg font-semibold text-foreground">
               {instrument.symbol}
             </h2>
 
-            <p className="mt-1 truncate text-sm text-zinc-500">
+            <p className="mt-1 truncate text-sm text-text-muted">
               {instrument.name}
             </p>
           </div>
@@ -44,19 +44,19 @@ export const InstrumentItem = ({
         <button
           type="button"
           onClick={() => onEdit(instrument)}
-          className="flex size-9 shrink-0 items-center justify-center rounded-lg text-zinc-500 transition hover:bg-zinc-100 hover:text-zinc-900"
+          className="flex size-9 shrink-0 items-center justify-center rounded-lg text-text-muted transition hover:bg-surface hover:text-foreground"
           aria-label={`Editar ${instrument.symbol}`}
         >
           <Pencil className="size-4" />
         </button>
       </div>
 
-      <div className="mt-5 border-t border-zinc-100 pt-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-zinc-400">
+      <div className="mt-5 border-t border-border pt-4">
+        <p className="text-xs font-medium uppercase tracking-wide text-text-muted">
           Moneda
         </p>
 
-        <p className="mt-1 text-sm font-semibold text-zinc-900">
+        <p className="mt-1 text-sm font-semibold text-foreground">
           {currency
             ? `${currency.code} — ${currency.symbol}`
             : 'Moneda no encontrada'}

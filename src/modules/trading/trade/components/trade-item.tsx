@@ -93,15 +93,15 @@ export function TradeItem({
     trade.sales.length > 0;
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+    <article className="overflow-hidden rounded-2xl border border-border bg-background">
       {/* ===================
       HEADER
       =================== */}
 
-      <div className="border-b border-neutral-100 p-5 sm:p-6">
+      <div className="border-b border-border p-5 sm:p-6">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex min-w-0 items-center gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-neutral-950 text-xs font-semibold text-white">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary text-xs font-semibold text-primary-foreground">
               {trade.instrumentSymbol.slice(
                 0,
                 4,
@@ -110,20 +110,20 @@ export function TradeItem({
 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <h3 className="text-lg font-semibold text-neutral-950">
+                <h3 className="text-lg font-semibold text-foreground">
                   {trade.instrumentSymbol}
                 </h3>
 
-                <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-neutral-600">
+                <span className="rounded-full bg-surface px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-text-muted">
                   {statusLabel[trade.status]}
                 </span>
               </div>
 
-              <p className="mt-0.5 truncate text-sm text-neutral-600">
+              <p className="mt-0.5 truncate text-sm text-text-muted">
                 {trade.instrumentName}
               </p>
 
-              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400">
+              <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted">
                 <span>
                   {trade.tradingAccountName}
                 </span>
@@ -146,7 +146,7 @@ export function TradeItem({
                 onClick={() =>
                   onSell(trade)
                 }
-                className="inline-flex h-9 items-center gap-2 rounded-lg bg-neutral-950 px-3 text-sm font-medium text-white transition hover:bg-neutral-800"
+                className="inline-flex h-9 items-center gap-2 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover"
               >
                 <TrendingDown className="size-4" />
                 Vender
@@ -158,7 +158,7 @@ export function TradeItem({
               onClick={() =>
                 onEdit(trade)
               }
-              className="flex size-9 items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 transition hover:bg-neutral-50 hover:text-neutral-950"
+              className="flex size-9 items-center justify-center rounded-lg border border-border text-text-muted transition hover:bg-surface hover:text-foreground"
               aria-label="Editar compra"
             >
               <Pencil className="size-4" />
@@ -169,7 +169,7 @@ export function TradeItem({
               onClick={() =>
                 onDelete(trade)
               }
-              className="flex size-9 items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 transition hover:bg-red-50 hover:text-red-600"
+              className="flex size-9 items-center justify-center rounded-lg border border-border text-text-muted transition hover:bg-primary-soft hover:text-primary"
               aria-label="Eliminar compra"
             >
               <Trash2 className="size-4" />
@@ -183,7 +183,7 @@ export function TradeItem({
       =================== */}
 
       <div className="p-5 sm:p-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-neutral-400">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
           Resumen de la operación
         </p>
 
@@ -192,8 +192,8 @@ export function TradeItem({
           COMPRA
           =================== */}
 
-          <div className="rounded-xl bg-neutral-50 p-4">
-            <div className="flex items-center gap-2 text-neutral-500">
+          <div className="rounded-xl bg-surface p-4">
+            <div className="flex items-center gap-2 text-text-muted">
               <ReceiptText className="size-4" />
 
               <p className="text-xs font-semibold uppercase tracking-wide">
@@ -201,16 +201,16 @@ export function TradeItem({
               </p>
             </div>
 
-            <p className="mt-3 text-lg font-semibold text-neutral-950">
+            <p className="mt-3 text-lg font-semibold text-foreground">
               {formatQuantity(
                 trade.quantity,
               )}{' '}
               acciones
             </p>
 
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-text-muted">
               a{' '}
-              <span className="font-medium text-neutral-800">
+              <span className="font-medium text-foreground">
                 {formatMoney(
                   trade.purchasePrice,
                   trade.currency,
@@ -219,7 +219,7 @@ export function TradeItem({
               cada una
             </p>
 
-            <div className="mt-4 space-y-2 border-t border-neutral-200 pt-3">
+            <div className="mt-4 space-y-2 border-t border-border pt-3">
               <MetricRow
                 label="Valor de compra"
                 value={formatMoney(
@@ -251,7 +251,7 @@ export function TradeItem({
           ARROW
           =================== */}
 
-          <div className="hidden items-center justify-center text-neutral-300 lg:flex">
+          <div className="hidden items-center justify-center text-text-muted lg:flex">
             <ArrowRight className="size-5" />
           </div>
 
@@ -259,8 +259,8 @@ export function TradeItem({
           VENDISTE
           =================== */}
 
-          <div className="rounded-xl bg-neutral-50 p-4">
-            <div className="flex items-center gap-2 text-neutral-500">
+          <div className="rounded-xl bg-surface p-4">
+            <div className="flex items-center gap-2 text-text-muted">
               <TrendingDown className="size-4" />
 
               <p className="text-xs font-semibold uppercase tracking-wide">
@@ -270,21 +270,21 @@ export function TradeItem({
 
             {hasSales ? (
               <>
-                <p className="mt-3 text-lg font-semibold text-neutral-950">
+                <p className="mt-3 text-lg font-semibold text-foreground">
                   {formatQuantity(
                     trade.soldQuantity,
                   )}{' '}
                   acciones
                 </p>
 
-                <p className="mt-1 text-sm text-neutral-500">
+                <p className="mt-1 text-sm text-text-muted">
                   en{' '}
                   {trade.sales.length === 1
                     ? '1 venta'
                     : `${trade.sales.length} ventas`}
                 </p>
 
-                <div className="mt-4 space-y-2 border-t border-neutral-200 pt-3">
+                <div className="mt-4 space-y-2 border-t border-border pt-3">
                   <MetricRow
                     label="Venta bruta"
                     value={formatMoney(
@@ -312,11 +312,11 @@ export function TradeItem({
               </>
             ) : (
               <div className="mt-3">
-                <p className="font-medium text-neutral-700">
+                <p className="font-medium text-foreground">
                   Aún no has vendido
                 </p>
 
-                <p className="mt-1 text-sm text-neutral-500">
+                <p className="mt-1 text-sm text-text-muted">
                   Conservas las{' '}
                   {formatQuantity(
                     trade.remainingQuantity,
@@ -331,7 +331,7 @@ export function TradeItem({
           ARROW
           =================== */}
 
-          <div className="hidden items-center justify-center text-neutral-300 lg:flex">
+          <div className="hidden items-center justify-center text-text-muted lg:flex">
             <ArrowRight className="size-5" />
           </div>
 
@@ -344,12 +344,12 @@ export function TradeItem({
               'rounded-xl border p-4',
               hasSales
                 ? trade.realizedProfit >= 0
-                  ? 'border-emerald-200 bg-emerald-50/60'
-                  : 'border-red-200 bg-red-50/60'
-                : 'border-neutral-200 bg-neutral-50',
+                  ? 'border-primary bg-primary-soft/60'
+                  : 'border-border bg-surface'
+                : 'border-border bg-surface',
             ].join(' ')}
           >
-            <div className="flex items-center gap-2 text-neutral-500">
+            <div className="flex items-center gap-2 text-text-muted">
               <CircleDollarSign className="size-4" />
 
               <p className="text-xs font-semibold uppercase tracking-wide">
@@ -363,8 +363,8 @@ export function TradeItem({
                   className={[
                     'mt-3 text-2xl font-semibold',
                     trade.realizedProfit >= 0
-                      ? 'text-emerald-700'
-                      : 'text-red-700',
+                      ? 'text-primary'
+                      : 'text-foreground',
                   ].join(' ')}
                 >
                   {trade.realizedProfit >= 0
@@ -376,14 +376,14 @@ export function TradeItem({
                   )}
                 </p>
 
-                <p className="mt-1 text-sm text-neutral-500">
+                <p className="mt-1 text-sm text-text-muted">
                   Resultado realizado
                 </p>
 
                 {trade.status ===
                   'CLOSED' && (
-                  <div className="mt-4 flex items-center gap-2 border-t border-emerald-200/70 pt-3 text-xs font-medium text-neutral-600">
-                    <CheckCircle2 className="size-4 text-emerald-600" />
+                  <div className="mt-4 flex items-center gap-2 border-t border-primary/70 pt-3 text-xs font-medium text-text-muted">
+                    <CheckCircle2 className="size-4 text-primary" />
 
                     Posición cerrada
                   </div>
@@ -391,7 +391,7 @@ export function TradeItem({
 
                 {trade.status ===
                   'PARTIALLY_SOLD' && (
-                  <div className="mt-4 border-t border-neutral-200 pt-3">
+                  <div className="mt-4 border-t border-border pt-3">
                     <MetricRow
                       label="Capital restante"
                       value={formatMoney(
@@ -404,15 +404,15 @@ export function TradeItem({
               </>
             ) : (
               <>
-                <p className="mt-3 text-lg font-semibold text-neutral-950">
+                <p className="mt-3 text-lg font-semibold text-foreground">
                   Sin resultado todavía
                 </p>
 
-                <p className="mt-1 text-sm text-neutral-500">
+                <p className="mt-1 text-sm text-text-muted">
                   El resultado se realiza al vender.
                 </p>
 
-                <div className="mt-4 border-t border-neutral-200 pt-3">
+                <div className="mt-4 border-t border-border pt-3">
                   <MetricRow
                     label="Costo restante"
                     value={formatMoney(
@@ -431,14 +431,14 @@ export function TradeItem({
       COMMISSION CHECK
       =================== */}
 
-      <div className="border-t border-neutral-100 px-5 py-4 sm:px-6">
+      <div className="border-t border-border px-5 py-4 sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs text-neutral-400">
+            <p className="text-xs text-text-muted">
               Comisión de compra
             </p>
 
-            <p className="mt-1 text-sm font-medium text-neutral-700">
+            <p className="mt-1 text-sm font-medium text-foreground">
               {formatMoney(
                 trade.purchaseCommission,
                 trade.currency,
@@ -451,8 +451,8 @@ export function TradeItem({
             className={[
               'rounded-lg px-3 py-2 text-xs font-medium',
               trade.purchaseCommissionValid
-                ? 'bg-emerald-50 text-emerald-700'
-                : 'bg-red-50 text-red-700',
+                ? 'bg-primary-soft text-primary'
+                : 'bg-surface text-text-muted',
             ].join(' ')}
           >
             {trade.purchaseCommissionValid
@@ -470,13 +470,13 @@ export function TradeItem({
       =================== */}
 
       {hasSales && (
-        <div className="border-t border-neutral-100 bg-neutral-50/50 px-5 py-5 sm:px-6">
+        <div className="border-t border-border bg-surface/50 px-5 py-5 sm:px-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-neutral-400">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-text-muted">
               Historial de ventas
             </p>
 
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-text-muted">
               Detalle de cómo fuiste cerrando esta posición.
             </p>
           </div>
@@ -493,16 +493,16 @@ export function TradeItem({
                       sale,
                     )
                   }
-                  className="w-full rounded-xl border border-neutral-200 bg-white p-4 text-left transition hover:border-neutral-300"
+                  className="w-full rounded-xl border border-border bg-background p-4 text-left transition hover:border-primary/20"
                 >
                   <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="flex size-6 items-center justify-center rounded-full bg-neutral-950 text-[10px] font-semibold text-white">
+                        <span className="flex size-6 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
                           {index + 1}
                         </span>
 
-                        <p className="font-semibold text-neutral-950">
+                        <p className="font-semibold text-foreground">
                           Venta de{' '}
                           {formatQuantity(
                             sale.quantity,
@@ -511,7 +511,7 @@ export function TradeItem({
                         </p>
                       </div>
 
-                      <p className="mt-2 text-sm text-neutral-500">
+                      <p className="mt-2 text-sm text-text-muted">
                         {formatDate(
                           sale.saleDate,
                         )}{' '}
@@ -550,7 +550,7 @@ export function TradeItem({
                       />
 
                       <div>
-                        <p className="text-xs text-neutral-400">
+                        <p className="text-xs text-text-muted">
                           Resultado
                         </p>
 
@@ -558,8 +558,8 @@ export function TradeItem({
                           className={[
                             'mt-1 text-sm font-semibold',
                             sale.realizedProfit >= 0
-                              ? 'text-emerald-600'
-                              : 'text-red-600',
+                              ? 'text-primary'
+                              : 'text-foreground',
                           ].join(' ')}
                         >
                           {sale.realizedProfit >=
@@ -575,10 +575,10 @@ export function TradeItem({
                     </div>
                   </div>
 
-                  <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-neutral-100 pt-3 text-xs text-neutral-500">
+                  <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-border pt-3 text-xs text-text-muted">
                     <span>
                       Costo asociado:{' '}
-                      <strong className="font-medium text-neutral-700">
+                      <strong className="font-medium text-foreground">
                         {formatMoney(
                           sale.costBasis,
                           trade.currency,
@@ -588,7 +588,7 @@ export function TradeItem({
 
                     <span>
                       Comisión:{' '}
-                      <strong className="font-medium text-neutral-700">
+                      <strong className="font-medium text-foreground">
                         {sale.commissionRate}%
                       </strong>
                     </span>
@@ -596,8 +596,8 @@ export function TradeItem({
                     <span
                       className={
                         sale.commissionValid
-                          ? 'text-emerald-600'
-                          : 'text-red-600'
+                          ? 'text-primary'
+                          : 'text-text-muted'
                       }
                     >
                       {sale.commissionValid
@@ -635,13 +635,13 @@ function MetricRow({
 }: MetricRowProps) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <span className="text-xs text-neutral-500">
+      <span className="text-xs text-text-muted">
         {label}
       </span>
 
       <span
         className={[
-          'text-sm text-neutral-800',
+          'text-sm text-foreground',
           strong
             ? 'font-semibold'
             : 'font-medium',
@@ -668,11 +668,11 @@ function SaleMetric({
 }: SaleMetricProps) {
   return (
     <div>
-      <p className="text-xs text-neutral-400">
+      <p className="text-xs text-text-muted">
         {label}
       </p>
 
-      <p className="mt-1 text-sm font-medium text-neutral-800">
+      <p className="mt-1 text-sm font-medium text-foreground">
         {value}
       </p>
     </div>

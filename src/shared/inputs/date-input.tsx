@@ -123,10 +123,10 @@ export function DateInput({
           'focus:outline-none',
           error
             ? [
-                'border-red-200 bg-red-50/30',
-                'focus:ring-4 focus:ring-red-500/[0.06]',
-                'dark:border-red-900/60',
-                'dark:bg-red-950/20',
+                'border-primary bg-primary-soft/30',
+                'focus:ring-4 focus:ring-primary/[0.06]',
+                'border-primary/60',
+                'bg-primary-soft/20',
               ].join(' ')
             : [
                 'border-border',
@@ -145,8 +145,8 @@ export function DateInput({
               ? 'bg-primary text-primary-foreground'
               : error
                 ? [
-                    'bg-red-100 text-red-500',
-                    'dark:bg-red-950/40 dark:text-red-400',
+                    'bg-primary-soft text-primary',
+                    'bg-primary-soft/40 text-primary',
                   ].join(' ')
                 : [
                     'bg-surface text-text-muted',
@@ -187,7 +187,7 @@ export function DateInput({
             'absolute left-0 top-[calc(100%+0.5rem)] z-30',
             'w-full min-w-[300px] overflow-hidden rounded-2xl',
             'border border-border bg-background p-4 text-foreground',
-            'shadow-xl shadow-black/10',
+            'shadow-xl shadow-foreground/10',
           ].join(' ')}
         >
           {/* ===================

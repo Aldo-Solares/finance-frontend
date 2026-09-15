@@ -272,7 +272,7 @@ function FilterField({ label, htmlFor, children }: FilterFieldProps) {
     <div className="min-w-0">
       <label
         htmlFor={htmlFor}
-        className="mb-2 block text-xs font-medium text-neutral-500"
+        className="mb-2 block text-xs font-medium text-text-muted"
       >
         {label}
       </label>

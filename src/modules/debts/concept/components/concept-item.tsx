@@ -22,18 +22,18 @@ export function ConceptItem({
   onDelete,
 }: ConceptItemProps) {
   return (
-    <article className="flex items-center justify-between gap-4 rounded-[1.5rem] border border-neutral-200 bg-white p-5 transition-all duration-300 hover:border-neutral-300 hover:shadow-[0_20px_50px_-35px_rgba(0,0,0,0.3)]">
+    <article className="flex items-center justify-between gap-4 rounded-[1.5rem] border border-border bg-background p-5 transition-all duration-300 hover:border-primary/20 hover:shadow-sm">
       <div className="flex min-w-0 items-center gap-4">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-neutral-100 text-neutral-600">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-surface text-text-muted">
           <Tag className="h-4 w-4" />
         </div>
 
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-neutral-950">
+          <p className="truncate text-sm font-semibold text-foreground">
             {concept.name}
           </p>
 
-          <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-neutral-300">
+          <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.12em] text-text-muted">
             Concepto #{concept.conceptId}
           </p>
         </div>
@@ -44,7 +44,7 @@ export function ConceptItem({
           type="button"
           onClick={() => onEdit(concept)}
           aria-label="Editar concepto"
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-surface hover:text-foreground"
         >
           <Pencil className="h-4 w-4" />
         </button>
@@ -53,7 +53,7 @@ export function ConceptItem({
           type="button"
           onClick={() => onDelete(concept)}
           aria-label="Eliminar concepto"
-          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-neutral-400 transition-colors hover:bg-red-50 hover:text-red-600"
+          className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-primary-soft hover:text-primary"
         >
           <Trash2 className="h-4 w-4" />
         </button>

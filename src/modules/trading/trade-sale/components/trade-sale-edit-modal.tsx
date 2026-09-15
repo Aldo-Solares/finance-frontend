@@ -124,15 +124,15 @@ export function TradeSaleEditModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white shadow-xl">
-        <div className="flex items-start justify-between border-b border-neutral-100 px-6 py-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-background shadow-xl">
+        <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
-            <h2 className="text-lg font-semibold text-neutral-950">
+            <h2 className="text-lg font-semibold text-foreground">
               Editar venta
             </h2>
 
-            <p className="mt-1 text-sm text-neutral-500">
+            <p className="mt-1 text-sm text-text-muted">
               {trade.instrumentSymbol} · {maxQuantity} disponibles
             </p>
           </div>
@@ -142,7 +142,7 @@ export function TradeSaleEditModal({
             onClick={onClose}
             disabled={pending}
             aria-label="Cerrar"
-            className="flex size-9 items-center justify-center rounded-lg text-neutral-500 transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex size-9 items-center justify-center rounded-lg text-text-muted transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
           >
             <X className="size-5" />
           </button>
@@ -153,7 +153,7 @@ export function TradeSaleEditModal({
             <div className="mb-2 flex items-center justify-between gap-3">
               <label
                 htmlFor="trade-sale-edit-quantity"
-                className="block text-sm font-medium text-neutral-700"
+                className="block text-sm font-medium text-foreground"
               >
                 Cantidad a vender
               </label>
@@ -162,7 +162,7 @@ export function TradeSaleEditModal({
                 type="button"
                 onClick={handleMaxQuantity}
                 disabled={pending}
-                className="text-xs font-medium text-neutral-500 transition-colors hover:text-neutral-950 disabled:cursor-not-allowed disabled:opacity-50"
+                className="text-xs font-medium text-text-muted transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Máximo
               </button>
@@ -180,7 +180,7 @@ export function TradeSaleEditModal({
               disabled={pending}
             />
 
-            <p className="mt-2 text-xs text-neutral-400">
+            <p className="mt-2 text-xs text-text-muted">
               Disponible: {maxQuantity}
             </p>
           </div>
@@ -188,7 +188,7 @@ export function TradeSaleEditModal({
           <div>
             <label
               htmlFor="trade-sale-edit-price"
-              className="mb-2 block text-sm font-medium text-neutral-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               Precio de venta
             </label>
@@ -209,7 +209,7 @@ export function TradeSaleEditModal({
             <div>
               <label
                 htmlFor="trade-sale-edit-commission"
-                className="mb-2 block text-sm font-medium text-neutral-700"
+                className="mb-2 block text-sm font-medium text-foreground"
               >
                 Comisión
               </label>
@@ -225,7 +225,7 @@ export function TradeSaleEditModal({
                 disabled={pending}
               />
 
-              <p className="mt-2 text-xs text-neutral-400">
+              <p className="mt-2 text-xs text-text-muted">
                 Se calcula automáticamente, pero puedes corregirla.
               </p>
             </div>
@@ -233,7 +233,7 @@ export function TradeSaleEditModal({
             <div>
               <label
                 htmlFor="trade-sale-edit-commission-rate"
-                className="mb-2 block text-sm font-medium text-neutral-700"
+                className="mb-2 block text-sm font-medium text-foreground"
               >
                 Comisión %
               </label>
@@ -254,7 +254,7 @@ export function TradeSaleEditModal({
           <div>
             <label
               htmlFor="trade-sale-edit-date"
-              className="mb-2 block text-sm font-medium text-neutral-700"
+              className="mb-2 block text-sm font-medium text-foreground"
             >
               Fecha de venta
             </label>
@@ -269,17 +269,17 @@ export function TradeSaleEditModal({
           </div>
 
           {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+            <p className="rounded-lg bg-primary-soft px-3 py-2 text-sm text-primary">
               {error}
             </p>
           )}
 
-          <div className="flex justify-end gap-3 border-t border-neutral-100 pt-5">
+          <div className="flex justify-end gap-3 border-t border-border pt-5">
             <button
               type="button"
               onClick={onClose}
               disabled={pending}
-              className="h-10 rounded-lg border border-neutral-300 px-4 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-10 rounded-lg border border-border px-4 text-sm font-medium text-foreground transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -287,7 +287,7 @@ export function TradeSaleEditModal({
             <button
               type="submit"
               disabled={pending}
-              className="h-10 rounded-lg bg-neutral-950 px-4 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-10 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               {pending ? 'Guardando...' : 'Guardar cambios'}
             </button>

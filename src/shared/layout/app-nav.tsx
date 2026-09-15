@@ -153,7 +153,7 @@ export function AppNav({ user }: AppNavProps) {
         </button>
 
         {openMenu === 'debts' && (
-          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-black/10">
+          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-foreground/10">
             <Link
               href="/debts/card"
               onClick={closeMenu}
@@ -212,7 +212,7 @@ export function AppNav({ user }: AppNavProps) {
         </button>
 
         {openMenu === 'trading' && (
-          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-black/10">
+          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-foreground/10">
             <Link
               href="/trading/account"
               onClick={closeMenu}
@@ -260,7 +260,7 @@ export function AppNav({ user }: AppNavProps) {
           </button>
 
           {openMenu === 'admin' && (
-            <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-black/10">
+            <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-foreground/10">
               <Link
                 href="/admin/card"
                 onClick={closeMenu}

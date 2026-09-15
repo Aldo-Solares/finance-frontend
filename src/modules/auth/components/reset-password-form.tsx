@@ -124,7 +124,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         ¿Ya puedes acceder a tu cuenta?{' '}
         <Link
           href="/auth/login"
-          className="font-semibold text-primary transition-colors hover:text-primary-hover"
+          className="font-semibold text-primary transition-colors hover:text-primary"
         >
           Iniciar sesión
         </Link>

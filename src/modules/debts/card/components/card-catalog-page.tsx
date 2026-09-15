@@ -54,7 +54,7 @@ export function CardCatalogPage({
             <button
               type="button"
               onClick={handleCreate}
-              className="flex cursor-pointer items-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+              className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
             >
               <Plus className="h-4 w-4" />
 
@@ -111,16 +111,16 @@ function CardCatalogEmptyState({
   onCreate,
 }: CardCatalogEmptyStateProps) {
   return (
-    <div className="flex min-h-72 flex-col items-center justify-center rounded-[2rem] border border-dashed border-neutral-200 bg-white px-6 text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-100 text-neutral-500">
+    <div className="flex min-h-72 flex-col items-center justify-center rounded-[2rem] border border-dashed border-border bg-background px-6 text-center">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface text-text-muted">
         <CreditCard className="h-5 w-5" />
       </div>
 
-      <h2 className="mt-5 font-semibold text-neutral-950">
+      <h2 className="mt-5 font-semibold text-foreground">
         No hay tarjetas en el catálogo
       </h2>
 
-      <p className="mt-2 max-w-sm text-sm leading-6 text-neutral-400">
+      <p className="mt-2 max-w-sm text-sm leading-6 text-text-muted">
         Crea la primera tarjeta para que pueda ser
         seleccionada por los usuarios.
       </p>
@@ -128,7 +128,7 @@ function CardCatalogEmptyState({
       <button
         type="button"
         onClick={onCreate}
-        className="mt-5 flex cursor-pointer items-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+        className="mt-5 flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
       >
         <Plus className="h-4 w-4" />
 

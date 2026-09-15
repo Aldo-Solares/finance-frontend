@@ -44,7 +44,7 @@ function formatDate(value: string | null) {
 
 function getStatusClassName(statement: DebtDashboardStatement) {
   if (statement.paid) {
-    return 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-400'
+    return 'border-primary bg-primary-soft text-primary border-primary/60 bg-primary-soft/30 text-primary'
   }
 
   switch (statement.status) {
@@ -52,13 +52,13 @@ function getStatusClassName(statement: DebtDashboardStatement) {
       return 'border-border bg-surface text-text-muted'
 
     case 'ACTIVE':
-      return 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900/60 dark:bg-blue-950/30 dark:text-blue-400'
+      return 'border-primary bg-primary-soft text-primary border-primary/60 bg-primary-soft/30 text-primary'
 
     case 'PAYMENT_PENDING':
-      return 'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-400'
+      return 'border-primary bg-primary-soft text-primary border-primary/60 bg-primary-soft/30 text-primary'
 
     case 'CLOSED':
-      return 'border-red-200 bg-red-50 text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-400'
+      return 'border-primary bg-primary-soft text-primary border-primary/60 bg-primary-soft/30 text-primary'
   }
 }
 

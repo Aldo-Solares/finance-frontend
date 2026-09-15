@@ -148,10 +148,10 @@ function ProfileImageStatusForm({
           'transition-all duration-200',
           profileImage.active
             ? [
-                'border-emerald-200 bg-emerald-50 text-emerald-700',
-                'hover:border-emerald-300 hover:bg-emerald-100',
-                'dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-400',
-                'dark:hover:bg-emerald-950/50',
+                'border-primary bg-primary-soft text-primary',
+                'hover:border-primary hover:bg-primary-soft',
+                'border-primary/60 bg-primary-soft/30 text-primary',
+                'hover:bg-primary-soft/50',
               ].join(' ')
             : [
                 'border-border bg-surface text-text-muted',
@@ -187,7 +187,7 @@ function ProfileImageCatalogMenu({
           'flex h-9 w-9 cursor-pointer list-none items-center justify-center',
           'rounded-xl border border-transparent text-text-muted',
           'transition-all duration-200',
-          'hover:border-border hover:bg-surface hover:text-foreground',
+          'hover:border-primary/20 hover:bg-surface hover:text-foreground',
           '[&::-webkit-details-marker]:hidden',
         ].join(' ')}
       >
@@ -198,7 +198,7 @@ function ProfileImageCatalogMenu({
         className={[
           'absolute right-0 top-11 z-30 w-48 overflow-hidden',
           'rounded-2xl border border-border bg-background p-1.5',
-          'text-foreground shadow-xl shadow-black/10',
+          'text-foreground shadow-xl shadow-foreground/10',
         ].join(' ')}
       >
         <button
@@ -221,8 +221,8 @@ function ProfileImageCatalogMenu({
           className={[
             'flex w-full cursor-pointer items-center gap-2.5 rounded-xl',
             'px-3 py-2.5 text-left text-sm',
-            'text-red-600 transition-colors hover:bg-red-50',
-            'dark:text-red-400 dark:hover:bg-red-950/30',
+            'text-primary transition-colors hover:bg-primary-soft',
+            'text-primary hover:bg-primary-soft/30',
           ].join(' ')}
         >
           <Trash2 className="h-4 w-4" />

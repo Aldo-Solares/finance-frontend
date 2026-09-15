@@ -119,7 +119,7 @@ export function ResendVerificationForm() {
         ¿Ya verificaste tu cuenta?{' '}
         <Link
           href="/auth/login"
-          className="font-semibold text-primary transition-colors hover:text-primary-hover"
+          className="font-semibold text-primary transition-colors hover:text-primary"
         >
           Iniciar sesión
         </Link>

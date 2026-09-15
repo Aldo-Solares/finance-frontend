@@ -13,8 +13,8 @@ export function StatementEmptyState({
   hasCards,
 }: StatementEmptyStateProps) {
   return (
-    <div className="flex min-h-80 flex-col items-center justify-center rounded-[1.75rem] border border-dashed border-neutral-300 bg-white px-6 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-neutral-100 text-neutral-500">
+    <div className="flex min-h-80 flex-col items-center justify-center rounded-[1.75rem] border border-dashed border-border bg-background px-6 text-center">
+      <div className="flex h-16 w-16 items-center justify-center rounded-[1.5rem] bg-surface text-text-muted">
         {hasCards ? (
           <ReceiptText className="h-6 w-6" />
         ) : (
@@ -22,13 +22,13 @@ export function StatementEmptyState({
         )}
       </div>
 
-      <h2 className="mt-5 text-base font-semibold text-neutral-950">
+      <h2 className="mt-5 text-base font-semibold text-foreground">
         {hasCards
           ? 'No hay estados de cuenta'
           : 'Primero agrega una tarjeta'}
       </h2>
 
-      <p className="mt-2 max-w-sm text-sm leading-6 text-neutral-400">
+      <p className="mt-2 max-w-sm text-sm leading-6 text-text-muted">
         {hasCards
           ? 'Esta tarjeta todavía no tiene periodos registrados.'
           : 'Necesitas una tarjeta antes de poder registrar estados de cuenta.'}

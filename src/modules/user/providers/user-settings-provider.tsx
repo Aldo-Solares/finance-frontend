@@ -23,6 +23,10 @@ export function UserSettingsProvider({
 }: UserSettingsProviderProps) {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', userSettings.darkMode)
+
+    return () => {
+      document.documentElement.classList.remove('dark')
+    }
   }, [userSettings.darkMode])
 
   return (

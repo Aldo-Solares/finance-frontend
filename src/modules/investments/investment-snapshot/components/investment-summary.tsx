@@ -11,24 +11,24 @@ export function InvestmentSummary({
 }: InvestmentSummaryProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-        <p className="text-xs text-neutral-400">
+      <div className="rounded-2xl border border-border bg-background p-5">
+        <p className="text-xs text-text-muted">
           Aportaciones acumuladas
         </p>
 
-        <p className="mt-2 text-xl font-semibold text-neutral-950">
+        <p className="mt-2 text-xl font-semibold text-foreground">
           {formatMoney(
             performance.totalContributions,
           )}
         </p>
       </div>
 
-      <div className="rounded-2xl border border-neutral-200 bg-white p-5">
-        <p className="text-xs text-neutral-400">
+      <div className="rounded-2xl border border-border bg-background p-5">
+        <p className="text-xs text-text-muted">
           Retiros acumulados
         </p>
 
-        <p className="mt-2 text-xl font-semibold text-neutral-950">
+        <p className="mt-2 text-xl font-semibold text-foreground">
           {formatMoney(
             performance.totalWithdrawals,
           )}

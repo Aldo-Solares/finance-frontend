@@ -18,12 +18,12 @@ export function StatementEntryPagination({
   }
 
   return (
-    <div className="flex items-center justify-between rounded-[1.25rem] border border-neutral-200 bg-white px-4 py-3">
+    <div className="flex items-center justify-between rounded-[1.25rem] border border-border bg-background px-4 py-3">
       <button
         type="button"
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
-        className="cursor-pointer rounded-lg px-3 py-2 text-xs font-medium text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900 disabled:cursor-not-allowed disabled:opacity-40"
+        className="cursor-pointer rounded-lg px-3 py-2 text-xs font-medium text-text-muted transition hover:bg-surface hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
       >
         Anterior
       </button>
@@ -38,8 +38,8 @@ export function StatementEntryPagination({
               className={[
                 'flex h-8 min-w-8 cursor-pointer items-center justify-center rounded-lg px-2 text-xs font-medium transition',
                 page === currentPage
-                  ? 'bg-neutral-950 text-white'
-                  : 'text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900',
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-text-muted hover:bg-surface hover:text-foreground',
               ].join(' ')}
             >
               {page}
@@ -52,7 +52,7 @@ export function StatementEntryPagination({
         type="button"
         onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
-        className="cursor-pointer rounded-lg px-3 py-2 text-xs font-medium text-neutral-500 transition hover:bg-neutral-100 hover:text-neutral-900 disabled:cursor-not-allowed disabled:opacity-40"
+        className="cursor-pointer rounded-lg px-3 py-2 text-xs font-medium text-text-muted transition hover:bg-surface hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40"
       >
         Siguiente
       </button>

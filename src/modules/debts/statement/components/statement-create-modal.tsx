@@ -104,29 +104,29 @@ export function StatementCreateModal({
         type="button"
         onClick={onClose}
         aria-label="Cerrar modal"
-        className="absolute inset-0 cursor-default bg-neutral-950/55 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-foreground/55 backdrop-blur-sm"
       />
 
-      <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-[2rem] border border-white/20 bg-white shadow-2xl">
-        <div className="flex items-start justify-between border-b border-neutral-100 px-6 py-5">
+      <div className="relative z-10 w-full max-w-2xl overflow-hidden rounded-[2rem] border border-border bg-background shadow-2xl">
+        <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-950 text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                 <Plus className="h-4 w-4" />
               </div>
 
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-neutral-400">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-text-muted">
                   Estado de cuenta
                 </p>
 
-                <h2 className="mt-0.5 text-xl font-semibold tracking-tight text-neutral-950">
+                <h2 className="mt-0.5 text-xl font-semibold tracking-tight text-foreground">
                   Nuevo periodo
                 </h2>
               </div>
             </div>
 
-            <p className="mt-3 text-sm text-neutral-400">
+            <p className="mt-3 text-sm text-text-muted">
               Registra las fechas del periodo.
             </p>
           </div>
@@ -135,7 +135,7 @@ export function StatementCreateModal({
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-neutral-400 transition hover:bg-neutral-100 hover:text-neutral-700"
+            className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-text-muted transition hover:bg-surface hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
@@ -182,29 +182,29 @@ export function StatementCreateModal({
             </div>
 
             {periodEnd && (
-              <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-400">
+              <div className="rounded-2xl border border-border bg-surface px-4 py-3">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-text-muted">
                   Periodo
                 </p>
 
-                <p className="mt-1 text-sm font-semibold text-neutral-900">
+                <p className="mt-1 text-sm font-semibold text-foreground">
                   {formatStatementPeriod(periodEnd)}
                 </p>
               </div>
             )}
 
             {!state.success && state.message && (
-              <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+              <div className="rounded-xl border border-primary bg-primary-soft px-4 py-3 text-sm text-primary">
                 {state.message}
               </div>
             )}
           </div>
 
-          <div className="flex justify-end gap-2 border-t border-neutral-100 bg-neutral-50/60 px-6 py-4">
+          <div className="flex justify-end gap-2 border-t border-border bg-surface/60 px-6 py-4">
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm font-medium text-neutral-500 transition hover:bg-neutral-200 hover:text-neutral-800"
+              className="cursor-pointer rounded-xl px-4 py-2.5 text-sm font-medium text-text-muted transition hover:bg-surface hover:text-foreground"
             >
               Cancelar
             </button>
@@ -245,7 +245,7 @@ function FieldLabel({
   return (
     <label
       htmlFor={htmlFor}
-      className="mb-2 block text-xs font-medium text-neutral-500"
+      className="mb-2 block text-xs font-medium text-text-muted"
     >
       {children}
     </label>
@@ -259,7 +259,7 @@ function CreateButton() {
     <button
       type="submit"
       disabled={pending}
-      className="flex min-w-36 cursor-pointer items-center justify-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
+      className="flex min-w-36 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
     >
       {pending ? (
         <LoaderCircle className="h-4 w-4 animate-spin" />

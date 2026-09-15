@@ -93,10 +93,10 @@ export function TextInput({
             Icon ? 'pl-10' : '',
             error
               ? [
-                  'border-red-300',
-                  'focus:border-red-400',
-                  'focus:ring-red-500/[0.08]',
-                  'dark:border-red-900/60',
+                  'border-primary',
+                  'focus:border-primary',
+                  'focus:ring-primary/[0.08]',
+                  'border-primary/60',
                 ].join(' ')
               : '',
             className,
@@ -109,7 +109,7 @@ export function TextInput({
           id={`${id}-description`}
           className={[
             'text-xs leading-5',
-            error ? 'text-red-600 dark:text-red-400' : 'text-text-muted',
+            error ? 'text-primary text-primary' : 'text-text-muted',
           ].join(' ')}
         >
           {error ?? description}

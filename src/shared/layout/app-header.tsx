@@ -118,7 +118,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                 className={[
                   'absolute right-0 top-[calc(100%+0.75rem)] w-72 overflow-hidden',
                   'rounded-2xl border border-border bg-background p-2',
-                  'text-foreground shadow-xl shadow-black/10',
+                  'text-foreground shadow-xl shadow-foreground/10',
                 ].join(' ')}
               >
                 {/* ===================
@@ -209,8 +209,8 @@ export function AppHeader({ user }: AppHeaderProps) {
                     className={[
                       'flex w-full items-center gap-3 rounded-xl px-3 py-3',
                       'text-sm text-text-muted transition-colors',
-                      'hover:bg-red-50 hover:text-red-600',
-                      'dark:hover:bg-red-950/30 dark:hover:text-red-400',
+                      'hover:bg-primary-soft hover:text-primary',
+                      'hover:bg-primary-soft/30 hover:text-primary',
                     ].join(' ')}
                   >
                     <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-surface">

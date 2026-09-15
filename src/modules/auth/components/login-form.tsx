@@ -127,7 +127,7 @@ export function LoginForm() {
           ¿Aún no tienes cuenta?{' '}
           <Link
             href="/auth/register"
-            className="font-semibold text-primary transition-colors hover:text-primary-hover"
+            className="font-semibold text-primary transition-colors hover:text-primary"
           >
             Crear cuenta
           </Link>
@@ -137,7 +137,7 @@ export function LoginForm() {
           ¿Olvidaste la contraseña?{' '}
           <Link
             href="/auth/forgot-password"
-            className="font-semibold text-primary transition-colors hover:text-primary-hover"
+            className="font-semibold text-primary transition-colors hover:text-primary"
           >
             Recuperar contraseña
           </Link>
@@ -147,7 +147,7 @@ export function LoginForm() {
           ¿Aun no has verificado?{' '}
           <Link
             href="/auth/resend-verification"
-            className="font-semibold text-primary transition-colors hover:text-primary-hover"
+            className="font-semibold text-primary transition-colors hover:text-primary"
           >
             Reenviar verificación
           </Link>

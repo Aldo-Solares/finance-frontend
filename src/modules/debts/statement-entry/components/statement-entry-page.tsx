@@ -201,7 +201,7 @@ export function StatementEntryPage({
         <div>
           <Link
             href="/debts/statement"
-            className="inline-flex items-center gap-2 text-xs font-medium text-neutral-400 transition-colors hover:text-neutral-950"
+            className="inline-flex items-center gap-2 text-xs font-medium text-text-muted transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             Estados de cuenta
@@ -217,7 +217,7 @@ export function StatementEntryPage({
                   <button
                     type="button"
                     onClick={() => setCreateOpen(true)}
-                    className="flex cursor-pointer items-center gap-2 rounded-xl bg-neutral-950 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+                    className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
                   >
                     <Plus className="h-4 w-4" />
                     Nuevo movimiento
@@ -263,12 +263,12 @@ export function StatementEntryPage({
         </div>
 
         {concepts.length === 0 && (
-          <div className="rounded-[1.5rem] border border-amber-200 bg-amber-50 px-5 py-4">
-            <p className="text-sm font-medium text-amber-800">
+          <div className="rounded-[1.5rem] border border-primary bg-primary-soft px-5 py-4">
+            <p className="text-sm font-medium text-primary">
               No existen conceptos disponibles.
             </p>
 
-            <p className="mt-1 text-xs text-amber-700/70">
+            <p className="mt-1 text-xs text-primary/70">
               Un administrador debe crear al menos un concepto antes de
               registrar movimientos.
             </p>
@@ -299,11 +299,11 @@ export function StatementEntryPage({
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-neutral-950">
+              <p className="text-sm font-semibold text-foreground">
                 Movimientos
               </p>
 
-              <p className="mt-1 text-xs text-neutral-400">
+              <p className="mt-1 text-xs text-text-muted">
                 {filteredEntries.length}{' '}
                 {filteredEntries.length === 1 ? 'resultado' : 'resultados'}
               </p>
@@ -377,10 +377,10 @@ type SummaryCardProps = {
 
 function SummaryCard({ label, value }: SummaryCardProps) {
   return (
-    <div className="rounded-[1.5rem] border border-neutral-200 bg-white p-5">
-      <p className="text-xs font-medium text-neutral-400">{label}</p>
+    <div className="rounded-[1.5rem] border border-border bg-background p-5">
+      <p className="text-xs font-medium text-text-muted">{label}</p>
 
-      <p className="mt-2 text-xl font-semibold tracking-tight text-neutral-950">
+      <p className="mt-2 text-xl font-semibold tracking-tight text-foreground">
         {value}
       </p>
     </div>
@@ -406,16 +406,16 @@ function InfoCard({ label, value, highlight = false }: InfoCardProps) {
       className={[
         'rounded-[1.5rem] border p-5',
         highlight
-          ? 'border-amber-200 bg-amber-50'
-          : 'border-neutral-200 bg-white',
+          ? 'border-primary bg-primary-soft'
+          : 'border-border bg-background',
       ].join(' ')}
     >
-      <p className="text-xs font-medium text-neutral-400">{label}</p>
+      <p className="text-xs font-medium text-text-muted">{label}</p>
 
       <div
         className={[
           'mt-2 text-sm font-semibold',
-          highlight ? 'text-amber-800' : 'text-neutral-950',
+          highlight ? 'text-primary' : 'text-foreground',
         ].join(' ')}
       >
         {value}
@@ -453,12 +453,12 @@ function EmptyFilteredState({
   onReset,
 }: EmptyFilteredStateProps) {
   return (
-    <div className="rounded-[1.5rem] border border-dashed border-neutral-200 bg-neutral-50 px-6 py-12 text-center">
-      <p className="text-sm font-medium text-neutral-900">
+    <div className="rounded-[1.5rem] border border-dashed border-border bg-surface px-6 py-12 text-center">
+      <p className="text-sm font-medium text-foreground">
         No hay movimientos que coincidan
       </p>
 
-      <p className="mt-1 text-xs text-neutral-400">
+      <p className="mt-1 text-xs text-text-muted">
         Ajusta los filtros para mostrar otros movimientos.
       </p>
 
@@ -466,7 +466,7 @@ function EmptyFilteredState({
         <button
           type="button"
           onClick={onReset}
-          className="mt-4 cursor-pointer rounded-lg px-3 py-2 text-xs font-medium text-neutral-600 transition hover:bg-white hover:text-neutral-950"
+          className="mt-4 cursor-pointer rounded-lg px-3 py-2 text-xs font-medium text-text-muted transition hover:bg-background hover:text-foreground"
         >
           Limpiar filtros
         </button>

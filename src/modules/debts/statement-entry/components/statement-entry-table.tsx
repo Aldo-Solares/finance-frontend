@@ -25,10 +25,10 @@ export function StatementEntryTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-[1.6rem] border border-neutral-200 bg-white">
+    <div className="overflow-hidden rounded-[1.6rem] border border-border bg-background">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[1150px]">
-          <thead className="border-b border-neutral-100 bg-neutral-50/70">
+          <thead className="border-b border-border bg-surface/70">
             <tr>
               <HeaderCell>Concepto</HeaderCell>
 
@@ -54,7 +54,7 @@ export function StatementEntryTable({
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-neutral-100">
+          <tbody className="divide-y divide-border">
             {entries.map((entry) => (
               <StatementEntryItem
                 key={entry.entryId}
@@ -79,7 +79,7 @@ function HeaderCell({ children, align = 'left' }: HeaderCellProps) {
   return (
     <th
       className={[
-        'whitespace-nowrap px-5 py-4 text-[10px] font-semibold uppercase tracking-[0.13em] text-neutral-400',
+        'whitespace-nowrap px-5 py-4 text-[10px] font-semibold uppercase tracking-[0.13em] text-text-muted',
         align === 'right' ? 'text-right' : 'text-left',
       ].join(' ')}
     >

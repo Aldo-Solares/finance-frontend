@@ -27,7 +27,7 @@ export function InvestmentSnapshotList({
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+    <div className="overflow-hidden rounded-2xl border border-border bg-background">
       {snapshots.map((snapshot) => (
         <InvestmentSnapshotItem
           key={

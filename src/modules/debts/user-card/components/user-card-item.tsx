@@ -16,12 +16,12 @@ export function UserCardItem({
   userCard,
 }: UserCardItemProps) {
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-neutral-200/70 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+    <article className="group relative overflow-hidden rounded-3xl border border-border/70 bg-background p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
       {/* ===================
       DECORATION
       =================== */}
 
-      <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-violet-100/60 blur-3xl transition duration-300 group-hover:bg-violet-200/70" />
+      <div className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-primary-soft/60 blur-3xl transition duration-300 group-hover:bg-primary-soft/70" />
 
       {/* ===================
       HEADER
@@ -29,16 +29,16 @@ export function UserCardItem({
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-neutral-950 text-white">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
             <CreditCard className="h-5 w-5" />
           </div>
 
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.14em] text-neutral-400">
+            <p className="text-xs font-medium uppercase tracking-[0.14em] text-text-muted">
               {userCard.bank}
             </p>
 
-            <h2 className="mt-1 text-lg font-semibold tracking-tight text-neutral-950">
+            <h2 className="mt-1 text-lg font-semibold tracking-tight text-foreground">
               {userCard.cardName}
             </h2>
           </div>
@@ -48,8 +48,8 @@ export function UserCardItem({
           className={[
             'shrink-0 rounded-full px-2.5 py-1 text-xs font-medium',
             userCard.active
-              ? 'bg-emerald-50 text-emerald-700'
-              : 'bg-neutral-100 text-neutral-500',
+              ? 'bg-primary-soft text-primary'
+              : 'bg-surface text-text-muted',
           ].join(' ')}
         >
           {userCard.active ? 'Activa' : 'Inactiva'}
@@ -60,10 +60,10 @@ export function UserCardItem({
       ACTION
       =================== */}
 
-      <div className="relative mt-6 border-t border-neutral-100 pt-5">
+      <div className="relative mt-6 border-t border-border pt-5">
         <Link
           href={`/debts/statement?userCardId=${userCard.userCardId}`}
-          className="flex w-full items-center justify-between rounded-2xl bg-neutral-950 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
+          className="flex w-full items-center justify-between rounded-2xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
         >
           Ver estados de cuenta
 

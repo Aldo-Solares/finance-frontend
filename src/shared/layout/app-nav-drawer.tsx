@@ -40,7 +40,7 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
           DRAWER
           =================== */}
 
-      <aside className="absolute inset-y-0 left-0 flex w-full max-w-[390px] flex-col overflow-y-auto border-r border-border bg-background px-6 py-6 text-foreground shadow-2xl shadow-black/10">
+      <aside className="absolute inset-y-0 left-0 flex w-full max-w-[390px] flex-col overflow-y-auto border-r border-border bg-background px-6 py-6 text-foreground shadow-2xl shadow-foreground/10">
         {/* ===================
             TOP
             =================== */}
@@ -103,8 +103,8 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
                 'flex w-full cursor-pointer items-center gap-3 rounded-xl',
                 'px-4 py-3 text-sm font-medium text-text-muted',
                 'transition-all duration-200',
-                'hover:bg-red-50 hover:text-red-600',
-                'dark:hover:bg-red-950/30 dark:hover:text-red-400',
+                'hover:bg-primary-soft hover:text-primary',
+                'hover:bg-primary-soft/30 hover:text-primary',
               ].join(' ')}
             >
               <LogOut className="h-4 w-4" />

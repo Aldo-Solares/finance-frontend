@@ -1,12 +1,9 @@
-// @/modules/trading/trading-account/components/trading-account-page.tsx
-
 'use client'
 
-import { Plus } from 'lucide-react'
+import { Plus, WalletCards } from 'lucide-react'
 import { useState } from 'react'
 
 import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'
-
 import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema'
 
 import { deleteTradingAccountAction } from '@/modules/trading/trading-account/actions/trading-account.actions'
@@ -14,9 +11,8 @@ import { deleteTradingAccountAction } from '@/modules/trading/trading-account/ac
 import { HeroComponent } from '@/shared/hero/hero-component'
 import { DeleteModal } from '@/shared/modal/delete-modal'
 
-import { TradingAccountCreateModal } from './trading-account-create-modal'
+import { TradingAccountAddModal } from './trading-account-add-modal'
 import { TradingAccountEditModal } from './trading-account-edit-modal'
-import { TradingAccountEmptyState } from './trading-account-empty-state'
 import { TradingAccountList } from './trading-account-list'
 
 type TradingAccountPageProps = {
@@ -52,6 +48,8 @@ export const TradingAccountPage = ({
     await deleteTradingAccountAction(deletingAccount.tradingAccountId)
   }
 
+  const hasAccounts = tradingAccounts.length > 0
+
   return (
     <>
       <section className="w-full space-y-8">
@@ -60,7 +58,7 @@ export const TradingAccountPage = ({
           title="Cuentas de trading"
           description="Administra las cuentas de trading disponibles en el sistema."
           action={
-            tradingAccounts.length > 0 ? (
+            hasAccounts ? (
               <button
                 type="button"
                 onClick={handleCreate}
@@ -82,8 +80,35 @@ export const TradingAccountPage = ({
           }
         />
 
-        {tradingAccounts.length === 0 ? (
-          <TradingAccountEmptyState onCreate={handleCreate} />
+        {!hasAccounts ? (
+          <div className="flex min-h-72 flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-background p-8 text-center">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-surface text-text-muted">
+              <WalletCards className="h-6 w-6" />
+            </div>
+
+            <h2 className="text-lg font-semibold text-foreground">
+              No tienes cuentas de trading
+            </h2>
+
+            <p className="mt-2 max-w-md text-sm leading-6 text-text-muted">
+              Crea una cuenta para comenzar a registrar movimientos y
+              operaciones.
+            </p>
+
+            <button
+              type="button"
+              onClick={handleCreate}
+              className={[
+                'mt-6 inline-flex h-10 cursor-pointer items-center gap-2',
+                'rounded-xl bg-primary px-4 text-sm font-semibold',
+                'text-primary-foreground transition-all duration-200',
+                'hover:bg-primary-hover',
+              ].join(' ')}
+            >
+              <Plus className="h-4 w-4" />
+              Nueva cuenta
+            </button>
+          </div>
         ) : (
           <div className="rounded-2xl border border-border bg-background p-4 sm:p-6">
             <div className="mb-5 flex items-center justify-between gap-4">
@@ -113,7 +138,7 @@ export const TradingAccountPage = ({
       </section>
 
       {creating && (
-        <TradingAccountCreateModal
+        <TradingAccountAddModal
           currencies={currencies}
           onClose={() => setCreating(false)}
         />

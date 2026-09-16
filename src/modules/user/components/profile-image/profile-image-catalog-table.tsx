@@ -3,12 +3,9 @@
 'use client'
 
 import Image from 'next/image'
-import { useActionState } from 'react'
 
-import { Check, MoreHorizontal, Pencil, Power, Trash2 } from 'lucide-react'
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 
-import type { ActionState } from '@/core/utils/action-state'
-import { updateProfileImageStatusAction } from '@/modules/user/actions/profile-image.actions'
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 
 type ProfileImageCatalogTableProps = {
@@ -24,10 +21,9 @@ export function ProfileImageCatalogTable({
 }: ProfileImageCatalogTableProps) {
   return (
     <div className="overflow-visible">
-      <div className="hidden grid-cols-[64px_minmax(0,1fr)_120px_48px] items-center gap-5 px-4 pb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-text-muted sm:grid">
+      <div className="hidden grid-cols-[64px_minmax(0,1fr)_48px] items-center gap-5 px-4 pb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-text-muted sm:grid">
         <span>Imagen</span>
         <span>Nombre</span>
-        <span>Estado</span>
         <span />
       </div>
 
@@ -60,7 +56,7 @@ function ProfileImageCatalogRow({
         'group grid gap-4 rounded-2xl border border-border bg-background p-3',
         'transition-all duration-200',
         'hover:border-primary/20 hover:shadow-sm',
-        'sm:grid-cols-[64px_minmax(0,1fr)_120px_48px] sm:items-center sm:gap-5',
+        'sm:grid-cols-[64px_minmax(0,1fr)_48px] sm:items-center sm:gap-5',
         'sm:px-4',
       ].join(' ')}
     >
@@ -81,9 +77,7 @@ function ProfileImageCatalogRow({
             {profileImage.name}
           </p>
 
-          <div className="mt-2">
-            <ProfileImageStatusForm profileImage={profileImage} />
-          </div>
+          <p className="mt-1 text-xs text-text-muted">Imagen de perfil</p>
         </div>
       </div>
 
@@ -95,10 +89,6 @@ function ProfileImageCatalogRow({
         <p className="mt-1 text-xs text-text-muted">Imagen de perfil</p>
       </div>
 
-      <div className="hidden sm:block">
-        <ProfileImageStatusForm profileImage={profileImage} />
-      </div>
-
       <div className="absolute right-6 sm:static sm:flex sm:justify-end">
         <ProfileImageCatalogMenu
           profileImage={profileImage}
@@ -107,67 +97,6 @@ function ProfileImageCatalogRow({
         />
       </div>
     </div>
-  )
-}
-
-function ProfileImageStatusForm({
-  profileImage,
-}: {
-  profileImage: ProfileImage
-}) {
-  const initialState: ActionState<ProfileImage> = {
-    success: false,
-    message: null,
-    data: null,
-  }
-
-  const [, action] = useActionState(
-    updateProfileImageStatusAction,
-    initialState,
-  )
-
-  return (
-    <form action={action}>
-      <input
-        type="hidden"
-        name="profileImageId"
-        value={profileImage.profileImageId}
-      />
-
-      <input
-        type="hidden"
-        name="active"
-        value={profileImage.active ? 'false' : 'true'}
-      />
-
-      <button
-        type="submit"
-        className={[
-          'inline-flex cursor-pointer items-center gap-1.5 rounded-full',
-          'border px-2.5 py-1 text-[10px] font-semibold',
-          'transition-all duration-200',
-          profileImage.active
-            ? [
-                'border-primary bg-primary-soft text-primary',
-                'hover:border-primary hover:bg-primary-soft',
-                'border-primary/60 bg-primary-soft/30 text-primary',
-                'hover:bg-primary-soft/50',
-              ].join(' ')
-            : [
-                'border-border bg-surface text-text-muted',
-                'hover:border-primary/20 hover:bg-primary-soft hover:text-primary',
-              ].join(' '),
-        ].join(' ')}
-      >
-        {profileImage.active ? (
-          <Check className="h-3 w-3" />
-        ) : (
-          <Power className="h-3 w-3" />
-        )}
-
-        {profileImage.active ? 'Activa' : 'Inactiva'}
-      </button>
-    </form>
   )
 }
 
@@ -221,8 +150,8 @@ function ProfileImageCatalogMenu({
           className={[
             'flex w-full cursor-pointer items-center gap-2.5 rounded-xl',
             'px-3 py-2.5 text-left text-sm',
-            'text-primary transition-colors hover:bg-primary-soft',
-            'text-primary hover:bg-primary-soft/30',
+            'text-primary transition-colors',
+            'hover:bg-primary-soft',
           ].join(' ')}
         >
           <Trash2 className="h-4 w-4" />

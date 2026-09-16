@@ -1,4 +1,4 @@
-// @/modules/trading/trading-account/components/trading-account-create-modal.tsx
+// @/modules/trading/trading-account/components/trading-account-add-modal.tsx
 
 'use client'
 
@@ -12,15 +12,15 @@ import { createTradingAccountAction } from '@/modules/trading/trading-account/ac
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 import { TextInput } from '@/shared/inputs/text-input'
 
-type TradingAccountCreateModalProps = {
+type TradingAccountAddModalProps = {
   currencies: Currency[]
   onClose: () => void
 }
 
-export function TradingAccountCreateModal({
+export function TradingAccountAddModal({
   currencies,
   onClose,
-}: TradingAccountCreateModalProps) {
+}: TradingAccountAddModalProps) {
   const router = useRouter()
 
   const [institution, setInstitution] = useState('')
@@ -57,7 +57,9 @@ export function TradingAccountCreateModal({
       })
 
       if (!result.success) {
-        setError(result.message ?? 'No fue posible crear la cuenta de trading')
+        setError(
+          result.message ?? 'No fue posible agregar la cuenta de trading',
+        )
         return
       }
 
@@ -74,7 +76,7 @@ export function TradingAccountCreateModal({
         <div className="flex items-center justify-between gap-4 border-b border-border px-6 py-5">
           <div className="min-w-0">
             <h2 className="text-lg font-semibold tracking-tight text-foreground">
-              Nueva cuenta de trading
+              Agregar cuenta de trading
             </h2>
 
             <p className="mt-1 text-sm text-text-muted">
@@ -198,7 +200,7 @@ export function TradingAccountCreateModal({
                 'disabled:cursor-not-allowed disabled:opacity-50',
               ].join(' ')}
             >
-              {pending ? 'Creando...' : 'Crear cuenta'}
+              {pending ? 'Agregando...' : 'Agregar cuenta'}
             </button>
           </div>
         </form>

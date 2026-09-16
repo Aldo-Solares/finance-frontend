@@ -15,14 +15,12 @@ import {
 } from '@/core/utils/action-state'
 import {
   UpdateProfileImageRequestSchema,
-  UpdateProfileImageStatusRequestSchema,
   type ProfileImage,
 } from '@/modules/user/schemas/profile-image.schema'
 import {
   createProfileImage,
   deleteProfileImage,
   updateProfileImage,
-  updateProfileImageStatus,
 } from '@/modules/user/services/profile-image.service'
 
 // ===================
@@ -99,46 +97,6 @@ export async function updateProfileImageAction(
 
   try {
     const result = await updateProfileImage(profileImageId, parsed.data)
-
-    revalidatePath('/', 'layout')
-
-    return actionSuccess(result)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la imagen de perfil',
-    )
-  }
-}
-
-// ===================
-// UPDATE PROFILE IMAGE STATUS
-// ===================
-
-export async function updateProfileImageStatusAction(
-  _previousState: ActionState<ProfileImage>,
-  formData: FormData,
-): Promise<ActionState<ProfileImage>> {
-  const profileImageId = Number(formData.get('profileImageId'))
-
-  const parsed = UpdateProfileImageStatusRequestSchema.safeParse({
-    active: formData.get('active') === 'true',
-  })
-
-  if (!Number.isInteger(profileImageId) || profileImageId <= 0) {
-    return actionError('La imagen de perfil no es válida')
-  }
-
-  if (!parsed.success) {
-    return actionError(
-      parsed.error.issues[0]?.message ??
-        'El estado de la imagen de perfil no es válido',
-    )
-  }
-
-  try {
-    const result = await updateProfileImageStatus(profileImageId, parsed.data)
 
     revalidatePath('/', 'layout')
 

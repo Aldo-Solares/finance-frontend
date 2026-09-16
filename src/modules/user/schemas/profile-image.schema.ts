@@ -12,7 +12,6 @@ export const ProfileImageSchema = z.object({
   profileImageId: z.number(),
   name: z.string(),
   imageUrl: z.string(),
-  active: z.boolean(),
 })
 
 // ===================
@@ -27,14 +26,6 @@ export const UpdateProfileImageRequestSchema = z.object({
 })
 
 // ===================
-// UPDATE PROFILE IMAGE STATUS
-// ===================
-
-export const UpdateProfileImageStatusRequestSchema = z.object({
-  active: z.boolean(),
-})
-
-// ===================
 // TYPES
 // ===================
 
@@ -42,8 +33,4 @@ export type ProfileImage = z.infer<typeof ProfileImageSchema>
 
 export type UpdateProfileImageRequest = z.infer<
   typeof UpdateProfileImageRequestSchema
->
-
-export type UpdateProfileImageStatusRequest = z.infer<
-  typeof UpdateProfileImageStatusRequestSchema
 >

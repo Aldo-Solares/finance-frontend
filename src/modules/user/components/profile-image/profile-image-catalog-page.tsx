@@ -4,17 +4,20 @@
 
 import { useState } from 'react'
 
-import { ImagePlus, Layers3, Plus, Sparkles } from 'lucide-react'
+import { ImagePlus, Layers3, Plus } from 'lucide-react'
 
 import { deleteProfileImageAction } from '@/modules/user/actions/profile-image.actions'
 
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 
 import { HeroComponent } from '@/shared/hero/hero-component'
+
 import { DeleteModal } from '@/shared/modal/delete-modal'
 
 import { ProfileImageCatalogCreateModal } from './profile-image-catalog-create-modal'
+
 import { ProfileImageCatalogEditModal } from './profile-image-catalog-edit-modal'
+
 import { ProfileImageCatalogTable } from './profile-image-catalog-table'
 
 type ProfileImageCatalogPageProps = {
@@ -46,12 +49,6 @@ export function ProfileImageCatalogPage({
     await deleteProfileImageAction(deleteProfileImage.profileImageId)
   }
 
-  const activeImages = profileImages.filter(
-    (profileImage) => profileImage.active,
-  ).length
-
-  const inactiveImages = profileImages.length - activeImages
-
   return (
     <>
       <section className="w-full space-y-8">
@@ -61,19 +58,11 @@ export function ProfileImageCatalogPage({
           description="Administra las imágenes disponibles para los perfiles de usuario."
         />
 
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-1">
           <CatalogMetric
             icon={Layers3}
             label="Total"
             value={profileImages.length}
-          />
-
-          <CatalogMetric icon={Sparkles} label="Activas" value={activeImages} />
-
-          <CatalogMetric
-            icon={ImagePlus}
-            label="Inactivas"
-            value={inactiveImages}
           />
         </div>
 

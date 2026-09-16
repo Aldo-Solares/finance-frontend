@@ -9,7 +9,6 @@ import {
   ProfileImageSchema,
   type ProfileImage,
   type UpdateProfileImageRequest,
-  type UpdateProfileImageStatusRequest,
 } from '@/modules/user/schemas/profile-image.schema'
 
 // ===================
@@ -121,40 +120,6 @@ export async function updateProfileImage(
   if (!result.success) {
     throw new Error(
       result.message ?? 'No fue posible actualizar la imagen de perfil',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de actualización no contiene datos')
-  }
-
-  return result.data
-}
-
-// ===================
-// UPDATE PROFILE IMAGE STATUS
-// ===================
-
-export async function updateProfileImageStatus(
-  profileImageId: number,
-  request: UpdateProfileImageStatusRequest,
-): Promise<ProfileImage> {
-  const response = await fetchServer(
-    `/profile-images/${profileImageId}/active`,
-    {
-      method: 'PATCH',
-      body: JSON.stringify(request),
-    },
-  )
-
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(ProfileImageSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ??
-        'No fue posible actualizar el estado de la imagen de perfil',
     )
   }
 

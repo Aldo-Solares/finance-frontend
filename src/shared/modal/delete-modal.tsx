@@ -18,22 +18,28 @@ type DeleteModalProps = {
 export function DeleteModal({
   title,
   description,
-  error,
+  error: externalError,
   confirmLabel = 'Eliminar',
   pendingLabel = 'Eliminando...',
   onClose,
   onConfirm,
 }: DeleteModalProps) {
   const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | null>(externalError ?? null)
 
   const handleConfirm = async () => {
     setPending(true)
+    setError(null)
 
     try {
       await onConfirm()
       onClose()
-    } catch {
-      // El error se mantiene controlado por el componente consumidor.
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : 'No fue posible completar la eliminación.',
+      )
     } finally {
       setPending(false)
     }
@@ -81,7 +87,7 @@ export function DeleteModal({
         </div>
 
         {error && (
-          <div className="px-6 pt-5">
+          <div className="px-6 pt-5 pb-5">
             <div
               role="alert"
               className="rounded-xl border border-primary/20 bg-primary-soft px-4 py-3 text-sm text-primary"

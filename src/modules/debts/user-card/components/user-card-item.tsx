@@ -1,5 +1,3 @@
-// @/modules/debts/user-card/components/user-card-item.tsx
-
 import Link from 'next/link'
 
 import { ArrowRight, CreditCard, Trash2 } from 'lucide-react'
@@ -32,17 +30,6 @@ export function UserCardItem({ userCard, onDelete }: UserCardItemProps) {
             </h2>
           </div>
         </div>
-
-        <span
-          className={[
-            'shrink-0 rounded-full px-2.5 py-1 text-xs font-medium',
-            userCard.active
-              ? 'bg-primary-soft text-primary'
-              : 'bg-surface text-text-muted',
-          ].join(' ')}
-        >
-          {userCard.active ? 'Activa' : 'Inactiva'}
-        </span>
       </div>
 
       <div className="relative mt-5 flex gap-2 border-t border-border pt-4">

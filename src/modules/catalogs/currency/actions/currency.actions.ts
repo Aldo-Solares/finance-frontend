@@ -81,20 +81,8 @@ export async function updateCurrencyAction(
 // DELETE
 // ===================
 
-export async function deleteCurrencyAction(
-  currencyId: number,
-): Promise<ActionState<null>> {
-  try {
-    await deleteCurrency(currencyId)
+export async function deleteCurrencyAction(currencyId: number) {
+  await deleteCurrency(currencyId)
 
-    revalidatePath('/admin/currency')
-
-    return actionSuccess(null, 'Moneda eliminada correctamente.')
-  } catch (error) {
-    return actionError<null>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar la moneda.',
-    )
-  }
+  revalidatePath('/admin/currency')
 }

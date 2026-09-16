@@ -12,7 +12,7 @@ import Link from 'next/link'
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 import type { User } from '@/modules/user/schemas/user.schema'
 import type { UserSettings } from '@/modules/user/schemas/user-settings.schema'
-import { PageHeader } from '@/shared/page/page-header'
+import { HeroComponent } from '@/shared/hero/hero-component'
 
 import { UserAccountCard } from './user-account-card'
 
@@ -59,7 +59,7 @@ export function UsersPage({
 
   return (
     <section className="w-full space-y-8">
-      <PageHeader
+      <HeroComponent
         eyebrow="Cuenta"
         title="Mi cuenta"
         description="Administra tu información, seguridad y preferencias desde un solo lugar."

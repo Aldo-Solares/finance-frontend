@@ -161,33 +161,16 @@ export async function payAllStatementsAction(
   }
 }
 
+// @/modules/debts/statement/actions/statement.actions.ts
+
 // ===================
 // DELETE
 // ===================
 
-export async function deleteStatementAction(
-  _previousState: ActionState<null>,
-  formData: FormData,
-): Promise<ActionState<null>> {
-  const statementId = Number(formData.get('statementId'))
+export async function deleteStatementAction(statementId: number) {
+  await deleteStatement(statementId)
 
-  if (!Number.isInteger(statementId) || statementId <= 0) {
-    return actionError('El estado de cuenta no es válido')
-  }
-
-  try {
-    await deleteStatement(statementId)
-
-    revalidatePath('/debts/statement')
-
-    return actionSuccess(null)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar el estado de cuenta',
-    )
-  }
+  revalidatePath('/debts/statement')
 }
 
 // ===================

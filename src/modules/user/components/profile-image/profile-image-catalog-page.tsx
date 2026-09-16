@@ -6,12 +6,14 @@ import { useState } from 'react'
 
 import { ImagePlus, Layers3, Plus, Sparkles } from 'lucide-react'
 
+import { deleteProfileImageAction } from '@/modules/user/actions/profile-image.actions'
+
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 
-import { PageHeader } from '@/shared/page/page-header'
+import { HeroComponent } from '@/shared/hero/hero-component'
+import { DeleteModal } from '@/shared/modal/delete-modal'
 
 import { ProfileImageCatalogCreateModal } from './profile-image-catalog-create-modal'
-import { ProfileImageCatalogDeleteModal } from './profile-image-catalog-delete-modal'
 import { ProfileImageCatalogEditModal } from './profile-image-catalog-edit-modal'
 import { ProfileImageCatalogTable } from './profile-image-catalog-table'
 
@@ -23,8 +25,10 @@ export function ProfileImageCatalogPage({
   profileImages,
 }: ProfileImageCatalogPageProps) {
   const [formOpen, setFormOpen] = useState(false)
+
   const [editingProfileImage, setEditingProfileImage] =
     useState<ProfileImage | null>(null)
+
   const [deleteProfileImage, setDeleteProfileImage] =
     useState<ProfileImage | null>(null)
 
@@ -36,6 +40,12 @@ export function ProfileImageCatalogPage({
     setEditingProfileImage(profileImage)
   }
 
+  const handleConfirmDelete = async () => {
+    if (!deleteProfileImage) return
+
+    await deleteProfileImageAction(deleteProfileImage.profileImageId)
+  }
+
   const activeImages = profileImages.filter(
     (profileImage) => profileImage.active,
   ).length
@@ -45,7 +55,7 @@ export function ProfileImageCatalogPage({
   return (
     <>
       <section className="w-full space-y-8">
-        <PageHeader
+        <HeroComponent
           eyebrow="Administración"
           title="Catálogo de imágenes"
           description="Administra las imágenes disponibles para los perfiles de usuario."
@@ -84,10 +94,13 @@ export function ProfileImageCatalogPage({
               onClick={handleCreate}
               className={[
                 'inline-flex shrink-0 cursor-pointer items-center justify-center gap-2',
-                'rounded-xl bg-primary px-4 py-2.5',
-                'text-sm font-semibold text-primary-foreground',
-                'transition-all duration-200',
-                'hover:bg-primary-hover hover:shadow-md',
+                'rounded-xl bg-white px-4 py-2.5',
+                'text-sm font-semibold text-[#111111]',
+                'shadow-sm transition-all duration-200',
+                'hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md',
+                'focus-visible:outline-none focus-visible:ring-2',
+                'focus-visible:ring-primary/50 focus-visible:ring-offset-2',
+                'focus-visible:ring-offset-[#111111]',
               ].join(' ')}
             >
               <Plus className="h-4 w-4" />
@@ -121,9 +134,11 @@ export function ProfileImageCatalogPage({
       )}
 
       {deleteProfileImage && (
-        <ProfileImageCatalogDeleteModal
-          profileImage={deleteProfileImage}
+        <DeleteModal
+          title="Eliminar imagen"
+          description="¿Seguro que deseas eliminar esta imagen del catálogo?"
           onClose={() => setDeleteProfileImage(null)}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </>

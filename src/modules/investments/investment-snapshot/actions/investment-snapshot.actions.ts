@@ -9,11 +9,13 @@ import {
   actionSuccess,
   type ActionState,
 } from '@/core/utils/action-state'
+
 import {
   CreateInvestmentSnapshotRequestSchema,
   UpdateInvestmentSnapshotRequestSchema,
   type InvestmentSnapshot,
 } from '@/modules/investments/investment-snapshot/schemas/investment-snapshot.schema'
+
 import {
   createInvestmentSnapshot,
   deleteInvestmentSnapshot,
@@ -108,26 +110,8 @@ export async function updateInvestmentSnapshotAction(
 // ===================
 
 export async function deleteInvestmentSnapshotAction(
-  _previousState: ActionState<null>,
-  formData: FormData,
-): Promise<ActionState<null>> {
-  const investmentSnapshotId = Number(formData.get('investmentSnapshotId'))
-
-  if (!Number.isInteger(investmentSnapshotId) || investmentSnapshotId <= 0) {
-    return actionError('El registro de inversión no es válido')
-  }
-
-  try {
-    await deleteInvestmentSnapshot(investmentSnapshotId)
-
-    revalidatePath('/investments')
-
-    return actionSuccess(null)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar el registro',
-    )
-  }
+  investmentSnapshotId: number,
+) {
+  await deleteInvestmentSnapshot(investmentSnapshotId)
+  revalidatePath('/investments')
 }

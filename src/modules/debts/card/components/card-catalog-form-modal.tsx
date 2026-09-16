@@ -2,17 +2,9 @@
 
 'use client'
 
-import {
-  useActionState,
-  useEffect,
-} from 'react'
+import { useActionState, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
-import {
-  LoaderCircle,
-  Plus,
-  Save,
-  X,
-} from 'lucide-react'
+import { LoaderCircle, Plus, Save, X } from 'lucide-react'
 
 import type { ActionState } from '@/core/utils/action-state'
 import {
@@ -38,38 +30,25 @@ export function CardCatalogFormModal({
 }: CardCatalogFormModalProps) {
   const editing = card !== null
 
-  const [
-    createState,
-    createAction,
-  ] = useActionState(
+  const [createState, createAction] = useActionState(
     createCardAction,
     initialState,
   )
 
-  const [
-    updateState,
-    updateAction,
-  ] = useActionState(
+  const [updateState, updateAction] = useActionState(
     updateCardAction,
     initialState,
   )
 
-  const state = editing
-    ? updateState
-    : createState
+  const state = editing ? updateState : createState
 
-  const action = editing
-    ? updateAction
-    : createAction
+  const action = editing ? updateAction : createAction
 
   useEffect(() => {
     if (state.success) {
       onClose()
     }
-  }, [
-    state.success,
-    onClose,
-  ])
+  }, [state.success, onClose])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -83,9 +62,7 @@ export function CardCatalogFormModal({
         <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
             <h2 className="font-semibold text-foreground">
-              {editing
-                ? 'Editar tarjeta'
-                : 'Nueva tarjeta'}
+              {editing ? 'Editar tarjeta' : 'Nueva tarjeta'}
             </h2>
 
             <p className="mt-1 text-sm text-text-muted">
@@ -105,13 +82,7 @@ export function CardCatalogFormModal({
         </div>
 
         <form action={action}>
-          {editing && (
-            <input
-              type="hidden"
-              name="cardId"
-              value={card.cardId}
-            />
-          )}
+          {editing && <input type="hidden" name="cardId" value={card.cardId} />}
 
           <div className="space-y-5 p-6">
             <div>
@@ -126,9 +97,7 @@ export function CardCatalogFormModal({
                 id="bank"
                 name="bank"
                 type="text"
-                defaultValue={
-                  card?.bank ?? ''
-                }
+                defaultValue={card?.bank ?? ''}
                 required
                 maxLength={100}
                 placeholder="Ej. BBVA"
@@ -148,9 +117,7 @@ export function CardCatalogFormModal({
                 id="cardName"
                 name="cardName"
                 type="text"
-                defaultValue={
-                  card?.cardName ?? ''
-                }
+                defaultValue={card?.cardName ?? ''}
                 required
                 maxLength={100}
                 placeholder="Ej. Azul"
@@ -166,35 +133,29 @@ export function CardCatalogFormModal({
                   </p>
 
                   <p className="mt-0.5 text-xs text-text-muted">
-                    Las tarjetas activas pueden ser seleccionadas por los usuarios.
+                    Las tarjetas activas pueden ser seleccionadas por los
+                    usuarios.
                   </p>
                 </div>
 
                 <input
                   type="checkbox"
                   name="activeCheckbox"
-                  defaultChecked={
-                    card?.active ?? true
-                  }
+                  defaultChecked={card?.active ?? true}
                   className="peer sr-only"
                 />
 
                 <span className="relative h-6 w-11 shrink-0 rounded-full bg-surface transition-colors peer-checked:bg-primary after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-background after:transition-transform peer-checked:after:translate-x-5" />
               </label>
 
-              <ActiveValueInput
-                defaultActive={
-                  card?.active ?? true
-                }
-              />
+              <ActiveValueInput defaultActive={card?.active ?? true} />
             </div>
 
-            {!state.success &&
-              state.message && (
-                <div className="rounded-xl bg-primary-soft px-4 py-3 text-sm text-primary">
-                  {state.message}
-                </div>
-              )}
+            {!state.success && state.message && (
+              <div className="rounded-xl bg-primary-soft px-4 py-3 text-sm text-primary">
+                {state.message}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 border-t border-border bg-surface/60 px-6 py-4">
@@ -206,9 +167,7 @@ export function CardCatalogFormModal({
               Cancelar
             </button>
 
-            <SaveButton
-              editing={editing}
-            />
+            <SaveButton editing={editing} />
           </div>
         </form>
       </div>
@@ -216,21 +175,13 @@ export function CardCatalogFormModal({
   )
 }
 
-function ActiveValueInput({
-  defaultActive,
-}: {
-  defaultActive: boolean
-}) {
+function ActiveValueInput({ defaultActive }: { defaultActive: boolean }) {
   return (
     <>
       <input
         type="hidden"
         name="active"
-        value={
-          defaultActive
-            ? 'true'
-            : 'false'
-        }
+        value={defaultActive ? 'true' : 'false'}
       />
 
       <script
@@ -242,13 +193,8 @@ function ActiveValueInput({
   )
 }
 
-function SaveButton({
-  editing,
-}: {
-  editing: boolean
-}) {
-  const { pending } =
-    useFormStatus()
+function SaveButton({ editing }: { editing: boolean }) {
+  const { pending } = useFormStatus()
 
   return (
     <button
@@ -264,11 +210,7 @@ function SaveButton({
         <Plus className="h-4 w-4" />
       )}
 
-      {pending
-        ? 'Guardando...'
-        : editing
-          ? 'Guardar cambios'
-          : 'Crear tarjeta'}
+      {pending ? 'Guardando...' : editing ? 'Guardar cambios' : 'Crear tarjeta'}
     </button>
   )
 }

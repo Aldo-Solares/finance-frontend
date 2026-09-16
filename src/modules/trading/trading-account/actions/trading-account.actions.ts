@@ -19,6 +19,7 @@ import {
   deleteTradingAccount,
   updateTradingAccount,
 } from '@/modules/trading/trading-account/services/trading-account.service'
+import { revalidatePath } from 'next/cache'
 
 // ===================
 // CREATE
@@ -90,18 +91,8 @@ export const updateTradingAccountAction = async (
 // DELETE
 // ===================
 
-export const deleteTradingAccountAction = async (
-  tradingAccountId: number,
-): Promise<ActionState<null>> => {
-  try {
-    await deleteTradingAccount(tradingAccountId)
+export const deleteTradingAccountAction = async (tradingAccountId: number) => {
+  await deleteTradingAccount(tradingAccountId)
 
-    return actionSuccess(null, 'Cuenta de trading eliminada correctamente')
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar la cuenta de trading',
-    )
-  }
+  revalidatePath('/trading/account')
 }

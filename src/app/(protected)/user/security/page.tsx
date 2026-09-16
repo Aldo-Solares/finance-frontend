@@ -1,12 +1,12 @@
 // @/app/(protected)/user/security/page.tsx
 
 import { UserPasswordForm } from '@/modules/user/components/user-password-form'
-import { PageHeader } from '@/shared/page/page-header'
+import { HeroComponent } from '@/shared/hero/hero-component'
 
 export default function Page() {
   return (
     <section className="w-full space-y-8">
-      <PageHeader
+      <HeroComponent
         eyebrow="Cuenta"
         title="Seguridad"
         description="Mantén segura tu cuenta y actualiza tu contraseña."

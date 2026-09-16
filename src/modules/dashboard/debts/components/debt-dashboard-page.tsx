@@ -13,7 +13,7 @@ import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/sta
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
 
-import { PageHeader } from '@/shared/page/page-header'
+import { HeroComponent } from '@/shared/hero/hero-component'
 
 type DebtDashboardPageProps = {
   dashboard: DebtDashboard
@@ -65,7 +65,7 @@ export function DebtDashboardPage({
 
   return (
     <div className="w-full space-y-6">
-      <PageHeader
+      <HeroComponent
         eyebrow="Dashboard"
         title="Gastos de tarjetas"
         description={`${periodLabel} · Analiza tus gastos, pagos y distribución por tarjeta y concepto.`}

@@ -9,16 +9,22 @@ import {
   actionSuccess,
   type ActionState,
 } from '@/core/utils/action-state'
+
 import {
   CreateTradeSchema,
   UpdateTradeSchema,
   type Trade,
 } from '@/modules/trading/trade/schemas/trade.schema'
+
 import {
   createTrade,
   deleteTrade,
   updateTrade,
 } from '@/modules/trading/trade/services/trade.service'
+
+// ===================
+// CREATE
+// ===================
 
 export async function createTradeAction(
   input: unknown,
@@ -43,6 +49,10 @@ export async function createTradeAction(
     )
   }
 }
+
+// ===================
+// UPDATE
+// ===================
 
 export async function updateTradeAction(
   tradeId: number,
@@ -69,18 +79,12 @@ export async function updateTradeAction(
   }
 }
 
-export async function deleteTradeAction(tradeId: number): Promise<ActionState> {
-  try {
-    await deleteTrade(tradeId)
+// ===================
+// DELETE
+// ===================
 
-    revalidatePath('/trading/trade')
+export async function deleteTradeAction(tradeId: number) {
+  await deleteTrade(tradeId)
 
-    return actionSuccess(null, 'Compra eliminada correctamente.')
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar la compra.',
-    )
-  }
+  revalidatePath('/trading/trade')
 }

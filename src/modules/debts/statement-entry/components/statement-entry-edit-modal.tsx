@@ -27,6 +27,7 @@ import type {
 } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 import { DateInput } from '@/shared/inputs/date-input'
 import { TextInput } from '@/shared/inputs/text-input'
+import { NumberInput } from '@/shared/inputs/number-input'
 
 type StatementEntryEditModalProps = {
   entry: StatementEntry
@@ -75,7 +76,7 @@ export function StatementEntryEditModal({
   }, [state.success, onClose])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 select-scrollbar overflow-y-auto">
       <button
         type="button"
         onClick={onClose}
@@ -236,17 +237,22 @@ export function StatementEntryEditModal({
                     </p>
                   </div>
 
-                  <Field
-                    label={isPurchase ? 'Monto de esta parcialidad' : 'Monto'}
-                    name="amount"
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    defaultValue={entry.amount}
-                    placeholder="0.00"
-                    prefix="$"
-                    required
-                  />
+                  <div>
+                    <FieldLabel htmlFor="amount">
+                      {isPurchase ? 'Monto de esta parcialidad' : 'Monto'}
+                    </FieldLabel>
+
+                    <NumberInput
+                      id="amount"
+                      name="amount"
+                      defaultValue={entry.amount}
+                      min={0}
+                      step="0.01"
+                      placeholder="0.00"
+                      prefix="$"
+                      required
+                    />
+                  </div>
                 </div>
               </FormSection>
 

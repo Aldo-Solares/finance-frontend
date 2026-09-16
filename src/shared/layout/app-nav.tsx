@@ -55,8 +55,8 @@ export function AppNav({ user }: AppNavProps) {
       'flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium',
       'transition-all duration-200',
       isActive(route)
-        ? 'bg-primary-soft text-primary'
-        : 'text-text-muted hover:bg-surface hover:text-foreground',
+        ? 'bg-primary/[0.12] text-primary'
+        : 'text-white/60 hover:bg-white/[0.05] hover:text-white',
     ].join(' ')
 
   const getDropdownButtonClassName = (active: boolean, opened: boolean) =>
@@ -64,8 +64,8 @@ export function AppNav({ user }: AppNavProps) {
       'flex h-10 cursor-pointer items-center gap-2 rounded-xl px-3',
       'text-sm font-medium transition-all duration-200',
       active || opened
-        ? 'bg-primary-soft text-primary'
-        : 'text-text-muted hover:bg-surface hover:text-foreground',
+        ? 'bg-primary/[0.12] text-primary'
+        : 'text-white/60 hover:bg-white/[0.05] hover:text-white',
     ].join(' ')
 
   const getDropdownLinkClassName = (route: string) =>
@@ -73,8 +73,8 @@ export function AppNav({ user }: AppNavProps) {
       'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm',
       'transition-all duration-200',
       isActive(route)
-        ? 'bg-primary-soft font-medium text-primary'
-        : 'text-text-muted hover:bg-surface hover:text-foreground',
+        ? 'bg-primary/[0.12] font-medium text-primary'
+        : 'text-white/60 hover:bg-white/[0.05] hover:text-white',
     ].join(' ')
 
   // ===================
@@ -146,14 +146,14 @@ export function AppNav({ user }: AppNavProps) {
           Tarjetas
           <ChevronDown
             className={[
-              'h-4 w-4 text-text-muted transition-transform duration-200',
+              'h-4 w-4 text-white/40 transition-transform duration-200',
               openMenu === 'debts' ? 'rotate-180' : '',
             ].join(' ')}
           />
         </button>
 
         {openMenu === 'debts' && (
-          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-foreground/10">
+          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/10 bg-[#111111] p-2 text-white shadow-xl shadow-black/30">
             <Link
               href="/debts/card"
               onClick={closeMenu}
@@ -205,14 +205,14 @@ export function AppNav({ user }: AppNavProps) {
           Trading
           <ChevronDown
             className={[
-              'h-4 w-4 text-text-muted transition-transform duration-200',
+              'h-4 w-4 text-white/40 transition-transform duration-200',
               openMenu === 'trading' ? 'rotate-180' : '',
             ].join(' ')}
           />
         </button>
 
         {openMenu === 'trading' && (
-          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-foreground/10">
+          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/10 bg-[#111111] p-2 text-white shadow-xl shadow-black/30">
             <Link
               href="/trading/account"
               onClick={closeMenu}
@@ -253,14 +253,14 @@ export function AppNav({ user }: AppNavProps) {
             Administración
             <ChevronDown
               className={[
-                'h-4 w-4 text-text-muted transition-transform duration-200',
+                'h-4 w-4 text-white/40 transition-transform duration-200',
                 openMenu === 'admin' ? 'rotate-180' : '',
               ].join(' ')}
             />
           </button>
 
           {openMenu === 'admin' && (
-            <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-border bg-background p-2 text-foreground shadow-xl shadow-foreground/10">
+            <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/10 bg-[#111111] p-2 text-white shadow-xl shadow-black/30">
               <Link
                 href="/admin/card"
                 onClick={closeMenu}

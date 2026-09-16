@@ -28,7 +28,6 @@ type AppNavDrawerNavProps = {
 
 export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
   const pathname = usePathname()
-
   const isAdmin = user.role === USER_ROLE.ADMIN
 
   // ===================
@@ -51,15 +50,15 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
       'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium',
       'transition-all duration-200',
       isActive(route)
-        ? 'bg-primary text-primary-foreground shadow-sm'
-        : 'text-text-muted hover:bg-surface hover:text-foreground',
+        ? 'bg-primary/[0.12] text-primary'
+        : 'text-white/60 hover:bg-white/[0.05] hover:text-white',
     ].join(' ')
 
   const getSectionClassName = (active: boolean) =>
     [
       'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium',
       'transition-colors',
-      active ? 'bg-primary-soft text-primary' : 'text-text-muted',
+      active ? 'bg-primary/[0.12] text-primary' : 'text-white/60',
     ].join(' ')
 
   const getSubLinkClassName = (route: string) =>
@@ -67,8 +66,8 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
       'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium',
       'transition-all duration-200',
       isActive(route)
-        ? 'bg-primary-soft text-primary'
-        : 'text-text-muted hover:bg-surface hover:text-foreground',
+        ? 'bg-primary/[0.12] text-primary'
+        : 'text-white/60 hover:bg-white/[0.05] hover:text-white',
     ].join(' ')
 
   return (
@@ -109,7 +108,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
           Tarjetas
         </div>
 
-        <div className="ml-5 mt-2 space-y-1 border-l border-border pl-4">
+        <div className="ml-5 mt-2 space-y-1 border-l border-white/10 pl-4">
           <Link
             href="/debts/card"
             onClick={onClose}
@@ -153,7 +152,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
           Trading
         </div>
 
-        <div className="ml-5 mt-2 space-y-1 border-l border-border pl-4">
+        <div className="ml-5 mt-2 space-y-1 border-l border-white/10 pl-4">
           <Link
             href="/trading/account"
             onClick={onClose}
@@ -185,7 +184,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
             Administración
           </div>
 
-          <div className="ml-5 mt-2 space-y-1 border-l border-border pl-4">
+          <div className="ml-5 mt-2 space-y-1 border-l border-white/10 pl-4">
             <Link
               href="/admin/card"
               onClick={onClose}
@@ -238,7 +237,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
           SETTINGS
           =================== */}
 
-      <div className="my-4 h-px bg-border" />
+      <div className="my-4 h-px bg-white/10" />
 
       <Link
         href="/user/settings"

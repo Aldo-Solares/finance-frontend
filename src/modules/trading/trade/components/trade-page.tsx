@@ -6,16 +6,22 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema'
+
 import { TradeCreateModal } from '@/modules/trading/trade/components/trade-create-modal'
-import { TradeDeleteModal } from '@/modules/trading/trade/components/trade-delete-modal'
 import { TradeEditModal } from '@/modules/trading/trade/components/trade-edit-modal'
 import { TradeList } from '@/modules/trading/trade/components/trade-list'
+import { deleteTradeAction } from '@/modules/trading/trade/actions/trade.actions'
+
 import { TradeSaleCreateModal } from '@/modules/trading/trade-sale/components/trade-sale-create-modal'
 import { TradeSaleEditModal } from '@/modules/trading/trade-sale/components/trade-sale-edit-modal'
+
 import type { TradeSale } from '@/modules/trading/trade-sale/schemas/trade-sale.schema'
 import type { Trade } from '@/modules/trading/trade/schemas/trade.schema'
+
 import type { UserTradingAccount } from '@/modules/trading/user-trading-account/schemas/user-trading-account.schema'
-import { PageHeader } from '@/shared/page/page-header'
+
+import { HeroComponent } from '@/shared/hero/hero-component'
+import { DeleteModal } from '@/shared/modal/delete-modal'
 
 type TradePageProps = {
   trades: Trade[]
@@ -73,6 +79,16 @@ export function TradePage({
   }
 
   // ===================
+  // DELETE TRADE
+  // ===================
+
+  const handleConfirmDelete = async () => {
+    if (!deletingTrade) return
+
+    await deleteTradeAction(deletingTrade.tradeId)
+  }
+
+  // ===================
   // SALE
   // ===================
 
@@ -98,7 +114,7 @@ export function TradePage({
   return (
     <>
       <div className="w-full space-y-10">
-        <PageHeader
+        <HeroComponent
           eyebrow="Trading"
           title="Operaciones"
           description="Administra tus compras, ventas parciales y posiciones cerradas."
@@ -107,7 +123,7 @@ export function TradePage({
               <button
                 type="button"
                 onClick={handleCreate}
-                className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover"
+                className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-[#111111] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
               >
                 <Plus className="h-4 w-4" />
                 Nueva compra
@@ -165,9 +181,11 @@ export function TradePage({
       )}
 
       {deletingTrade && (
-        <TradeDeleteModal
-          trade={deletingTrade}
+        <DeleteModal
+          title="Eliminar compra"
+          description="¿Seguro que deseas eliminar esta operación de trading?"
           onClose={() => setDeletingTrade(null)}
+          onConfirm={handleConfirmDelete}
         />
       )}
 

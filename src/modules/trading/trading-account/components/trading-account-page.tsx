@@ -6,11 +6,15 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'
+
 import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema'
 
-import { PageHeader } from '@/shared/page/page-header'
+import { deleteTradingAccountAction } from '@/modules/trading/trading-account/actions/trading-account.actions'
+
+import { HeroComponent } from '@/shared/hero/hero-component'
+import { DeleteModal } from '@/shared/modal/delete-modal'
+
 import { TradingAccountCreateModal } from './trading-account-create-modal'
-import { TradingAccountDeleteModal } from './trading-account-delete-modal'
 import { TradingAccountEditModal } from './trading-account-edit-modal'
 import { TradingAccountEmptyState } from './trading-account-empty-state'
 import { TradingAccountList } from './trading-account-list'
@@ -25,9 +29,11 @@ export const TradingAccountPage = ({
   currencies,
 }: TradingAccountPageProps) => {
   const [creating, setCreating] = useState(false)
+
   const [editingAccount, setEditingAccount] = useState<TradingAccount | null>(
     null,
   )
+
   const [deletingAccount, setDeletingAccount] = useState<TradingAccount | null>(
     null,
   )
@@ -40,10 +46,16 @@ export const TradingAccountPage = ({
     setEditingAccount(tradingAccount)
   }
 
+  const handleConfirmDelete = async () => {
+    if (!deletingAccount) return
+
+    await deleteTradingAccountAction(deletingAccount.tradingAccountId)
+  }
+
   return (
     <>
       <section className="w-full space-y-8">
-        <PageHeader
+        <HeroComponent
           eyebrow="Administración"
           title="Cuentas de trading"
           description="Administra las cuentas de trading disponibles en el sistema."
@@ -53,11 +65,14 @@ export const TradingAccountPage = ({
                 type="button"
                 onClick={handleCreate}
                 className={[
-                  'inline-flex h-10 shrink-0 cursor-pointer items-center',
-                  'justify-center gap-2 rounded-xl bg-primary px-4',
-                  'text-sm font-semibold text-primary-foreground',
-                  'transition-all duration-200',
-                  'hover:bg-primary-hover',
+                  'flex h-11 shrink-0 cursor-pointer items-center',
+                  'justify-center gap-2 rounded-xl bg-white px-4',
+                  'text-sm font-semibold text-[#111111]',
+                  'shadow-sm transition-all duration-200',
+                  'hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md',
+                  'focus-visible:outline-none focus-visible:ring-2',
+                  'focus-visible:ring-primary/50 focus-visible:ring-offset-2',
+                  'focus-visible:ring-offset-[#111111]',
                 ].join(' ')}
               >
                 <Plus className="h-4 w-4" />
@@ -76,6 +91,7 @@ export const TradingAccountPage = ({
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-text-muted">
                   Catálogo
                 </p>
+
                 <h2 className="mt-1 text-lg font-semibold tracking-tight text-foreground">
                   Cuentas disponibles
                 </h2>
@@ -112,9 +128,11 @@ export const TradingAccountPage = ({
       )}
 
       {deletingAccount && (
-        <TradingAccountDeleteModal
-          tradingAccount={deletingAccount}
+        <DeleteModal
+          title="Eliminar cuenta"
+          description="¿Seguro que deseas eliminar esta cuenta de trading?"
           onClose={() => setDeletingAccount(null)}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </>

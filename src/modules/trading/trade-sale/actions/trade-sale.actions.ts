@@ -5,20 +5,26 @@
 import { revalidatePath } from 'next/cache'
 
 import {
+  actionError,
+  actionSuccess,
+  type ActionState,
+} from '@/core/utils/action-state'
+
+import {
   CreateTradeSaleSchema,
   UpdateTradeSaleSchema,
   type TradeSale,
 } from '@/modules/trading/trade-sale/schemas/trade-sale.schema'
+
 import {
   createTradeSale,
   deleteTradeSale,
   updateTradeSale,
 } from '@/modules/trading/trade-sale/services/trade-sale.service'
-import {
-  actionError,
-  actionSuccess,
-  type ActionState,
-} from '@/core/utils/action-state'
+
+// ===================
+// CREATE
+// ===================
 
 export async function createTradeSaleAction(
   input: unknown,
@@ -43,6 +49,10 @@ export async function createTradeSaleAction(
     )
   }
 }
+
+// ===================
+// UPDATE
+// ===================
 
 export async function updateTradeSaleAction(
   tradeSaleId: number,
@@ -69,20 +79,12 @@ export async function updateTradeSaleAction(
   }
 }
 
-export async function deleteTradeSaleAction(
-  tradeSaleId: number,
-): Promise<ActionState> {
-  try {
-    await deleteTradeSale(tradeSaleId)
+// ===================
+// DELETE
+// ===================
 
-    revalidatePath('/trading/trade')
+export async function deleteTradeSaleAction(tradeSaleId: number) {
+  await deleteTradeSale(tradeSaleId)
 
-    return actionSuccess(null, 'Venta eliminada correctamente.')
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar la venta.',
-    )
-  }
+  revalidatePath('/trading/trade')
 }

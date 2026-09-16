@@ -6,18 +6,21 @@ import { ArrowLeft, Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
 
+import { deleteStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
+
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import type {
   StatementEntry,
   StatementEntryType,
 } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
+
 import { DateDisplay } from '@/shared/display/date-display'
 import { Pagination } from '@/shared/filters/pagination'
-import { PageHeader } from '@/shared/page/page-header'
+import { HeroComponent } from '@/shared/hero/hero-component'
+import { DeleteModal } from '@/shared/modal/delete-modal'
 
 import { StatementEntryCreateModal } from './statement-entry-create-modal'
-import { StatementEntryDeleteModal } from './statement-entry-delete-modal'
 import {
   DateSort,
   MsiFilter,
@@ -195,6 +198,12 @@ export function StatementEntryPage({
     setCurrentPage(1)
   }
 
+  const handleConfirmDelete = async () => {
+    if (!deleteEntry) return
+
+    await deleteStatementEntryAction(deleteEntry.entryId)
+  }
+
   return (
     <>
       <section className="w-full space-y-8">
@@ -208,7 +217,7 @@ export function StatementEntryPage({
           </Link>
 
           <div className="mt-5">
-            <PageHeader
+            <HeroComponent
               eyebrow={`${statement.bank} · ${statement.cardName}`}
               title={`${statement.month}/${statement.year}`}
               description="Consulta y administra los movimientos de este estado de cuenta."
@@ -217,7 +226,7 @@ export function StatementEntryPage({
                   <button
                     type="button"
                     onClick={() => setCreateOpen(true)}
-                    className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
+                    className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-[#111111] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
                   >
                     <Plus className="h-4 w-4" />
                     Nuevo movimiento
@@ -350,10 +359,11 @@ export function StatementEntryPage({
       )}
 
       {deleteEntry && (
-        <StatementEntryDeleteModal
-          key={deleteEntry.entryId}
-          entry={deleteEntry}
+        <DeleteModal
+          title="Eliminar movimiento"
+          description="¿Seguro que deseas eliminar este movimiento del estado de cuenta?"
           onClose={() => setDeleteEntry(null)}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </>

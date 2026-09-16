@@ -72,7 +72,7 @@ export function StatementEntryCreateModal({
   }, [state.success, onClose])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 select-scrollbar overflow-y-auto">
       <button
         type="button"
         onClick={onClose}

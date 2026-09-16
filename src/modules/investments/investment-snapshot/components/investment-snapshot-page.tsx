@@ -5,17 +5,21 @@
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
+import { deleteInvestmentSnapshotAction } from '@/modules/investments/investment-snapshot/actions/investment-snapshot.actions'
+
 import type {
   InvestmentPerformance,
   InvestmentSnapshot,
 } from '@/modules/investments/investment-snapshot/schemas/investment-snapshot.schema'
-import { InvestmentSnapshotCreateModal } from '@/modules/investments/investment-snapshot/components/investment-snapshot-create-modal'
-import { InvestmentSnapshotDeleteModal } from '@/modules/investments/investment-snapshot/components/investment-snapshot-delete-modal'
-import { InvestmentSnapshotEditModal } from '@/modules/investments/investment-snapshot/components/investment-snapshot-edit-modal'
+
 import { InvestmentPerformanceCard } from '@/modules/investments/investment-snapshot/components/investment-performance-card'
+import { InvestmentSnapshotCreateModal } from '@/modules/investments/investment-snapshot/components/investment-snapshot-create-modal'
+import { InvestmentSnapshotEditModal } from '@/modules/investments/investment-snapshot/components/investment-snapshot-edit-modal'
 import { InvestmentSnapshotList } from '@/modules/investments/investment-snapshot/components/investment-snapshot-list'
 import { InvestmentSummary } from '@/modules/investments/investment-snapshot/components/investment-summary'
-import { PageHeader } from '@/shared/page/page-header'
+
+import { HeroComponent } from '@/shared/hero/hero-component'
+import { DeleteModal } from '@/shared/modal/delete-modal'
 
 type InvestmentSnapshotPageProps = {
   snapshots: InvestmentSnapshot[]
@@ -42,10 +46,16 @@ export function InvestmentSnapshotPage({
     setEditingSnapshot(snapshot)
   }
 
+  const handleConfirmDelete = async () => {
+    if (!deleteSnapshot) return
+
+    await deleteInvestmentSnapshotAction(deleteSnapshot.investmentSnapshotId)
+  }
+
   return (
     <>
       <section className="w-full space-y-8">
-        <PageHeader
+        <HeroComponent
           eyebrow="Inversiones"
           title="SmartCash"
           description="Consulta cuánto tienes y cuánto has generado."
@@ -53,7 +63,7 @@ export function InvestmentSnapshotPage({
             <button
               type="button"
               onClick={handleCreate}
-              className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover"
+              className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-[#111111] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
             >
               <Plus className="h-4 w-4" />
               Actualizar saldo
@@ -90,10 +100,11 @@ export function InvestmentSnapshotPage({
       )}
 
       {deleteSnapshot && (
-        <InvestmentSnapshotDeleteModal
-          key={deleteSnapshot.investmentSnapshotId}
-          snapshot={deleteSnapshot}
+        <DeleteModal
+          title="Eliminar actualización"
+          description="Los rendimientos posteriores serán recalculados automáticamente."
           onClose={() => setDeleteSnapshot(null)}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </>

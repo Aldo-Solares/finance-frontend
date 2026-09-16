@@ -102,30 +102,11 @@ export async function updateCardAction(
 // DELETE
 // ===================
 
-export async function deleteCardAction(
-  _previousState: ActionState<null>,
-  formData: FormData,
-): Promise<ActionState<null>> {
-  const cardId = Number(formData.get('cardId'))
+export async function deleteCardAction(cardId: number) {
+  await deleteCard(cardId)
 
-  if (!Number.isInteger(cardId) || cardId <= 0) {
-    return actionError('La tarjeta no es válida')
-  }
-
-  try {
-    await deleteCard(cardId)
-
-    revalidatePath('/admin/card')
-    revalidatePath('/debts/card')
-
-    return actionSuccess(null)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar la tarjeta',
-    )
-  }
+  revalidatePath('/admin/card')
+  revalidatePath('/debts/card')
 }
 
 // ===================

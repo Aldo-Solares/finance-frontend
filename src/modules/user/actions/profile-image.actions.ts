@@ -156,27 +156,8 @@ export async function updateProfileImageStatusAction(
 // DELETE PROFILE IMAGE
 // ===================
 
-export async function deleteProfileImageAction(
-  _previousState: ActionState<null>,
-  formData: FormData,
-): Promise<ActionState<null>> {
-  const profileImageId = Number(formData.get('profileImageId'))
+export async function deleteProfileImageAction(profileImageId: number) {
+  await deleteProfileImage(profileImageId)
 
-  if (!Number.isInteger(profileImageId) || profileImageId <= 0) {
-    return actionError('La imagen de perfil no es válida')
-  }
-
-  try {
-    await deleteProfileImage(profileImageId)
-
-    revalidatePath('/', 'layout')
-
-    return actionSuccess(null)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar la imagen de perfil',
-    )
-  }
+  revalidatePath('/', 'layout')
 }

@@ -26,15 +26,14 @@ export function NotLoggedHeroInfo() {
       <div className="mt-9 flex flex-wrap items-center gap-3">
         <Link
           href="/auth/register"
-          className="group inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-7 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover"
+          className="group inline-flex h-12 items-center gap-2 rounded-xl bg-foreground px-7 text-sm font-medium text-background shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
         >
           Comenzar ahora
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
         </Link>
-
         <Link
           href="/auth/login"
-          className="inline-flex h-12 items-center rounded-xl border border-border bg-background px-7 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-surface"
+          className="group inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-7 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover"
         >
           Ya tengo cuenta
         </Link>

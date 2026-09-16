@@ -92,25 +92,17 @@ export async function updateUserTradingAccountAction(
   }
 }
 
+// @/modules/trading/account/actions/user-trading-account.actions.ts
+
 // ===================
 // DELETE
 // ===================
 
 export async function deleteUserTradingAccountAction(
   userTradingAccountId: number,
-): Promise<ActionState<null>> {
-  try {
-    await deleteUserTradingAccount(userTradingAccountId)
+) {
+  await deleteUserTradingAccount(userTradingAccountId)
 
-    revalidatePath('/trading/account')
-    revalidatePath('/trading/trade')
-
-    return actionSuccess(null, 'Cuenta de trading eliminada correctamente.')
-  } catch (error) {
-    return actionError<null>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar la cuenta de trading.',
-    )
-  }
+  revalidatePath('/trading/account')
+  revalidatePath('/trading/trade')
 }

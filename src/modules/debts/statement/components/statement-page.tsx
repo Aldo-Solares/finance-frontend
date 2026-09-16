@@ -6,12 +6,15 @@ import { Plus } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
+import { deleteStatementAction } from '@/modules/debts/statement/actions/statement.actions'
+
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
-import { PageHeader } from '@/shared/page/page-header'
+
+import { HeroComponent } from '@/shared/hero/hero-component'
+import { DeleteModal } from '@/shared/modal/delete-modal'
 
 import { StatementCreateModal } from './statement-create-modal'
-import { StatementDeleteModal } from './statement-delete-modal'
 import { StatementEditModal } from './statement-edit-modal'
 import { StatementFilters } from './statement-filters'
 import { StatementTable } from './statement-table'
@@ -25,19 +28,13 @@ export function StatementPage({ statements, userCards }: StatementPageProps) {
   const searchParams = useSearchParams()
 
   const [formStatement, setFormStatement] = useState<Statement | null>(null)
-
   const [formOpen, setFormOpen] = useState(false)
-
   const [deleteStatement, setDeleteStatement] = useState<Statement | null>(null)
 
   const selectedUserCardId = searchParams.get('userCardId') ?? ''
-
   const selectedYear = searchParams.get('year')
-
   const selectedMonth = searchParams.get('month')
-
   const selectedStatus = searchParams.get('status')
-
   const selectedPaid = searchParams.get('paid')
 
   const filteredStatements = statements.filter((statement) => {
@@ -89,10 +86,16 @@ export function StatementPage({ statements, userCards }: StatementPageProps) {
     setFormStatement(null)
   }
 
+  const handleConfirmDelete = async () => {
+    if (!deleteStatement) return
+
+    await deleteStatementAction(deleteStatement.statementId)
+  }
+
   return (
     <>
       <section className="w-full space-y-8">
-        <PageHeader
+        <HeroComponent
           eyebrow="Deudas"
           title="Estados de cuenta"
           description="Consulta periodos, fechas de pago y pagos de tus tarjetas."
@@ -101,7 +104,7 @@ export function StatementPage({ statements, userCards }: StatementPageProps) {
               <button
                 type="button"
                 onClick={handleCreate}
-                className="flex cursor-pointer items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
+                className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-[#111111] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
               >
                 <Plus className="h-4 w-4" />
                 Nuevo periodo
@@ -139,10 +142,11 @@ export function StatementPage({ statements, userCards }: StatementPageProps) {
       )}
 
       {deleteStatement && (
-        <StatementDeleteModal
-          key={deleteStatement.statementId}
-          statement={deleteStatement}
+        <DeleteModal
+          title="Eliminar estado de cuenta"
+          description="¿Seguro que deseas eliminar este estado de cuenta?"
           onClose={() => setDeleteStatement(null)}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </>

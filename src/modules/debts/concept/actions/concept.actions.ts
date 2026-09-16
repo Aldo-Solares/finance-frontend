@@ -95,31 +95,14 @@ export async function updateConceptAction(
   }
 }
 
+// @/modules/admin/concept/actions/concept.actions.ts
+
 // ===================
 // DELETE
 // ===================
 
-export async function deleteConceptAction(
-  _previousState: ActionState<null>,
-  formData: FormData,
-): Promise<ActionState<null>> {
-  const conceptId = Number(formData.get('conceptId'))
+export async function deleteConceptAction(conceptId: number) {
+  await deleteConcept(conceptId)
 
-  if (!Number.isInteger(conceptId) || conceptId <= 0) {
-    return actionError('El concepto no es válido')
-  }
-
-  try {
-    await deleteConcept(conceptId)
-
-    revalidatePath('/admin/concept')
-
-    return actionSuccess(null)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar el concepto',
-    )
-  }
+  revalidatePath('/admin/concept')
 }

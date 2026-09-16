@@ -2,14 +2,14 @@
 
 import { UserProfileForm } from '@/modules/user/components/user-profile-form'
 import { getCurrentUser } from '@/modules/user/services/user.service'
-import { PageHeader } from '@/shared/page/page-header'
+import { HeroComponent } from '@/shared/hero/hero-component'
 
 export default async function Page() {
   const user = await getCurrentUser()
 
   return (
     <section className="w-full space-y-8">
-      <PageHeader
+      <HeroComponent
         eyebrow="Cuenta"
         title="Información personal"
         description="Administra tus datos personales y de contacto."

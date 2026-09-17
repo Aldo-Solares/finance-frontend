@@ -5,11 +5,9 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-
   --surface: #f7f7f7;
   --border: #e5e5e5;
   --text-muted: #666666;
-
   --primary: #b86f89;
   --primary-hover: #a9617b;
   --primary-soft: #f9f1f4;
@@ -19,11 +17,9 @@
 .dark {
   --background: #111111;
   --foreground: #f5f5f5;
-
   --surface: #1a1a1a;
   --border: #303030;
   --text-muted: #a3a3a3;
-
   --primary: #d88999;
   --primary-hover: #e29aa8;
   --primary-soft: #251b1f;
@@ -33,11 +29,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
   --color-surface: var(--surface);
   --color-border: var(--border);
   --color-text-muted: var(--text-muted);
-
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-soft: var(--primary-soft);
@@ -49,6 +43,12 @@
 
 html {
   font-family: var(--font-geist-sans), sans-serif;
+
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -79,6 +79,7 @@ select {
 }
 
 /* Select dropdown scrollbar */
+
 .select-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
@@ -99,4 +100,46 @@ select {
 
 .select-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+}
+
+/* Custom scrollbar */
+
+.custom-scrollbar-thumb {
+  background: #171717;
+}
+
+.custom-scrollbar-thumb:hover {
+  background: #000000;
+}
+
+.custom-scrollbar-thumb:active {
+  background: #000000;
+}
+
+.dark .custom-scrollbar-thumb {
+  background: #f5f5f5;
+}
+
+.dark .custom-scrollbar-thumb:hover {
+  background: #ffffff;
+}
+
+.dark .custom-scrollbar-thumb:active {
+  background: #ffffff;
+}
+
+.custom-scrollbar-arrow-top {
+  border-bottom-color: #171717;
+}
+
+.custom-scrollbar-arrow-bottom {
+  border-top-color: #171717;
+}
+
+.dark .custom-scrollbar-arrow-top {
+  border-bottom-color: #f5f5f5;
+}
+
+.dark .custom-scrollbar-arrow-bottom {
+  border-top-color: #f5f5f5;
 }

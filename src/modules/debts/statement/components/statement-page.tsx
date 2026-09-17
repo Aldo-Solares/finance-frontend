@@ -100,19 +100,15 @@ export function StatementPage({ statements, userCards }: StatementPageProps) {
           title="Estados de cuenta"
           description="Consulta periodos, fechas de pago y pagos de tus tarjetas."
           action={
-            userCards.length > 0 ? (
-              <button
-                type="button"
-                onClick={handleCreate}
-                className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-[#111111] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
-              >
-                <Plus className="h-4 w-4" />
-                Nuevo periodo
-              </button>
-            ) : undefined
+            userCards.length > 0
+              ? {
+                  label: 'Nuevo periodo',
+                  icon: Plus,
+                  onClick: handleCreate,
+                }
+              : undefined
           }
         />
-
         {userCards.length > 0 && (
           <StatementFilters statements={statements} userCards={userCards} />
         )}

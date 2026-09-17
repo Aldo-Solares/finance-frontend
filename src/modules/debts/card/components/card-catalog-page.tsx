@@ -48,24 +48,11 @@ export function CardCatalogPage({ cards }: CardCatalogPageProps) {
           eyebrow="Administración"
           title="Catálogo de tarjetas"
           description="Administra las tarjetas disponibles para los usuarios."
-          action={
-            <button
-              type="button"
-              onClick={handleCreate}
-              className={[
-                'group flex h-11 cursor-pointer items-center gap-2 rounded-xl',
-                'bg-white px-4 text-sm font-semibold text-[#111111]',
-                'shadow-sm transition-all duration-200',
-                'hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md',
-                'focus-visible:outline-none focus-visible:ring-2',
-                'focus-visible:ring-primary/50 focus-visible:ring-offset-2',
-                'focus-visible:ring-offset-[#111111]',
-              ].join(' ')}
-            >
-              <Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" />
-              Nueva tarjeta
-            </button>
-          }
+          action={{
+            label: 'Nueva tarjeta',
+            icon: Plus,
+            onClick: handleCreate,
+          }}
         />
 
         {cards.length === 0 ? (

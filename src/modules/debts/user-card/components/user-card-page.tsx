@@ -53,25 +53,11 @@ export function UserCardPage({ userCards, cards }: UserCardPageProps) {
           eyebrow="Tarjetas"
           title="Mis tarjetas"
           description="Administra las tarjetas asociadas a tu cuenta."
-          action={
-            <button
-              type="button"
-              onClick={handleAddCard}
-              className={[
-                'group inline-flex h-11 shrink-0 cursor-pointer items-center',
-                'justify-center gap-2 rounded-xl bg-white px-4',
-                'text-sm font-semibold text-[#111111]',
-                'shadow-sm transition-all duration-200',
-                'hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md',
-                'focus-visible:outline-none focus-visible:ring-2',
-                'focus-visible:ring-primary/50 focus-visible:ring-offset-2',
-                'focus-visible:ring-offset-[#111111]',
-              ].join(' ')}
-            >
-              <Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" />
-              Agregar tarjeta
-            </button>
-          }
+          action={{
+            label: 'Agregar tarjeta',
+            icon: Plus,
+            onClick: handleAddCard,
+          }}
         />
 
         {userCards.length === 0 ? (

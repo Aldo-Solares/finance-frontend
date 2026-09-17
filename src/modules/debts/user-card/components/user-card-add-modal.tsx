@@ -8,6 +8,7 @@ import { type FormEvent, useState } from 'react'
 
 import { createUserCardAction } from '@/modules/debts/user-card/actions/user-card.action'
 import type { Card } from '@/modules/debts/card/schemas/card.schema'
+import { SelectInput } from '@/shared/inputs/select-input'
 
 type UserCardAddModalProps = {
   cards: Card[]
@@ -109,51 +110,18 @@ export function UserCardAddModal({ cards, onClose }: UserCardAddModalProps) {
                 Tarjeta del catálogo
               </label>
 
-              <select
+              <SelectInput
                 id="user-card"
-                value={cardId}
-                onChange={(event) => setCardId(Number(event.target.value))}
+                name="cardId"
+                options={cards.map((card) => ({
+                  value: card.cardId,
+                  label: `${card.bank} · ${card.cardName}`,
+                }))}
+                value={String(cardId)}
+                onChange={(value) => setCardId(Number(value))}
                 disabled={pending || cards.length === 0}
                 required
-                className={[
-                  'h-12 w-full rounded-xl border border-border',
-                  'bg-surface px-4 text-sm text-foreground',
-                  'outline-none transition-all',
-                  'focus:border-primary focus:ring-2 focus:ring-primary/10',
-                  'disabled:cursor-not-allowed disabled:opacity-60',
-                ].join(' ')}
-              >
-                {cards.map((card) => (
-                  <option key={card.cardId} value={card.cardId}>
-                    {card.bank} · {card.cardName}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-surface p-4">
-              <label className="flex cursor-pointer items-center justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="text-sm font-semibold text-foreground">
-                    Tarjeta activa
-                  </p>
-
-                  <p className="mt-1 text-xs leading-5 text-text-muted">
-                    La tarjeta estará disponible para estados de cuenta y
-                    movimientos.
-                  </p>
-                </div>
-
-                <input
-                  type="checkbox"
-                  checked={active}
-                  onChange={(event) => setActive(event.target.checked)}
-                  disabled={pending}
-                  className="peer sr-only"
-                />
-
-                <span className="relative h-6 w-11 shrink-0 rounded-full border border-border bg-background transition-colors peer-checked:border-primary peer-checked:bg-primary after:absolute after:left-1 after:top-1 after:h-4 after:w-4 after:rounded-full after:bg-foreground after:transition-transform peer-checked:after:translate-x-5 peer-checked:after:bg-primary-foreground" />
-              </label>
+              />
             </div>
 
             {error && (

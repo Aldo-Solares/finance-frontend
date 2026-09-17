@@ -17,7 +17,6 @@ import type { Statement } from '@/modules/debts/statement/schemas/statement.sche
 
 import { DateDisplay } from '@/shared/display/date-display'
 import { Pagination } from '@/shared/filters/pagination'
-import { HeroComponent } from '@/shared/hero/hero-component'
 import { DeleteModal } from '@/shared/modal/delete-modal'
 
 import { StatementEntryCreateModal } from './statement-entry-create-modal'
@@ -29,6 +28,7 @@ import {
 } from './statement-entry-filters'
 import { StatementEntryEditModal } from './statement-entry-edit-modal'
 import { StatementEntryTable } from './statement-entry-table'
+import { StatementHero } from './statement-hero'
 
 type StatementEntryPageProps = {
   statement: Statement
@@ -207,34 +207,30 @@ export function StatementEntryPage({
   return (
     <>
       <section className="w-full space-y-8">
-        <div>
-          <Link
-            href="/debts/statement"
-            className="inline-flex items-center gap-2 text-xs font-medium text-text-muted transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Estados de cuenta
-          </Link>
-
-          <div className="mt-5">
-            <HeroComponent
-              eyebrow={`${statement.bank} · ${statement.cardName}`}
-              title={`${statement.month}/${statement.year}`}
-              description="Consulta y administra los movimientos de este estado de cuenta."
-              action={
-                concepts.length > 0 ? (
-                  <button
-                    type="button"
-                    onClick={() => setCreateOpen(true)}
-                    className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-[#111111] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Nuevo movimiento
-                  </button>
-                ) : undefined
-              }
-            />
-          </div>
+        <div className="space-y-6">
+          <StatementHero
+            eyebrow={`${statement.bank} · ${statement.cardName}`}
+            title={`${statement.month}/${statement.year}`}
+            action={
+              concepts.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setCreateOpen(true)}
+                  className={[
+                    'inline-flex h-10 cursor-pointer items-center gap-2 rounded-xl',
+                    'bg-white px-4 text-xs font-semibold text-[#111111]',
+                    'transition-all duration-200',
+                    'hover:bg-white/90',
+                    'focus-visible:outline-none focus-visible:ring-2',
+                    'focus-visible:ring-primary/50',
+                  ].join(' ')}
+                >
+                  <Plus className="h-4 w-4" />
+                  Nuevo movimiento
+                </button>
+              ) : undefined
+            }
+          />
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <InfoCard

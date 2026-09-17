@@ -3,14 +3,21 @@
 'use client'
 
 import { ChartCandlestick, Coins, Plus } from 'lucide-react'
+
 import { useState } from 'react'
 
 import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'
+
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema'
 
+import { HeroComponent } from '@/shared/hero/hero-component'
+
 import { InstrumentCreateFormModal } from './instrument-create-form-modal'
+
 import { InstrumentEditFormModal } from './instrument-edit-form-modal'
+
 import { InstrumentEmptyState } from './instrument-empty-state'
+
 import { InstrumentList } from './instrument-list'
 
 type InstrumentPageProps = {
@@ -39,69 +46,50 @@ export const InstrumentPage = ({
   return (
     <>
       <div className="space-y-8">
-        {/* ===================
-            HEADER
-            =================== */}
+        <HeroComponent
+          eyebrow="Trading"
+          title="Instrumentos"
+          description="Administra los instrumentos disponibles para registrar y consultar tus operaciones de trading."
+          action={{
+            label: 'Nuevo instrumento',
+            icon: Plus,
+            onClick: handleCreate,
+          }}
+        />
 
-        <section className="relative overflow-hidden rounded-3xl border border-border bg-background">
-          <div className="absolute -right-20 -top-24 size-624 rounded-full bg-surface/80 blur-3xl" />
-
-          <div className="relative flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
-                <ChartCandlestick className="size-6" />
-              </div>
-
-              <div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
-                    Instrumentos
-                  </h1>
-
-                  <span className="rounded-full bg-surface px-2.5 py-1 text-xs font-semibold text-text-muted">
-                    {instruments.length}
-                  </span>
-                </div>
-
-                <p className="mt-2 max-w-xl text-sm leading-6 text-text-muted">
-                  Administra los instrumentos disponibles para registrar y
-                  consultar tus operaciones de trading.
-                </p>
-
-                <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-medium text-text-muted">
-                  <span className="inline-flex items-center gap-1.5">
-                    <ChartCandlestick className="size-3.5" />
-                    {instruments.length === 1
-                      ? 'instrumento disponible'
-                      : 'instrumentos disponibles'}
-                  </span>
-
-                  <span className="text-text-muted">•</span>
-
-                  <span className="inline-flex items-center gap-1.5">
-                    <Coins className="size-3.5" />
-                    {currencies.length === 1
-                      ? '1 moneda disponible'
-                      : `${currencies.length} monedas disponibles`}
-                  </span>
-                </div>
-              </div>
+        <section className="grid gap-3 sm:grid-cols-2">
+          <div className="flex items-center gap-3 rounded-[1.5rem] border border-border bg-background p-5">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
+              <ChartCandlestick className="size-5" />
             </div>
 
-            <button
-              type="button"
-              onClick={handleCreate}
-              className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary-hover hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            >
-              <Plus className="size-4" />
-              Nuevo instrumento
-            </button>
+            <div>
+              <p className="text-xs font-medium text-text-muted">
+                Instrumentos disponibles
+              </p>
+
+              <p className="mt-1 text-xl font-semibold tracking-tight text-foreground">
+                {instruments.length}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 rounded-[1.5rem] border border-border bg-background p-5">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
+              <Coins className="size-5" />
+            </div>
+
+            <div>
+              <p className="text-xs font-medium text-text-muted">
+                Monedas disponibles
+              </p>
+
+              <p className="mt-1 text-xl font-semibold tracking-tight text-foreground">
+                {currencies.length}
+              </p>
+            </div>
           </div>
         </section>
-
-        {/* ===================
-            CONTENT
-            =================== */}
 
         <section>
           {instruments.length === 0 ? (
@@ -116,20 +104,12 @@ export const InstrumentPage = ({
         </section>
       </div>
 
-      {/* ===================
-          CREATE MODAL
-          =================== */}
-
       {formOpen && (
         <InstrumentCreateFormModal
           currencies={currencies}
           onClose={() => setFormOpen(false)}
         />
       )}
-
-      {/* ===================
-          EDIT MODAL
-          =================== */}
 
       {editingInstrument && (
         <InstrumentEditFormModal

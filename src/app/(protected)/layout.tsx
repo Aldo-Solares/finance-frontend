@@ -1,13 +1,17 @@
 // @/app/(protected)/layout.tsx
 
 import type { ReactNode } from 'react'
+
 import { redirect } from 'next/navigation'
 
 import { getCurrentUser } from '@/modules/user/services/user.service'
 import { getCurrentUserSettings } from '@/modules/user/services/user-settings.service'
+
 import { UserSettingsProvider } from '@/modules/user/providers/user-settings-provider'
+
 import { AppFooter } from '@/shared/layout/app-footer'
 import { AppHeader } from '@/shared/layout/app-header'
+import { CustomScrollbar } from '@/shared/scrollbar/custom-scrollbar'
 
 type ProtectedLayoutProps = {
   children: ReactNode
@@ -36,6 +40,8 @@ export default async function ProtectedLayout({
         </main>
 
         <AppFooter />
+
+        <CustomScrollbar />
       </div>
     </UserSettingsProvider>
   )

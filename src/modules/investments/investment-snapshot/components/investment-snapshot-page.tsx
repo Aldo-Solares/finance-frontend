@@ -59,16 +59,11 @@ export function InvestmentSnapshotPage({
           eyebrow="Inversiones"
           title="SmartCash"
           description="Consulta cuánto tienes y cuánto has generado."
-          action={
-            <button
-              type="button"
-              onClick={handleCreate}
-              className="flex h-11 cursor-pointer items-center gap-2 rounded-xl bg-white px-4 text-sm font-semibold text-[#111111] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
-            >
-              <Plus className="h-4 w-4" />
-              Actualizar saldo
-            </button>
-          }
+          action={{
+            label: 'Actualizar saldo',
+            icon: Plus,
+            onClick: handleCreate,
+          }}
         />
 
         <InvestmentPerformanceCard performance={performance} />

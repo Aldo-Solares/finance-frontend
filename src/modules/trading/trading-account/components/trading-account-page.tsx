@@ -58,28 +58,15 @@ export const TradingAccountPage = ({
           title="Cuentas de trading"
           description="Administra las cuentas de trading disponibles en el sistema."
           action={
-            hasAccounts ? (
-              <button
-                type="button"
-                onClick={handleCreate}
-                className={[
-                  'flex h-11 shrink-0 cursor-pointer items-center',
-                  'justify-center gap-2 rounded-xl bg-white px-4',
-                  'text-sm font-semibold text-[#111111]',
-                  'shadow-sm transition-all duration-200',
-                  'hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-md',
-                  'focus-visible:outline-none focus-visible:ring-2',
-                  'focus-visible:ring-primary/50 focus-visible:ring-offset-2',
-                  'focus-visible:ring-offset-[#111111]',
-                ].join(' ')}
-              >
-                <Plus className="h-4 w-4" />
-                Nueva cuenta
-              </button>
-            ) : undefined
+            hasAccounts
+              ? {
+                  label: 'Nueva cuenta',
+                  icon: Plus,
+                  onClick: handleCreate,
+                }
+              : undefined
           }
         />
-
         {!hasAccounts ? (
           <div className="flex min-h-72 flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-background p-8 text-center">
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-surface text-text-muted">
@@ -136,14 +123,12 @@ export const TradingAccountPage = ({
           </div>
         )}
       </section>
-
       {creating && (
         <TradingAccountAddModal
           currencies={currencies}
           onClose={() => setCreating(false)}
         />
       )}
-
       {editingAccount && (
         <TradingAccountEditModal
           tradingAccount={editingAccount}
@@ -151,7 +136,6 @@ export const TradingAccountPage = ({
           onClose={() => setEditingAccount(null)}
         />
       )}
-
       {deletingAccount && (
         <DeleteModal
           title="Eliminar cuenta"

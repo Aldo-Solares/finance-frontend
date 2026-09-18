@@ -29,13 +29,12 @@ export function TradingAccountEditModal({
   const [institution, setInstitution] = useState(tradingAccount.institution)
   const [name, setName] = useState(tradingAccount.name)
   const [currencyId, setCurrencyId] = useState(tradingAccount.currencyId)
-  const [active, setActive] = useState(tradingAccount.active)
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
   const currencyOptions = currencies.map((currency) => ({
     value: currency.currencyId,
-    label: `${currency.code} — ${currency.symbol}`,
+    label: `${currency.code}`,
   }))
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -50,7 +49,6 @@ export function TradingAccountEditModal({
           institution: institution.trim(),
           name: name.trim(),
           currencyId,
-          active,
         },
       )
 
@@ -139,25 +137,6 @@ export function TradingAccountEditModal({
               required
             />
           </div>
-
-          <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-surface/50 px-4 py-3 transition-colors duration-200 hover:bg-surface">
-            <input
-              type="checkbox"
-              checked={active}
-              onChange={(event) => setActive(event.target.checked)}
-              disabled={pending}
-              className="h-4 w-4 accent-primary"
-            />
-
-            <div>
-              <p className="text-sm font-medium text-foreground">
-                Cuenta activa
-              </p>
-              <p className="text-xs text-text-muted">
-                Permite utilizar esta cuenta dentro del sistema.
-              </p>
-            </div>
-          </label>
 
           {error && (
             <p className="rounded-xl border border-border bg-primary-soft px-3 py-2 text-sm text-primary">

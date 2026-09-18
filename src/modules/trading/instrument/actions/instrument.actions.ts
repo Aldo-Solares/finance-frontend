@@ -16,8 +16,10 @@ import {
 } from '@/modules/trading/instrument/schemas/instrument.schema'
 import {
   createInstrument,
+  deleteInstrument,
   updateInstrument,
 } from '@/modules/trading/instrument/services/instrument.service'
+import { revalidatePath } from 'next/cache'
 
 // ===================
 // CREATE
@@ -70,4 +72,14 @@ export const updateInstrumentAction = async (
         : 'No fue posible actualizar el instrumento',
     )
   }
+}
+
+// ===================
+// DELETE INSTRUMENT
+// ===================
+
+export async function deleteInstrumentAction(instrumentId: number) {
+  await deleteInstrument(instrumentId)
+
+  revalidatePath('/', 'layout')
 }

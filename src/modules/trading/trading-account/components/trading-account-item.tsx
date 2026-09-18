@@ -33,17 +33,6 @@ export const TradingAccountItem = ({
               <h2 className="truncate font-semibold text-foreground">
                 {tradingAccount.name}
               </h2>
-
-              <span
-                className={[
-                  'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
-                  tradingAccount.active
-                    ? 'bg-primary-soft text-primary'
-                    : 'bg-surface text-text-muted',
-                ].join(' ')}
-              >
-                {tradingAccount.active ? 'Activa' : 'Inactiva'}
-              </span>
             </div>
 
             <p className="mt-1 truncate text-sm text-text-muted">
@@ -114,7 +103,7 @@ export const TradingAccountItem = ({
         </p>
 
         <p className="mt-1 text-sm font-semibold text-foreground">
-          {tradingAccount.currencyCode} — {tradingAccount.currencySymbol}
+          {tradingAccount.currencyCode}
         </p>
       </div>
     </article>

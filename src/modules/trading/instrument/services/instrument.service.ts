@@ -3,7 +3,9 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
+
 import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+
 import {
   CreateInstrument,
   Instrument,
@@ -86,4 +88,14 @@ export const updateInstrument = async (
   }
 
   return parsed.data
+}
+
+// ===================
+// DELETE
+// ===================
+
+export const deleteInstrument = async (instrumentId: number): Promise<void> => {
+  await fetchServer(`/instruments/${instrumentId}`, {
+    method: 'DELETE',
+  })
 }

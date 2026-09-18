@@ -28,13 +28,12 @@ export function TradingAccountAddModal({
   const [currencyId, setCurrencyId] = useState<number | null>(
     currencies[0]?.currencyId ?? null,
   )
-  const [active, setActive] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
 
   const currencyOptions = currencies.map((currency) => ({
     value: currency.currencyId,
-    label: `${currency.code} — ${currency.symbol}`,
+    label: `${currency.code}`,
   }))
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -53,7 +52,6 @@ export function TradingAccountAddModal({
         institution: institution.trim(),
         name: name.trim(),
         currencyId,
-        active,
       })
 
       if (!result.success) {
@@ -146,26 +144,6 @@ export function TradingAccountAddModal({
               required
             />
           </div>
-
-          <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-surface/50 px-4 py-3 transition-colors duration-200 hover:bg-surface">
-            <input
-              type="checkbox"
-              checked={active}
-              onChange={(event) => setActive(event.target.checked)}
-              disabled={pending}
-              className="h-4 w-4 accent-primary"
-            />
-
-            <div>
-              <p className="text-sm font-medium text-foreground">
-                Cuenta activa
-              </p>
-
-              <p className="text-xs text-text-muted">
-                Permite utilizar esta cuenta dentro del sistema.
-              </p>
-            </div>
-          </label>
 
           {error && (
             <p className="rounded-xl border border-border bg-primary-soft px-3 py-2 text-sm text-primary">

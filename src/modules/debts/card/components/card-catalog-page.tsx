@@ -11,9 +11,11 @@ import type { Card } from '@/modules/debts/card/schemas/card.schema'
 import { deleteCardAction } from '@/modules/debts/card/actions/card.actions'
 
 import { HeroComponent } from '@/shared/hero/hero-component'
+
 import { DeleteModal } from '@/shared/modal/delete-modal'
 
-import { CardCatalogFormModal } from './card-catalog-form-modal'
+import { CardCreateModal } from './card-create-modal'
+import { CardEditModal } from './card-edit-modal'
 import { CardCatalogTable } from './card-catalog-table'
 
 type CardCatalogPageProps = {
@@ -21,19 +23,21 @@ type CardCatalogPageProps = {
 }
 
 export function CardCatalogPage({ cards }: CardCatalogPageProps) {
-  const [formOpen, setFormOpen] = useState(false)
-  const [selectedCard, setSelectedCard] = useState<Card | null>(null)
+  const [createOpen, setCreateOpen] = useState(false)
+  const [editCard, setEditCard] = useState<Card | null>(null)
   const [deleteCard, setDeleteCard] = useState<Card | null>(null)
 
   const handleCreate = () => {
-    setSelectedCard(null)
-    setFormOpen(true)
+    setCreateOpen(true)
   }
 
   const handleEdit = (card: Card) => {
-    setSelectedCard(card)
-    setFormOpen(true)
+    setEditCard(card)
   }
+
+  // ===================
+  // DELETE
+  // ===================
 
   const handleConfirmDelete = async () => {
     if (!deleteCard) return
@@ -66,14 +70,13 @@ export function CardCatalogPage({ cards }: CardCatalogPageProps) {
         )}
       </section>
 
-      {formOpen && (
-        <CardCatalogFormModal
-          key={selectedCard?.cardId ?? 'create'}
-          card={selectedCard}
-          onClose={() => {
-            setFormOpen(false)
-            setSelectedCard(null)
-          }}
+      {createOpen && <CardCreateModal onClose={() => setCreateOpen(false)} />}
+
+      {editCard && (
+        <CardEditModal
+          key={editCard.cardId}
+          card={editCard}
+          onClose={() => setEditCard(null)}
         />
       )}
 

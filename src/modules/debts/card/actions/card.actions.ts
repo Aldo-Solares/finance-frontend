@@ -9,11 +9,13 @@ import {
   actionSuccess,
   type ActionState,
 } from '@/core/utils/action-state'
+
 import {
   CreateCardRequestSchema,
   UpdateCardRequestSchema,
   type Card,
 } from '@/modules/debts/card/schemas/card.schema'
+
 import {
   createCard,
   deleteCard,
@@ -31,7 +33,6 @@ export async function createCardAction(
   const parsed = CreateCardRequestSchema.safeParse({
     bank: normalizeRequiredString(formData.get('bank')),
     cardName: normalizeRequiredString(formData.get('cardName')),
-    active: formData.get('active') === 'true',
   })
 
   if (!parsed.success) {
@@ -73,7 +74,6 @@ export async function updateCardAction(
   const parsed = UpdateCardRequestSchema.safeParse({
     bank: normalizeRequiredString(formData.get('bank')),
     cardName: normalizeRequiredString(formData.get('cardName')),
-    active: formData.get('active') === 'true',
   })
 
   if (!parsed.success) {

@@ -12,7 +12,6 @@ export const CardSchema = z.object({
   cardId: z.number().int(),
   bank: z.string(),
   cardName: z.string(),
-  active: z.boolean(),
 })
 
 // ===================
@@ -28,7 +27,6 @@ export const CreateCardRequestSchema = z.object({
     100,
     'El nombre de la tarjeta no puede superar los 100 caracteres',
   ),
-  active: z.boolean(),
 })
 
 // ===================
@@ -44,7 +42,6 @@ export const UpdateCardRequestSchema = z.object({
     100,
     'El nombre de la tarjeta no puede superar los 100 caracteres',
   ),
-  active: z.boolean(),
 })
 
 // ===================

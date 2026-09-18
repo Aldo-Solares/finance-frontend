@@ -3,12 +3,17 @@
 'use client'
 
 import { X } from 'lucide-react'
+
 import { useRouter } from 'next/navigation'
+
 import { FormEvent, useState } from 'react'
 
 import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'
+
 import { updateInstrumentAction } from '@/modules/trading/instrument/actions/instrument.actions'
+
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema'
+
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 
 type InstrumentEditFormModalProps = {
@@ -29,13 +34,12 @@ export const InstrumentEditFormModal = ({
   const [currencyId, setCurrencyId] = useState<number | null>(
     instrument.currencyId,
   )
-
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const currencyOptions = currencies.map((currency) => ({
     value: currency.currencyId,
-    label: `${currency.code} — ${currency.symbol}`,
+    label: `${currency.code}`,
   }))
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -58,7 +62,6 @@ export const InstrumentEditFormModal = ({
 
       if (!result.success) {
         setError(result.message ?? 'No fue posible actualizar el instrumento')
-
         return
       }
 
@@ -70,15 +73,15 @@ export const InstrumentEditFormModal = ({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
-      <div className="w-full max-w-lg rounded-2xl border border-border bg-background shadow-xl">
-        <div className="flex items-start justify-between border-b border-border px-6 py-5">
-          <div>
-            <h2 className="text-lg font-semibold text-foreground">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-background shadow-2xl shadow-foreground/10">
+        <div className="flex items-start justify-between gap-4 border-b border-border px-6 py-5">
+          <div className="min-w-0">
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">
               Editar instrumento
             </h2>
 
-            <p className="mt-1 text-sm text-text-muted">
+            <p className="mt-1 text-sm leading-5 text-text-muted">
               Modifica la información del instrumento.
             </p>
           </div>
@@ -87,7 +90,7 @@ export const InstrumentEditFormModal = ({
             type="button"
             onClick={onClose}
             disabled={pending}
-            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-text-muted transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-transparent text-text-muted transition-colors hover:border-border hover:bg-surface hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
             aria-label="Cerrar"
           >
             <X className="size-5" />
@@ -110,7 +113,7 @@ export const InstrumentEditFormModal = ({
               onChange={(event) => setSymbol(event.target.value.toUpperCase())}
               disabled={pending}
               required
-              className="h-11 w-full rounded-lg border border-border px-3 text-sm uppercase text-foreground outline-none transition placeholder:text-text-muted focus:border-primary disabled:cursor-not-allowed disabled:bg-surface disabled:opacity-60"
+              className="h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm font-medium uppercase text-foreground outline-none transition-colors placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/10 disabled:cursor-not-allowed disabled:bg-surface disabled:opacity-60"
             />
           </div>
 
@@ -129,7 +132,7 @@ export const InstrumentEditFormModal = ({
               onChange={(event) => setName(event.target.value)}
               disabled={pending}
               required
-              className="h-11 w-full rounded-lg border border-border px-3 text-sm text-foreground outline-none transition placeholder:text-text-muted focus:border-primary disabled:cursor-not-allowed disabled:bg-surface disabled:opacity-60"
+              className="h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm text-foreground outline-none transition-colors placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/10 disabled:cursor-not-allowed disabled:bg-surface disabled:opacity-60"
             />
           </div>
 
@@ -158,7 +161,7 @@ export const InstrumentEditFormModal = ({
           </div>
 
           {error && (
-            <p className="rounded-lg bg-primary-soft px-3 py-2 text-sm text-primary">
+            <p className="rounded-xl border border-primary/20 bg-primary-soft px-3.5 py-3 text-sm text-primary">
               {error}
             </p>
           )}
@@ -168,7 +171,7 @@ export const InstrumentEditFormModal = ({
               type="button"
               onClick={onClose}
               disabled={pending}
-              className="h-10 rounded-lg border border-border px-4 text-sm font-medium text-foreground transition hover:bg-surface disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-10 cursor-pointer rounded-xl border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Cancelar
             </button>
@@ -176,7 +179,7 @@ export const InstrumentEditFormModal = ({
             <button
               type="submit"
               disabled={pending || currencyId === null}
-              className="h-10 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-10 cursor-pointer rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm shadow-primary/20 transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {pending ? 'Guardando...' : 'Guardar cambios'}
             </button>

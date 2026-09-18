@@ -43,7 +43,6 @@
 
 html {
   font-family: var(--font-geist-sans), sans-serif;
-
   scrollbar-width: none;
 }
 
@@ -105,41 +104,18 @@ select {
 /* Custom scrollbar */
 
 .custom-scrollbar-thumb {
-  background: #171717;
+  background: var(--foreground);
 }
 
-.custom-scrollbar-thumb:hover {
-  background: #000000;
-}
-
+.custom-scrollbar-thumb:hover,
 .custom-scrollbar-thumb:active {
-  background: #000000;
-}
-
-.dark .custom-scrollbar-thumb {
-  background: #f5f5f5;
-}
-
-.dark .custom-scrollbar-thumb:hover {
-  background: #ffffff;
-}
-
-.dark .custom-scrollbar-thumb:active {
-  background: #ffffff;
+  background: var(--text-muted);
 }
 
 .custom-scrollbar-arrow-top {
-  border-bottom-color: #171717;
+  border-bottom-color: var(--foreground);
 }
 
 .custom-scrollbar-arrow-bottom {
-  border-top-color: #171717;
-}
-
-.dark .custom-scrollbar-arrow-top {
-  border-bottom-color: #f5f5f5;
-}
-
-.dark .custom-scrollbar-arrow-bottom {
-  border-top-color: #f5f5f5;
+  border-top-color: var(--foreground);
 }

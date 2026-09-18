@@ -8,7 +8,11 @@ import { useState } from 'react'
 
 import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'
 
+import { deleteInstrumentAction } from '@/modules/trading/instrument/actions/instrument.actions'
+
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema'
+
+import { DeleteModal } from '@/shared/modal/delete-modal'
 
 import { HeroComponent } from '@/shared/hero/hero-component'
 
@@ -30,10 +34,11 @@ export const InstrumentPage = ({
   currencies,
 }: InstrumentPageProps) => {
   const [formOpen, setFormOpen] = useState(false)
-
   const [editingInstrument, setEditingInstrument] = useState<Instrument | null>(
     null,
   )
+  const [deletingInstrument, setDeletingInstrument] =
+    useState<Instrument | null>(null)
 
   const handleCreate = () => {
     setFormOpen(true)
@@ -41,6 +46,10 @@ export const InstrumentPage = ({
 
   const handleEdit = (instrument: Instrument) => {
     setEditingInstrument(instrument)
+  }
+
+  const handleDelete = (instrument: Instrument) => {
+    setDeletingInstrument(instrument)
   }
 
   return (
@@ -99,6 +108,7 @@ export const InstrumentPage = ({
               instruments={instruments}
               currencies={currencies}
               onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           )}
         </section>
@@ -116,6 +126,17 @@ export const InstrumentPage = ({
           instrument={editingInstrument}
           currencies={currencies}
           onClose={() => setEditingInstrument(null)}
+        />
+      )}
+
+      {deletingInstrument && (
+        <DeleteModal
+          title="Eliminar instrumento"
+          description={`¿Estás seguro de que deseas eliminar ${deletingInstrument.symbol}? Esta acción no se puede deshacer.`}
+          onClose={() => setDeletingInstrument(null)}
+          onConfirm={async () => {
+            await deleteInstrumentAction(deletingInstrument.instrumentId)
+          }}
         />
       )}
     </>

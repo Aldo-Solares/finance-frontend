@@ -19,6 +19,7 @@ import {
   deleteStatementEntry,
   updateStatementEntry,
 } from '@/modules/debts/statement-entry/services/statement-entry.service'
+import { normalizeNullableString } from '@/core/utils/form-data'
 
 // ===================
 // CREATE
@@ -32,10 +33,10 @@ export async function createStatementEntryAction(
     statementId: Number(formData.get('statementId')),
     conceptId: Number(formData.get('conceptId')),
     debtor: formData.get('debtor'),
-    specification: nullableString(formData.get('specification')),
-    notes: nullableString(formData.get('notes')),
+    specification: normalizeNullableString(formData.get('specification')),
+    notes: normalizeNullableString(formData.get('notes')),
     entryType: formData.get('entryType'),
-    date: nullableString(formData.get('date')),
+    date: normalizeNullableString(formData.get('date')),
     amount: nullableNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
     msiCurrent: nullableNumber(formData.get('msiCurrent')),
@@ -82,10 +83,10 @@ export async function updateStatementEntryAction(
     statementId: Number(formData.get('statementId')),
     conceptId: Number(formData.get('conceptId')),
     debtor: formData.get('debtor'),
-    specification: nullableString(formData.get('specification')),
-    notes: nullableString(formData.get('notes')),
+    specification: normalizeNullableString(formData.get('specification')),
+    notes: normalizeNullableString(formData.get('notes')),
     entryType: formData.get('entryType'),
-    date: nullableString(formData.get('date')),
+    date: normalizeNullableString(formData.get('date')),
     amount: nullableNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
     msiCurrent: nullableNumber(formData.get('msiCurrent')),
@@ -125,29 +126,6 @@ export async function deleteStatementEntryAction(entryId: number) {
 
   revalidatePath('/debts/statement')
 }
-
-// ===================
-// NORMALIZATION
-// ===================
-
-function nullableString(value: FormDataEntryValue | null): string | null {
-  if (typeof value !== 'string' || value.trim() === '') {
-    return null
-  }
-
-  return value.trim()
-}
-
-function nullableNumber(value: FormDataEntryValue | null): number | null {
-  if (typeof value !== 'string' || value.trim() === '') {
-    return null
-  }
-
-  const number = Number(value)
-
-  if (!Number.isFinite(number)) {
-    return null
-  }
-
-  return number
+function nullableNumber(arg0: FormDataEntryValue | null) {
+  throw new Error('Function not implemented.')
 }

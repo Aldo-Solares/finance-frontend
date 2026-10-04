@@ -23,6 +23,7 @@ import {
   updateCurrentUser,
   updateCurrentUserProfileImage,
 } from '@/modules/user/services/user.service'
+import { normalizeNullableString } from '@/core/utils/form-data'
 
 // ===================
 // UPDATE CURRENT USER
@@ -160,18 +161,4 @@ export async function changePasswordAction(
         : 'No fue posible actualizar la contraseña',
     )
   }
-}
-
-// ===================
-// NORMALIZATION
-// ===================
-
-function normalizeNullableString(
-  value: FormDataEntryValue | null,
-): string | null {
-  if (typeof value !== 'string' || value.trim() === '') {
-    return null
-  }
-
-  return value.trim()
 }

@@ -10,7 +10,7 @@ import {
 
 export function NotLoggedHeroVisual() {
   return (
-    <div className="relative flex min-h-[620px] w-full items-center justify-center lg:min-h-[700px]">
+    <div className="relative flex min-h-[690px] w-full items-center justify-center lg:min-h-[700px]">
       <div className="pointer-events-none absolute h-[34rem] w-[34rem] rounded-full bg-primary-soft/70 blur-3xl" />
 
       <div className="pointer-events-none absolute right-[8%] top-[10%] h-64 w-64 rounded-full border border-primary/10" />

@@ -1,11 +1,12 @@
-// @/app/auth/layout.tsx
+// /app/auth/layout.tsx
 
 'use client'
 
 import type { ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
-import { Sparkles } from 'lucide-react'
-import Image from 'next/image'
+
+import { AuthBrandPanel } from '@/modules/auth/components/auth-brand-panel'
+
 type AuthLayoutProps = {
   children: ReactNode
 }
@@ -13,13 +14,16 @@ type AuthLayoutProps = {
 export default function AuthLayout({ children }: AuthLayoutProps) {
   const pathname = usePathname()
 
-  const isRegister = pathname === '/auth/register'
+  const isRegister =
+    pathname === '/auth/register' ||
+    pathname === '/auth/resend-verification' ||
+    pathname === '/auth/forgot-password' ||
+    pathname === '/auth/reset-password' ||
+    pathname === '/auth/verify-email'
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-surface px-4 py-8">
-      {/* ===================
-      BACKGROUND
-      =================== */}
+      {/* BACKGROUND */}
 
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-32 -top-40 h-[32rem] w-[32rem] rounded-full bg-primary-soft/30 blur-[100px]" />
@@ -29,24 +33,18 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         <div className="absolute bottom-[-14rem] left-[30%] h-[34rem] w-[34rem] rounded-full bg-primary-soft/25 blur-[110px]" />
       </div>
 
-      {/* ===================
-      AUTH CONTAINER
-      =================== */}
+      {/* AUTH CONTAINER */}
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center justify-center">
         <div className="relative w-full overflow-hidden rounded-[2.5rem] border border-border bg-background/70 shadow-2xl backdrop-blur-2xl">
-          {/* ===================
-          DESKTOP
-          =================== */}
+          {/* DESKTOP */}
 
-          <div className="hidden min-h-[680px] grid-cols-2 lg:grid">
-            {/* ===================
-            FORM PANEL
-            =================== */}
+          <div className="hidden min-h-[690px] grid-cols-2 lg:grid">
+            {/* FORM PANEL */}
 
             <div
               className={`
-                relative flex min-h-full items-center justify-center
+                relative flex min-h-[690px] items-center justify-center
                 px-12 py-14
                 transition-transform duration-700
                 [transition-timing-function:cubic-bezier(0.77,0,0.18,1)]
@@ -55,143 +53,16 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             >
               <div
                 key={pathname}
-                className="w-full max-w-md animate-[authFade_500ms_ease-out]"
+                className="flex min-h-[580px] w-full max-w-md items-center animate-[authFade_500ms_ease-out]"
               >
-                {children}
+                <div className="w-full">{children}</div>
               </div>
             </div>
 
-            {/* ===================
-            ISHA PANEL
-            =================== */}
-
-            <div
-              className={`
-                relative min-h-full p-3
-                transition-transform duration-700
-                [transition-timing-function:cubic-bezier(0.77,0,0.18,1)]
-                ${isRegister ? '-translate-x-full' : 'translate-x-0'}
-              `}
-            >
-              <div className="relative flex h-full min-h-[656px] overflow-hidden rounded-[2rem] bg-primary p-12 text-primary-foreground">
-                {/* ===================
-                LIGHTS
-                =================== */}
-
-                <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-primary/30 blur-[90px]" />
-
-                <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-primary-soft/20 blur-[90px]" />
-
-                <div className="pointer-events-none absolute left-1/3 top-1/3 h-64 w-64 rounded-full bg-primary-foreground/5 blur-[80px]" />
-
-                {/* ===================
-                CONTENT
-                =================== */}
-
-                <div className="relative z-10 flex w-full flex-col justify-between">
-                  {/* ===================
-                  BRAND
-                  =================== */}
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-background">
-                        <Image
-                          src="/icons/app/Isha.svg"
-                          alt="Isha"
-                          width={44}
-                          height={44}
-                          className="h-11 w-11 object-contain"
-                          priority
-                        />
-                      </div>
-
-                      <div>
-                        <p className="font-semibold tracking-[0.2em]">ISHA</p>
-                        <p className="text-xs text-primary-foreground/40">
-                          Finance
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/5 px-3 py-1.5 text-xs text-primary-foreground/60 backdrop-blur">
-                      <Sparkles className="h-3.5 w-3.5" />
-                      Finanzas personales
-                    </div>
-                  </div>
-
-                  {/* ===================
-                  MESSAGE
-                  =================== */}
-
-                  <div
-                    key={`message-${pathname}`}
-                    className="animate-[authFade_500ms_ease-out]"
-                  >
-                    <p className="mb-4 text-sm font-medium tracking-wide text-primary-foreground/40">
-                      {isRegister ? 'UN SOLO LUGAR' : 'TODO BAJO CONTROL'}
-                    </p>
-
-                    <h2 className="max-w-md text-5xl font-semibold leading-[1.05] tracking-[-0.04em]">
-                      {isRegister ? (
-                        <>
-                          Empieza a construir
-                          <span className="block text-primary-foreground/40">
-                            tu espacio financiero.
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          Entiende mejor
-                          <span className="block text-primary-foreground/40">
-                            tu dinero.
-                          </span>
-                        </>
-                      )}
-                    </h2>
-
-                    <p className="mt-6 max-w-md text-sm leading-6 text-primary-foreground/50">
-                      {isRegister
-                        ? 'Crea tu cuenta y reúne deudas, inversiones y movimientos en un mismo lugar.'
-                        : 'Consulta tus deudas, inversiones y movimientos con una visión más clara de tus finanzas.'}
-                    </p>
-                  </div>
-
-                  {/* ===================
-                  DECORATION
-                  =================== */}
-
-                  <div className="flex items-end justify-between">
-                    <div className="flex gap-2">
-                      <span
-                        className={`h-1.5 rounded-full transition-all duration-500 ${
-                          isRegister
-                            ? 'w-1.5 bg-background/30'
-                            : 'w-8 bg-background'
-                        }`}
-                      />
-
-                      <span
-                        className={`h-1.5 rounded-full transition-all duration-500 ${
-                          isRegister
-                            ? 'w-8 bg-background'
-                            : 'w-1.5 bg-background/30'
-                        }`}
-                      />
-                    </div>
-
-                    <p className="text-xs text-primary-foreground/30">
-                      ISHA © 2026
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <AuthBrandPanel isRegister={isRegister} />
           </div>
 
-          {/* ===================
-          MOBILE
-          =================== */}
+          {/* MOBILE */}
 
           <div className="p-5 sm:p-8 lg:hidden">{children}</div>
         </div>

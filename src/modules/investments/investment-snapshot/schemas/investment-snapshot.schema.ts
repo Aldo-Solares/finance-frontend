@@ -30,8 +30,15 @@ export const CreateInvestmentSnapshotRequestSchema = z.object({
   withdrawal: z.number().nonnegative('El retiro no puede ser negativo'),
 })
 
-export const UpdateInvestmentSnapshotRequestSchema =
-  CreateInvestmentSnapshotRequestSchema
+export const UpdateInvestmentSnapshotRequestSchema = z.object({
+  balanceDate: z.string().min(1, 'La fecha es obligatoria'),
+
+  balance: z.number().nonnegative('El saldo no puede ser negativo'),
+
+  contribution: z.number().nonnegative('La aportación no puede ser negativa'),
+
+  withdrawal: z.number().nonnegative('El retiro no puede ser negativo'),
+})
 
 export type InvestmentSnapshot = z.infer<typeof InvestmentSnapshotSchema>
 

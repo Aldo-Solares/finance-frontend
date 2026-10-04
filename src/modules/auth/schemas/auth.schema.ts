@@ -1,11 +1,6 @@
-// @/modules/auth/schemas/auth.schema.ts
-
 import { z } from 'zod'
 
-import {
-  optionalNullableString,
-  requiredString,
-} from '@/core/utils/zod-helpers'
+import { requiredString } from '@/core/utils/zod-helpers'
 import { USER_ROLE_VALUES } from '@/modules/user/constants/user.constants'
 
 // ===================
@@ -25,7 +20,7 @@ export const AuthUserSchema = z.object({
   name: z.string(),
   lastName: z.string().nullable(),
   secondLastName: z.string().nullable(),
-  email: z.string(),
+  email: z.email(),
   role: RoleSchema,
 })
 
@@ -36,9 +31,11 @@ export type AuthUser = z.infer<typeof AuthUserSchema>
 // ===================
 
 export const LoginRequestSchema = z.object({
-  email: requiredString('Email is required').email('Invalid email'),
-
-  password: requiredString('Password is required'),
+  email: z
+    .string()
+    .min(1, 'El correo electrónico es requerido')
+    .email('El correo electrónico no es válido'),
+  password: requiredString('La contraseña es requerida'),
 })
 
 export type LoginRequest = z.infer<typeof LoginRequestSchema>
@@ -55,15 +52,11 @@ export type LoginResponse = z.infer<typeof LoginResponseSchema>
 // ===================
 
 export const RegisterRequestSchema = z.object({
-  name: requiredString('Name is required').max(100),
-
-  lastName: optionalNullableString.pipe(z.string().max(100).nullable()),
-
-  secondLastName: optionalNullableString.pipe(z.string().max(100).nullable()),
-
-  email: requiredString('Email is required').email('Invalid email').max(150),
-
-  password: requiredString('Password is required'),
+  name: requiredString('El nombre es requerido'),
+  lastName: requiredString('El apellido es requerido'),
+  secondLastName: z.string().nullable(),
+  email: z.email('El correo electrónico no es válido'),
+  password: requiredString('La contraseña es requerida'),
 })
 
 export type RegisterRequest = z.infer<typeof RegisterRequestSchema>
@@ -79,7 +72,7 @@ export type RegisterResponse = z.infer<typeof RegisterResponseSchema>
 // ===================
 
 export const VerifyEmailRequestSchema = z.object({
-  token: requiredString('Token is required'),
+  token: requiredString('El token es requerido'),
 })
 
 export type VerifyEmailRequest = z.infer<typeof VerifyEmailRequestSchema>
@@ -89,7 +82,7 @@ export type VerifyEmailRequest = z.infer<typeof VerifyEmailRequestSchema>
 // ===================
 
 export const ResendVerificationRequestSchema = z.object({
-  email: requiredString('Email is required').email('Invalid email'),
+  email: z.email('El correo electrónico no es válido'),
 })
 
 export type ResendVerificationRequest = z.infer<
@@ -101,7 +94,7 @@ export type ResendVerificationRequest = z.infer<
 // ===================
 
 export const ForgotPasswordRequestSchema = z.object({
-  email: requiredString('Email is required').email('Invalid email'),
+  email: z.email('El correo electrónico no es válido'),
 })
 
 export type ForgotPasswordRequest = z.infer<typeof ForgotPasswordRequestSchema>
@@ -111,9 +104,8 @@ export type ForgotPasswordRequest = z.infer<typeof ForgotPasswordRequestSchema>
 // ===================
 
 export const ResetPasswordRequestSchema = z.object({
-  token: requiredString('Token is required'),
-
-  newPassword: requiredString('New password is required'),
+  token: requiredString('El token es requerido'),
+  newPassword: requiredString('La nueva contraseña es requerida'),
 })
 
 export type ResetPasswordRequest = z.infer<typeof ResetPasswordRequestSchema>

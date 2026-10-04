@@ -21,6 +21,7 @@ import {
   deleteCard,
   updateCard,
 } from '@/modules/debts/card/services/card.service'
+import { normalizeRequiredString } from '@/core/utils/form-data'
 
 // ===================
 // CREATE
@@ -107,16 +108,4 @@ export async function deleteCardAction(cardId: number) {
 
   revalidatePath('/admin/card')
   revalidatePath('/debts/card')
-}
-
-// ===================
-// NORMALIZATION
-// ===================
-
-function normalizeRequiredString(value: FormDataEntryValue | null): string {
-  if (typeof value !== 'string') {
-    return ''
-  }
-
-  return value.trim()
 }

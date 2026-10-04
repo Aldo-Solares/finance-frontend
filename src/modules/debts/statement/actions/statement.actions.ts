@@ -23,6 +23,10 @@ import {
   updateStatement,
   updateStatementPaid,
 } from '@/modules/debts/statement/services/statement.service'
+import {
+  normalizeNullableString,
+  normalizeRequiredString,
+} from '@/core/utils/form-data'
 
 // ===================
 // CREATE
@@ -161,8 +165,6 @@ export async function payAllStatementsAction(
   }
 }
 
-// @/modules/debts/statement/actions/statement.actions.ts
-
 // ===================
 // DELETE
 // ===================
@@ -195,26 +197,4 @@ export async function getStatementDateSuggestionAction(
         : 'No fue posible obtener las fechas sugeridas',
     )
   }
-}
-
-// ===================
-// NORMALIZATION
-// ===================
-
-function normalizeRequiredString(value: FormDataEntryValue | null): string {
-  if (typeof value !== 'string') {
-    return ''
-  }
-
-  return value.trim()
-}
-
-function normalizeNullableString(
-  value: FormDataEntryValue | null,
-): string | null {
-  if (typeof value !== 'string' || value.trim() === '') {
-    return null
-  }
-
-  return value.trim()
 }

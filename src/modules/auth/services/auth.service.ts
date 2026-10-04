@@ -2,9 +2,8 @@
 
 import { z } from 'zod'
 
+import { parseApiResponse } from '@/core/api/api-response'
 import { fetchPublic } from '@/core/api/api-public'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
-import { extractErrorMessage } from '@/core/utils/extract-error-message'
 
 import {
   type ForgotPasswordRequest,
@@ -34,23 +33,11 @@ export async function login(request: LoginRequest): Promise<LoginResponse> {
     body: JSON.stringify(request),
   })
 
-  if (!response.ok) {
-    throw new Error(await extractErrorMessage(response))
-  }
-
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(LoginResponseSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'Login failed')
-  }
-
-  if (result.data === null) {
-    throw new Error('Login response data is missing')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    LoginResponseSchema,
+    'Los datos de inicio de sesión no están disponibles',
+  )
 }
 
 // ===================
@@ -66,23 +53,11 @@ export async function register(
     body: JSON.stringify(request),
   })
 
-  if (!response.ok) {
-    throw new Error(await extractErrorMessage(response))
-  }
-
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(RegisterResponseSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'Registration failed')
-  }
-
-  if (result.data === null) {
-    throw new Error('Registration response data is missing')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    RegisterResponseSchema,
+    'Los datos del registro no están disponibles',
+  )
 }
 
 // ===================
@@ -96,17 +71,11 @@ export async function verifyEmail(request: VerifyEmailRequest): Promise<void> {
     body: JSON.stringify(request),
   })
 
-  if (!response.ok) {
-    throw new Error(await extractErrorMessage(response))
-  }
-
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'Email verification failed')
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible verificar el correo electrónico',
+  )
 }
 
 // ===================
@@ -122,17 +91,11 @@ export async function resendVerification(
     body: JSON.stringify(request),
   })
 
-  if (!response.ok) {
-    throw new Error(await extractErrorMessage(response))
-  }
-
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'Verification email could not be sent')
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible enviar nuevamente el correo de verificación',
+  )
 }
 
 // ===================
@@ -148,17 +111,11 @@ export async function forgotPassword(
     body: JSON.stringify(request),
   })
 
-  if (!response.ok) {
-    throw new Error(await extractErrorMessage(response))
-  }
-
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'Password recovery request failed')
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible solicitar la recuperación de contraseña',
+  )
 }
 
 // ===================
@@ -174,15 +131,9 @@ export async function resetPassword(
     body: JSON.stringify(request),
   })
 
-  if (!response.ok) {
-    throw new Error(await extractErrorMessage(response))
-  }
-
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'Password reset failed')
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible restablecer la contraseña',
+  )
 }

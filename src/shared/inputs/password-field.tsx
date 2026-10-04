@@ -12,6 +12,7 @@ type PasswordFieldProps = {
   placeholder?: string
   autoComplete?: string
   required?: boolean
+  showRequirements?: boolean
 }
 
 export function PasswordField({
@@ -21,8 +22,29 @@ export function PasswordField({
   placeholder,
   autoComplete,
   required = false,
+  showRequirements = false,
 }: PasswordFieldProps) {
   const [visible, setVisible] = useState(false)
+  const [password, setPassword] = useState('')
+
+  const requirements = [
+    {
+      label: 'Al menos 8 caracteres',
+      valid: password.length >= 8,
+    },
+    {
+      label: 'Una letra mayúscula',
+      valid: /[A-Z]/.test(password),
+    },
+    {
+      label: 'Una letra minúscula',
+      valid: /[a-z]/.test(password),
+    },
+    {
+      label: 'Un número',
+      valid: /\d/.test(password),
+    },
+  ]
 
   return (
     <div className="space-y-2">
@@ -43,6 +65,8 @@ export function PasswordField({
           autoComplete={autoComplete}
           required={required}
           placeholder={placeholder}
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
           className={[
             'h-11 w-full rounded-xl border border-border bg-surface',
             'px-10 pr-11 text-sm text-foreground outline-none',
@@ -72,6 +96,33 @@ export function PasswordField({
           )}
         </button>
       </div>
+
+      {showRequirements && password && (
+        <div className="space-y-1.5 pt-1">
+          {requirements.map((requirement) => (
+            <p
+              key={requirement.label}
+              className={[
+                'flex items-center gap-2 text-xs transition-colors',
+                requirement.valid ? 'text-primary' : 'text-text-muted',
+              ].join(' ')}
+            >
+              <span
+                className={[
+                  'flex size-4 items-center justify-center rounded-full border text-[10px]',
+                  requirement.valid
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-border',
+                ].join(' ')}
+              >
+                {requirement.valid ? '✓' : ''}
+              </span>
+
+              {requirement.label}
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

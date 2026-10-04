@@ -36,7 +36,7 @@ export const UserSchema = z.object({
   name: z.string(),
   lastName: z.string().nullable(),
   secondLastName: z.string().nullable(),
-  email: z.string().email(),
+  email: z.email(),
   role: UserRoleSchema,
   emailVerified: z.boolean(),
   profileImage: ProfileImageSchema.nullable(),
@@ -50,9 +50,7 @@ export const UpdateUserRequestSchema = z.object({
   name: requiredString('El nombre es obligatorio'),
   lastName: z.string().trim().nullable(),
   secondLastName: z.string().trim().nullable(),
-  email: requiredString('El correo es obligatorio').email(
-    'El correo no es válido',
-  ),
+  email: z.email('El correo es obligatorio'),
 })
 
 export const UpdateUserResponseSchema = z.object({

@@ -87,6 +87,19 @@ export type CreateTrade = z.infer<typeof CreateTradeSchema>
 // UPDATE
 // ===================
 
-export const UpdateTradeSchema = CreateTradeSchema
+export const UpdateTradeSchema = z.object({
+  userTradingAccountId: z.number(),
+
+  instrumentId: z.number(),
+
+  quantity: z.number().positive(),
+
+  purchasePrice: z.number().positive(),
+
+  purchaseCommission: z.number().min(0),
+  purchaseCommissionRate: z.number().min(0),
+
+  purchaseDate: z.string().min(1),
+})
 
 export type UpdateTrade = z.infer<typeof UpdateTradeSchema>

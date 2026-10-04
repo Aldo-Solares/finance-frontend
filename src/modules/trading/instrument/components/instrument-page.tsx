@@ -23,6 +23,7 @@ import { InstrumentEditFormModal } from './instrument-edit-form-modal'
 import { InstrumentEmptyState } from './instrument-empty-state'
 
 import { InstrumentList } from './instrument-list'
+import { MetricCard } from '@/shared/metrics/metric-card'
 
 type InstrumentPageProps = {
   instruments: Instrument[]
@@ -67,37 +68,17 @@ export const InstrumentPage = ({
         />
 
         <section className="grid gap-3 sm:grid-cols-2">
-          <div className="flex items-center gap-3 rounded-[1.5rem] border border-border bg-background p-5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
-              <ChartCandlestick className="size-5" />
-            </div>
+          <MetricCard
+            icon={ChartCandlestick}
+            label="Instrumentos disponibles"
+            value={instruments.length}
+          />
 
-            <div>
-              <p className="text-xs font-medium text-text-muted">
-                Instrumentos disponibles
-              </p>
-
-              <p className="mt-1 text-xl font-semibold tracking-tight text-foreground">
-                {instruments.length}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 rounded-[1.5rem] border border-border bg-background p-5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
-              <Coins className="size-5" />
-            </div>
-
-            <div>
-              <p className="text-xs font-medium text-text-muted">
-                Monedas disponibles
-              </p>
-
-              <p className="mt-1 text-xl font-semibold tracking-tight text-foreground">
-                {currencies.length}
-              </p>
-            </div>
-          </div>
+          <MetricCard
+            icon={Coins}
+            label="Monedas disponibles"
+            value={currencies.length}
+          />
         </section>
 
         <section>

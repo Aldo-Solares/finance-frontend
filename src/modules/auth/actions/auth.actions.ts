@@ -1,13 +1,16 @@
 // @/modules/auth/actions/auth.actions.ts
+
 'use server'
 
 import { cookies } from 'next/headers'
-import { AUTH_TOKEN_COOKIE } from '@/core/constants/auth.constants'
+import { redirect } from 'next/navigation'
 
+import { AUTH_TOKEN_COOKIE } from '@/core/constants/auth.constants'
 import {
   actionError,
   actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 
 import {
@@ -29,7 +32,6 @@ import {
   resetPassword,
   verifyEmail,
 } from '@/modules/auth/services/auth.service'
-import { redirect } from 'next/navigation'
 
 // ===================
 // LOGIN
@@ -45,24 +47,29 @@ export async function loginAction(
   })
 
   if (!parsed.success) {
-    return actionError(parsed.error.issues[0]?.message ?? 'Invalid login data')
+    return actionError(
+      parsed.error.issues[0]?.message ??
+        'Los datos de inicio de sesión no son válidos',
+    )
   }
 
-  let result: LoginResponse
-
-  try {
-    result = await login(parsed.data)
+  const result = await withActionState(async () => {
+    const response = await login(parsed.data)
 
     const cookieStore = await cookies()
 
-    cookieStore.set(AUTH_TOKEN_COOKIE, result.token, {
+    cookieStore.set(AUTH_TOKEN_COOKIE, response.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
     })
-  } catch (error) {
-    return actionError(error instanceof Error ? error.message : 'Login failed')
+
+    return response
+  }, 'No fue posible iniciar sesión')
+
+  if (!result.success) {
+    return result
   }
 
   redirect('/main')
@@ -86,19 +93,14 @@ export async function registerAction(
 
   if (!parsed.success) {
     return actionError(
-      parsed.error.issues[0]?.message ?? 'Invalid registration data',
+      parsed.error.issues[0]?.message ?? 'Los datos de registro no son válidos',
     )
   }
 
-  try {
-    const result = await register(parsed.data)
-
-    return actionSuccess(result)
-  } catch (error) {
-    return actionError(
-      error instanceof Error ? error.message : 'Registration failed',
-    )
-  }
+  return withActionState(
+    () => register(parsed.data),
+    'No fue posible registrar al usuario',
+  )
 }
 
 // ===================
@@ -115,19 +117,16 @@ export async function verifyEmailAction(
 
   if (!parsed.success) {
     return actionError(
-      parsed.error.issues[0]?.message ?? 'Invalid verification token',
+      parsed.error.issues[0]?.message ??
+        'El token de verificación no es válido',
     )
   }
 
-  try {
+  return withActionState(async () => {
     await verifyEmail(parsed.data)
 
-    return actionSuccess(null)
-  } catch (error) {
-    return actionError(
-      error instanceof Error ? error.message : 'Email verification failed',
-    )
-  }
+    return null
+  }, 'No fue posible verificar el correo electrónico')
 }
 
 // ===================
@@ -143,20 +142,16 @@ export async function resendVerificationAction(
   })
 
   if (!parsed.success) {
-    return actionError(parsed.error.issues[0]?.message ?? 'Invalid email')
-  }
-
-  try {
-    await resendVerification(parsed.data)
-
-    return actionSuccess(null)
-  } catch (error) {
     return actionError(
-      error instanceof Error
-        ? error.message
-        : 'Verification email could not be sent',
+      parsed.error.issues[0]?.message ?? 'El correo electrónico no es válido',
     )
   }
+
+  return withActionState(async () => {
+    await resendVerification(parsed.data)
+
+    return null
+  }, 'No fue posible enviar el correo de verificación')
 }
 
 // ===================
@@ -172,20 +167,16 @@ export async function forgotPasswordAction(
   })
 
   if (!parsed.success) {
-    return actionError(parsed.error.issues[0]?.message ?? 'Invalid email')
-  }
-
-  try {
-    await forgotPassword(parsed.data)
-
-    return actionSuccess(null)
-  } catch (error) {
     return actionError(
-      error instanceof Error
-        ? error.message
-        : 'Password recovery request failed',
+      parsed.error.issues[0]?.message ?? 'El correo electrónico no es válido',
     )
   }
+
+  return withActionState(async () => {
+    await forgotPassword(parsed.data)
+
+    return null
+  }, 'No fue posible solicitar la recuperación de contraseña')
 }
 
 // ===================
@@ -203,19 +194,16 @@ export async function resetPasswordAction(
 
   if (!parsed.success) {
     return actionError(
-      parsed.error.issues[0]?.message ?? 'Invalid password reset data',
+      parsed.error.issues[0]?.message ??
+        'Los datos para restablecer la contraseña no son válidos',
     )
   }
 
-  try {
+  return withActionState(async () => {
     await resetPassword(parsed.data)
 
-    return actionSuccess(null)
-  } catch (error) {
-    return actionError(
-      error instanceof Error ? error.message : 'Password reset failed',
-    )
-  }
+    return null
+  }, 'No fue posible restablecer la contraseña')
 }
 
 // ===================
@@ -234,7 +222,9 @@ export async function logoutAction(): Promise<void> {
 // NORMALIZATION
 // ===================
 
-function normalizeNullableString(value: FormDataEntryValue | null) {
+function normalizeNullableString(
+  value: FormDataEntryValue | null,
+): string | null {
   if (typeof value !== 'string' || value.trim() === '') {
     return null
   }

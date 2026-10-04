@@ -5,15 +5,12 @@
 import { revalidatePath } from 'next/cache'
 
 import {
-  PROFILE_IMAGE_ALLOWED_TYPES,
-  PROFILE_IMAGE_MAX_SIZE,
-} from '@/modules/user/constants/profile-image.constants'
-import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 import {
+  CreateProfileImageRequestSchema,
   UpdateProfileImageRequestSchema,
   type ProfileImage,
 } from '@/modules/user/schemas/profile-image.schema'
@@ -31,42 +28,24 @@ export async function createProfileImageAction(
   _previousState: ActionState<ProfileImage>,
   formData: FormData,
 ): Promise<ActionState<ProfileImage>> {
-  const name = formData.get('name')
-  const file = formData.get('file')
+  const parsed = CreateProfileImageRequestSchema.safeParse({
+    name: formData.get('name'),
+    file: formData.get('file'),
+  })
 
-  if (typeof name !== 'string' || name.trim() === '') {
-    return actionError('El nombre de la imagen es obligatorio')
-  }
-
-  if (!(file instanceof File) || file.size === 0) {
-    return actionError('La imagen es obligatoria')
-  }
-
-  if (
-    !PROFILE_IMAGE_ALLOWED_TYPES.some(
-      (allowedType) => allowedType === file.type,
+  if (!parsed.success) {
+    return actionError(
+      parsed.error.issues[0]?.message ?? 'Los datos de la imagen no son válidos',
     )
-  ) {
-    return actionError('El formato debe ser PNG, JPG, JPEG o WebP')
   }
 
-  if (file.size > PROFILE_IMAGE_MAX_SIZE) {
-    return actionError('La imagen no puede superar los 5 MB')
-  }
-
-  try {
-    const result = await createProfileImage(name.trim(), file)
+  return withActionState(async () => {
+    const result = await createProfileImage(parsed.data.name, parsed.data.file)
 
     revalidatePath('/', 'layout')
 
-    return actionSuccess(result)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible crear la imagen de perfil',
-    )
-  }
+    return result
+  }, 'No fue posible crear la imagen de perfil')
 }
 
 // ===================
@@ -95,19 +74,13 @@ export async function updateProfileImageAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const result = await updateProfileImage(profileImageId, parsed.data)
 
     revalidatePath('/', 'layout')
 
-    return actionSuccess(result)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la imagen de perfil',
-    )
-  }
+    return result
+  }, 'No fue posible actualizar la imagen de perfil')
 }
 
 // ===================

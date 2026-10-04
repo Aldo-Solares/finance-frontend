@@ -84,7 +84,7 @@ export function UserTradingAccountCreateModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 p-6">
+        <form noValidate onSubmit={handleSubmit} className="space-y-5 p-6">
           <div>
             <label
               htmlFor="user-trading-account-create"

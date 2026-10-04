@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 
 import {
@@ -42,19 +42,13 @@ export async function updateStatementCutoffReminderAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const result = await updateStatementCutoffReminder(parsed.data)
 
     revalidatePath('/user/settings')
 
-    return actionSuccess(result)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la preferencia de recordatorio',
-    )
-  }
+    return result
+  }, 'No fue posible actualizar la preferencia de recordatorio')
 }
 
 // ===================
@@ -76,19 +70,13 @@ export async function updateProfileImageBackgroundAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const result = await updateProfileImageBackground(parsed.data)
 
     revalidatePath('/user/settings')
 
-    return actionSuccess(result)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar el fondo de la imagen de perfil',
-    )
-  }
+    return result
+  }, 'No fue posible actualizar el fondo de la imagen de perfil')
 }
 
 // ===================
@@ -109,15 +97,9 @@ export async function updateDarkModeAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const result = await updateDarkMode(parsed.data)
     revalidatePath('/user/settings')
-    return actionSuccess(result)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la preferencia de modo oscuro',
-    )
-  }
+    return result
+  }, 'No fue posible actualizar la preferencia de modo oscuro')
 }

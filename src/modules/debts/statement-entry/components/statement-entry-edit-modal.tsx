@@ -118,7 +118,7 @@ export function StatementEntryEditModal({
           </button>
         </div>
 
-        <form action={action} className="flex min-h-0 flex-1 flex-col">
+        <form noValidate action={action} className="flex min-h-0 flex-1 flex-col">
           <input type="hidden" name="entryId" value={entry.entryId} />
 
           <input type="hidden" name="statementId" value={entry.statementId} />

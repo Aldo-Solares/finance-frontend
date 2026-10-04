@@ -23,7 +23,7 @@ export function ForgotPasswordForm() {
   )
 
   return (
-    <form action={formAction} className="space-y-5">
+    <form noValidate action={formAction} className="space-y-5">
       <TextInput
         id="email"
         name="email"

@@ -26,7 +26,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   )
 
   return (
-    <form action={formAction} className="space-y-5">
+    <form noValidate action={formAction} className="space-y-5">
       <input type="hidden" name="token" value={token} />
 
       <PasswordField

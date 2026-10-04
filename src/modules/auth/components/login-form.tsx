@@ -20,7 +20,7 @@ export function LoginForm() {
   const [state, formAction, pending] = useActionState(loginAction, initialState)
 
   return (
-    <form action={formAction} className="space-y-5">
+    <form noValidate action={formAction} className="space-y-5">
       <TextInput
         id="email"
         name="email"

@@ -5,7 +5,7 @@
 import {
   ActionState,
   actionError,
-  actionSuccess,
+  withActionState,
 } from '@/core/utils/action-state'
 import {
   CreateTradingAccount,
@@ -31,25 +31,17 @@ export const createTradingAccountAction = async (
   const result = CreateTradingAccountSchema.safeParse(payload)
 
   if (!result.success) {
-    return actionError<TradingAccount>(
-      'Los datos de la cuenta de trading no son válidos',
+    return actionError(
+      result.error.issues[0]?.message ??
+        'Los datos de la cuenta de trading no son válidos',
     )
   }
 
-  try {
+  return withActionState(async () => {
     const tradingAccount = await createTradingAccount(result.data)
 
-    return actionSuccess(
-      tradingAccount,
-      'Cuenta de trading creada correctamente',
-    )
-  } catch (error) {
-    return actionError<TradingAccount>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible crear la cuenta de trading',
-    )
-  }
+    return tradingAccount
+  }, 'No fue posible crear la cuenta de trading', 'Cuenta de trading creada correctamente')
 }
 
 // ===================
@@ -63,28 +55,20 @@ export const updateTradingAccountAction = async (
   const result = UpdateTradingAccountSchema.safeParse(payload)
 
   if (!result.success) {
-    return actionError<TradingAccount>(
-      'Los datos de la cuenta de trading no son válidos',
+    return actionError(
+      result.error.issues[0]?.message ??
+        'Los datos de la cuenta de trading no son válidos',
     )
   }
 
-  try {
+  return withActionState(async () => {
     const tradingAccount = await updateTradingAccount(
       tradingAccountId,
       result.data,
     )
 
-    return actionSuccess(
-      tradingAccount,
-      'Cuenta de trading actualizada correctamente',
-    )
-  } catch (error) {
-    return actionError<TradingAccount>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la cuenta de trading',
-    )
-  }
+    return tradingAccount
+  }, 'No fue posible actualizar la cuenta de trading', 'Cuenta de trading actualizada correctamente')
 }
 
 // ===================

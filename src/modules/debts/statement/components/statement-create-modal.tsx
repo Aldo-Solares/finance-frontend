@@ -141,7 +141,7 @@ export function StatementCreateModal({
           </button>
         </div>
 
-        <form action={action}>
+        <form noValidate action={action}>
           <div className="space-y-5 p-6">
             <div>
               <FieldLabel htmlFor="create-user-card-id">Tarjeta</FieldLabel>

@@ -23,7 +23,13 @@ export async function parseApiResponse<T>(
   }
 
   if (result.data === null) {
-    throw new Error(fallbackMessage)
+    const nullResult = dataSchema.safeParse(null)
+
+    if (!nullResult.success) {
+      throw new Error(fallbackMessage)
+    }
+
+    return nullResult.data
   }
 
   return result.data

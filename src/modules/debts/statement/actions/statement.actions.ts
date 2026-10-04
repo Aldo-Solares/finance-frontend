@@ -6,11 +6,12 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 import {
   CreateStatementRequestSchema,
+  UpdateStatementPaidRequestSchema,
   UpdateStatementRequestSchema,
   type Statement,
   type StatementDateSuggestion,
@@ -25,6 +26,7 @@ import {
 } from '@/modules/debts/statement/services/statement.service'
 import {
   normalizeNullableString,
+  normalizeRequiredNumber,
   normalizeRequiredString,
 } from '@/core/utils/form-data'
 
@@ -37,7 +39,7 @@ export async function createStatementAction(
   formData: FormData,
 ): Promise<ActionState<Statement>> {
   const parsed = CreateStatementRequestSchema.safeParse({
-    userCardId: Number(formData.get('userCardId')),
+    userCardId: normalizeRequiredNumber(formData.get('userCardId')),
     periodStart: normalizeRequiredString(formData.get('periodStart')),
     periodEnd: normalizeRequiredString(formData.get('periodEnd')),
     paymentDate: normalizeRequiredString(formData.get('paymentDate')),
@@ -49,19 +51,13 @@ export async function createStatementAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const statement = await createStatement(parsed.data)
 
     revalidatePath('/debts/statement')
 
-    return actionSuccess(statement)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible crear el estado de cuenta',
-    )
-  }
+    return statement
+  }, 'No fue posible crear el estado de cuenta')
 }
 
 // ===================
@@ -79,7 +75,7 @@ export async function updateStatementAction(
   }
 
   const parsed = UpdateStatementRequestSchema.safeParse({
-    userCardId: Number(formData.get('userCardId')),
+    userCardId: normalizeRequiredNumber(formData.get('userCardId')),
     periodStart: normalizeRequiredString(formData.get('periodStart')),
     periodEnd: normalizeRequiredString(formData.get('periodEnd')),
     paymentDate: normalizeRequiredString(formData.get('paymentDate')),
@@ -92,19 +88,13 @@ export async function updateStatementAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const statement = await updateStatement(statementId, parsed.data)
 
     revalidatePath('/debts/statement')
 
-    return actionSuccess(statement)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar el estado de cuenta',
-    )
-  }
+    return statement
+  }, 'No fue posible actualizar el estado de cuenta')
 }
 
 // ===================
@@ -116,24 +106,33 @@ export async function updateStatementPaidAction(
   formData: FormData,
 ): Promise<ActionState<Statement>> {
   const statementId = Number(formData.get('statementId'))
+  const paidValue = formData.get('paid')
 
-  const paid = formData.get('paid') === 'true'
+  if (!Number.isInteger(statementId) || statementId <= 0) {
+    return actionError('El estado de cuenta no es válido')
+  }
 
-  try {
-    const statement = await updateStatementPaid(statementId, {
-      paid,
-    })
+  if (paidValue !== 'true' && paidValue !== 'false') {
+    return actionError('El estado de pago no es válido')
+  }
+
+  const parsed = UpdateStatementPaidRequestSchema.safeParse({
+    paid: paidValue === 'true',
+  })
+
+  if (!parsed.success) {
+    return actionError(
+      parsed.error.issues[0]?.message ?? 'El estado de pago no es válido',
+    )
+  }
+
+  return withActionState(async () => {
+    const statement = await updateStatementPaid(statementId, parsed.data)
 
     revalidatePath('/debts/statement')
 
-    return actionSuccess(statement)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar el pago',
-    )
-  }
+    return statement
+  }, 'No fue posible actualizar el pago')
 }
 
 // ===================
@@ -150,19 +149,13 @@ export async function payAllStatementsAction(
     return actionError('La tarjeta no es válida')
   }
 
-  try {
+  return withActionState(async () => {
     const statements = await payAllStatements(userCardId)
 
     revalidatePath('/debts/statement')
 
-    return actionSuccess(statements)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible marcar todos los periodos como pagados',
-    )
-  }
+    return statements
+  }, 'No fue posible marcar todos los periodos como pagados')
 }
 
 // ===================
@@ -186,15 +179,9 @@ export async function getStatementDateSuggestionAction(
     return actionError('La tarjeta no es válida')
   }
 
-  try {
+  return withActionState(async () => {
     const suggestion = await getStatementDateSuggestion(userCardId)
 
-    return actionSuccess(suggestion)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible obtener las fechas sugeridas',
-    )
-  }
+    return suggestion
+  }, 'No fue posible obtener las fechas sugeridas')
 }

@@ -3,10 +3,8 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
-  CreateUserTradingAccountSchema,
-  UpdateUserTradingAccountSchema,
   UserTradingAccountSchema,
   type CreateUserTradingAccount,
   type UpdateUserTradingAccount,
@@ -17,13 +15,9 @@ import {
 // SCHEMAS
 // ===================
 
-const UserTradingAccountResponseSchema = createApiResponseSchema(
-  UserTradingAccountSchema,
-)
+const UserTradingAccountResponseSchema = UserTradingAccountSchema
 
-const UserTradingAccountListResponseSchema = createApiResponseSchema(
-  z.array(UserTradingAccountSchema),
-)
+const UserTradingAccountListResponseSchema = z.array(UserTradingAccountSchema)
 
 // ===================
 // GET ALL
@@ -34,17 +28,11 @@ export const getUserTradingAccounts = async (): Promise<
 > => {
   const response = await fetchServer('/user-trading-accounts')
 
-  const json: unknown = await response.json()
-
-  const parsed = UserTradingAccountListResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(
-      parsed.message ?? 'No fue posible obtener tus cuentas de trading',
-    )
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    UserTradingAccountListResponseSchema,
+    'No fue posible obtener tus cuentas de trading',
+  )
 }
 
 // ===================
@@ -58,17 +46,11 @@ export const getUserTradingAccountById = async (
     `/user-trading-accounts/${userTradingAccountId}`,
   )
 
-  const json: unknown = await response.json()
-
-  const parsed = UserTradingAccountResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(
-      parsed.message ?? 'No fue posible obtener la cuenta de trading',
-    )
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    UserTradingAccountResponseSchema,
+    'No fue posible obtener la cuenta de trading',
+  )
 }
 
 // ===================
@@ -78,24 +60,16 @@ export const getUserTradingAccountById = async (
 export const createUserTradingAccount = async (
   input: CreateUserTradingAccount,
 ): Promise<UserTradingAccount> => {
-  const payload = CreateUserTradingAccountSchema.parse(input)
-
   const response = await fetchServer('/user-trading-accounts', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(input),
   })
 
-  const json: unknown = await response.json()
-
-  const parsed = UserTradingAccountResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(
-      parsed.message ?? 'No fue posible agregar la cuenta de trading',
-    )
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    UserTradingAccountResponseSchema,
+    'No fue posible agregar la cuenta de trading',
+  )
 }
 
 // ===================
@@ -106,27 +80,19 @@ export const updateUserTradingAccount = async (
   userTradingAccountId: number,
   input: UpdateUserTradingAccount,
 ): Promise<UserTradingAccount> => {
-  const payload = UpdateUserTradingAccountSchema.parse(input)
-
   const response = await fetchServer(
     `/user-trading-accounts/${userTradingAccountId}`,
     {
       method: 'PUT',
-      body: JSON.stringify(payload),
+      body: JSON.stringify(input),
     },
   )
 
-  const json: unknown = await response.json()
-
-  const parsed = UserTradingAccountResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(
-      parsed.message ?? 'No fue posible actualizar la cuenta de trading',
-    )
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    UserTradingAccountResponseSchema,
+    'No fue posible actualizar la cuenta de trading',
+  )
 }
 
 // ===================

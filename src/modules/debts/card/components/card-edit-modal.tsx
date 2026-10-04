@@ -61,7 +61,7 @@ export function CardEditModal({ card, onClose }: CardEditModalProps) {
           </button>
         </div>
 
-        <form action={action}>
+        <form noValidate action={action}>
           <input type="hidden" name="cardId" value={card.cardId} />
 
           <div className="space-y-5 p-6">

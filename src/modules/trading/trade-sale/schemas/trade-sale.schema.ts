@@ -2,6 +2,8 @@
 
 import { z } from 'zod'
 
+import { requiredNumber, requiredString } from '@/core/utils/zod-helpers'
+
 export const TradeSaleSchema = z.object({
   tradeSaleId: z.number(),
   tradeId: z.number(),
@@ -26,31 +28,53 @@ export const TradeSaleSchema = z.object({
 export type TradeSale = z.infer<typeof TradeSaleSchema>
 
 export const CreateTradeSaleSchema = z.object({
-  tradeId: z.number(),
+  tradeId: requiredNumber('La operación es obligatoria', 'La operación no es válida')
+    .int('La operación no es válida')
+    .positive('La operación no es válida'),
 
-  quantity: z.number().positive(),
+  quantity: requiredNumber('La cantidad es obligatoria', 'La cantidad debe ser válida')
+    .positive('La cantidad debe ser mayor que cero'),
 
-  salePrice: z.number().positive(),
+  salePrice: requiredNumber(
+    'El precio de venta es obligatorio',
+    'El precio de venta debe ser válido',
+  ).positive('El precio de venta debe ser mayor que cero'),
 
-  commission: z.number().min(0),
+  commission: requiredNumber(
+    'La comisión es obligatoria',
+    'La comisión debe ser válida',
+  ).min(0, 'La comisión no puede ser negativa'),
 
-  commissionRate: z.number().min(0),
+  commissionRate: requiredNumber(
+    'La tasa de comisión es obligatoria',
+    'La tasa de comisión debe ser válida',
+  ).min(0, 'La tasa de comisión no puede ser negativa'),
 
-  saleDate: z.string().min(1),
+  saleDate: requiredString('La fecha de venta es obligatoria'),
 })
 
 export type CreateTradeSale = z.infer<typeof CreateTradeSaleSchema>
 
 export const UpdateTradeSaleSchema = z.object({
-  quantity: z.number().positive(),
+  quantity: requiredNumber('La cantidad es obligatoria', 'La cantidad debe ser válida')
+    .positive('La cantidad debe ser mayor que cero'),
 
-  salePrice: z.number().positive(),
+  salePrice: requiredNumber(
+    'El precio de venta es obligatorio',
+    'El precio de venta debe ser válido',
+  ).positive('El precio de venta debe ser mayor que cero'),
 
-  commission: z.number().min(0),
+  commission: requiredNumber(
+    'La comisión es obligatoria',
+    'La comisión debe ser válida',
+  ).min(0, 'La comisión no puede ser negativa'),
 
-  commissionRate: z.number().min(0),
+  commissionRate: requiredNumber(
+    'La tasa de comisión es obligatoria',
+    'La tasa de comisión debe ser válida',
+  ).min(0, 'La tasa de comisión no puede ser negativa'),
 
-  saleDate: z.string().min(1),
+  saleDate: requiredString('La fecha de venta es obligatoria'),
 })
 
 export type UpdateTradeSale = z.infer<typeof UpdateTradeSaleSchema>

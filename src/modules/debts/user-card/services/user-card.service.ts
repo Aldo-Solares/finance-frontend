@@ -1,8 +1,9 @@
 // @/modules/debts/user-card/services/user-card.service.ts
+
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 
 import {
   UserCardSchema,
@@ -19,21 +20,11 @@ export async function findAllUserCards(): Promise<UserCard[]> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(UserCardSchema)).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener las tarjetas del usuario',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de tarjetas del usuario no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    z.array(UserCardSchema),
+    'No fue posible obtener las tarjetas del usuario',
+  )
 }
 
 // ===================
@@ -45,21 +36,11 @@ export async function findUserCardById(userCardId: number): Promise<UserCard> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(UserCardSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener la tarjeta del usuario',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de la tarjeta del usuario no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    UserCardSchema,
+    'No fue posible obtener la tarjeta del usuario',
+  )
 }
 
 // ===================
@@ -74,19 +55,11 @@ export async function createUserCard(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(UserCardSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible agregar la tarjeta')
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de creación de la tarjeta no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    UserCardSchema,
+    'No fue posible agregar la tarjeta',
+  )
 }
 
 // ===================
@@ -98,13 +71,9 @@ export async function deleteUserCard(userCardId: number): Promise<void> {
     method: 'DELETE',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible eliminar la tarjeta del usuario',
-    )
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible eliminar la tarjeta del usuario',
+  )
 }

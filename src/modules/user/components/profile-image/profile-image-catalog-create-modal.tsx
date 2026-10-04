@@ -9,11 +9,11 @@ import Image from 'next/image'
 
 import type { ActionState } from '@/core/utils/action-state'
 import { createProfileImageAction } from '@/modules/user/actions/profile-image.actions'
+import { PROFILE_IMAGE_ALLOWED_EXTENSIONS } from '@/modules/user/constants/profile-image.constants'
 import {
-  PROFILE_IMAGE_ALLOWED_EXTENSIONS,
-  PROFILE_IMAGE_MAX_SIZE,
-} from '@/modules/user/constants/profile-image.constants'
-import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
+  ProfileImageFileSchema,
+  type ProfileImage,
+} from '@/modules/user/schemas/profile-image.schema'
 
 type ProfileImageCatalogCreateModalProps = {
   onClose: () => void
@@ -56,9 +56,13 @@ export function ProfileImageCatalogCreateModal({
       return
     }
 
-    if (file.size > PROFILE_IMAGE_MAX_SIZE) {
+    const parsed = ProfileImageFileSchema.safeParse(file)
+
+    if (!parsed.success) {
       setPreview(null)
-      setFileError('La imagen no puede superar los 5 MB')
+      setFileError(
+        parsed.error.issues[0]?.message ?? 'La imagen seleccionada no es válida',
+      )
       event.target.value = ''
       return
     }
@@ -99,7 +103,7 @@ export function ProfileImageCatalogCreateModal({
           </button>
         </div>
 
-        <form action={action}>
+        <form noValidate action={action}>
           <div className="space-y-5 p-6">
             <div>
               <label

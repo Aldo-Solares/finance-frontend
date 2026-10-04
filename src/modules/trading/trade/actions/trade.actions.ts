@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 
 import {
@@ -32,22 +32,19 @@ export async function createTradeAction(
   const parsed = CreateTradeSchema.safeParse(input)
 
   if (!parsed.success) {
-    return actionError<Trade>('Los datos de la compra no son válidos.')
+    return actionError(
+      parsed.error.issues[0]?.message ??
+        'Los datos de la compra no son válidos.',
+    )
   }
 
-  try {
+  return withActionState(async () => {
     const trade = await createTrade(parsed.data)
 
     revalidatePath('/trading/trade')
 
-    return actionSuccess(trade, 'Compra registrada correctamente.')
-  } catch (error) {
-    return actionError<Trade>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible registrar la compra.',
-    )
-  }
+    return trade
+  }, 'No fue posible registrar la compra.', 'Compra registrada correctamente.')
 }
 
 // ===================
@@ -61,22 +58,19 @@ export async function updateTradeAction(
   const parsed = UpdateTradeSchema.safeParse(input)
 
   if (!parsed.success) {
-    return actionError<Trade>('Los datos de la compra no son válidos.')
+    return actionError(
+      parsed.error.issues[0]?.message ??
+        'Los datos de la compra no son válidos.',
+    )
   }
 
-  try {
+  return withActionState(async () => {
     const trade = await updateTrade(tradeId, parsed.data)
 
     revalidatePath('/trading/trade')
 
-    return actionSuccess(trade, 'Compra actualizada correctamente.')
-  } catch (error) {
-    return actionError<Trade>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la compra.',
-    )
-  }
+    return trade
+  }, 'No fue posible actualizar la compra.', 'Compra actualizada correctamente.')
 }
 
 // ===================

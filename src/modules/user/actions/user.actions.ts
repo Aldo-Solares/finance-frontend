@@ -8,8 +8,8 @@ import { cookies } from 'next/headers'
 import { AUTH_TOKEN_COOKIE } from '@/core/constants/auth.constants'
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 import {
   ChangePasswordRequestSchema,
@@ -46,7 +46,7 @@ export async function updateCurrentUserAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const result = await updateCurrentUser(parsed.data)
 
     // ===================
@@ -68,14 +68,8 @@ export async function updateCurrentUserAction(
 
     revalidatePath('/', 'layout')
 
-    return actionSuccess(result)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar el usuario',
-    )
-  }
+    return result
+  }, 'No fue posible actualizar el usuario')
 }
 
 // ===================
@@ -92,19 +86,13 @@ export async function updateCurrentUserProfileImageAction(
     return actionError('La imagen de perfil no es válida')
   }
 
-  try {
+  return withActionState(async () => {
     const result = await updateCurrentUserProfileImage(profileImageId)
 
     revalidatePath('/', 'layout')
 
-    return actionSuccess(result)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la imagen de perfil',
-    )
-  }
+    return result
+  }, 'No fue posible actualizar la imagen de perfil')
 }
 
 // ===================
@@ -115,19 +103,13 @@ export async function removeCurrentUserProfileImageAction(
   _previousState: ActionState<null>,
   _formData: FormData,
 ): Promise<ActionState<null>> {
-  try {
+  return withActionState(async () => {
     await removeCurrentUserProfileImage()
 
     revalidatePath('/', 'layout')
 
-    return actionSuccess(null)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible eliminar la imagen de perfil',
-    )
-  }
+    return null
+  }, 'No fue posible eliminar la imagen de perfil')
 }
 
 // ===================
@@ -150,15 +132,9 @@ export async function changePasswordAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     await changePassword(parsed.data)
 
-    return actionSuccess(null)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la contraseña',
-    )
-  }
+    return null
+  }, 'No fue posible actualizar la contraseña')
 }

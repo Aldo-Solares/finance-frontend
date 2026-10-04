@@ -3,26 +3,42 @@
 
 import { revalidatePath } from 'next/cache'
 
+import {
+  actionError,
+  type ActionState,
+  withActionState,
+} from '@/core/utils/action-state'
 import { CreateUserCardRequestSchema } from '@/modules/debts/user-card/schemas/user-card.schema'
 
 import {
   createUserCard,
   deleteUserCard,
 } from '@/modules/debts/user-card/services/user-card.service'
+import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
 
 // ===================
 // CREATE
 // ===================
 
-export async function createUserCardAction(input: unknown) {
-  const request = CreateUserCardRequestSchema.parse(input)
+export async function createUserCardAction(
+  input: unknown,
+): Promise<ActionState<UserCard>> {
+  const parsed = CreateUserCardRequestSchema.safeParse(input)
 
-  const userCard = await createUserCard(request)
+  if (!parsed.success) {
+    return actionError(
+      parsed.error.issues[0]?.message ?? 'Los datos de la tarjeta no son válidos',
+    )
+  }
 
-  revalidatePath('/debts/card')
-  revalidatePath('/debts/statement')
+  return withActionState(async () => {
+    const userCard = await createUserCard(parsed.data)
 
-  return userCard
+    revalidatePath('/debts/card')
+    revalidatePath('/debts/statement')
+
+    return userCard
+  }, 'No fue posible agregar la tarjeta')
 }
 
 // ===================

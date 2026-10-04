@@ -100,7 +100,7 @@ export function ConceptFormModal({
           </button>
         </div>
 
-        <form action={action}>
+        <form noValidate action={action}>
           {editing && (
             <input
               type="hidden"

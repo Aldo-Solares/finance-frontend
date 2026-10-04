@@ -50,7 +50,11 @@ export const UpdateUserRequestSchema = z.object({
   name: requiredString('El nombre es obligatorio'),
   lastName: z.string().trim().nullable(),
   secondLastName: z.string().trim().nullable(),
-  email: z.email('El correo es obligatorio'),
+  email: z
+    .string({ error: 'El correo electrónico es obligatorio' })
+    .trim()
+    .min(1, 'El correo electrónico es obligatorio')
+    .email('El correo electrónico no es válido'),
 })
 
 export const UpdateUserResponseSchema = z.object({

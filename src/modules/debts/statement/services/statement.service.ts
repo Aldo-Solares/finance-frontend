@@ -3,7 +3,7 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
   StatementDateSuggestionSchema,
   StatementSchema,
@@ -23,21 +23,11 @@ export async function findAllStatements(): Promise<Statement[]> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(StatementSchema)).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener los estados de cuenta',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de estados de cuenta no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    z.array(StatementSchema),
+    'No fue posible obtener los estados de cuenta',
+  )
 }
 
 // ===================
@@ -51,22 +41,11 @@ export async function findStatementsByUserCardId(
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(StatementSchema)).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ??
-        'No fue posible obtener los estados de cuenta de la tarjeta',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de estados de cuenta no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    z.array(StatementSchema),
+    'No fue posible obtener los estados de cuenta de la tarjeta',
+  )
 }
 
 // ===================
@@ -80,21 +59,11 @@ export async function findStatementById(
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(StatementSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener el estado de cuenta',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta del estado de cuenta no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    StatementSchema,
+    'No fue posible obtener el estado de cuenta',
+  )
 }
 
 // ===================
@@ -109,17 +78,11 @@ export async function createStatement(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(StatementSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(
-      result.message ?? 'No fue posible crear el estado de cuenta',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    StatementSchema,
+    'No fue posible crear el estado de cuenta',
+  )
 }
 
 // ===================
@@ -135,17 +98,11 @@ export async function updateStatement(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(StatementSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(
-      result.message ?? 'No fue posible actualizar el estado de cuenta',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    StatementSchema,
+    'No fue posible actualizar el estado de cuenta',
+  )
 }
 
 // ===================
@@ -161,15 +118,11 @@ export async function updateStatementPaid(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(StatementSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible actualizar el pago')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    StatementSchema,
+    'No fue posible actualizar el pago',
+  )
 }
 
 // ===================
@@ -186,15 +139,11 @@ export async function payAllStatements(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(StatementSchema)).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible pagar todos los periodos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    z.array(StatementSchema),
+    'No fue posible pagar todos los periodos',
+  )
 }
 
 // ===================
@@ -206,15 +155,11 @@ export async function deleteStatement(statementId: number): Promise<void> {
     method: 'DELETE',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible eliminar el estado de cuenta',
-    )
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible eliminar el estado de cuenta',
+  )
 }
 
 // ===================
@@ -229,27 +174,16 @@ export async function getStatementDateSuggestion(
   })
 
   const response = await fetchServer(
-    `/statements/suggestion?${params.toString()}`,
+    `/statements/suggestion?${params.toString()
+}`,
     {
       method: 'GET',
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(StatementDateSuggestionSchema).parse(
-    json,
+  return parseApiResponse(
+    response,
+    StatementDateSuggestionSchema,
+    'No fue posible obtener las fechas sugeridas',
   )
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener las fechas sugeridas',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de fechas sugeridas no contiene datos')
-  }
-
-  return result.data
 }

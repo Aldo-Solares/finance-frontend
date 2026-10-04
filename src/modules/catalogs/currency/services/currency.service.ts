@@ -3,11 +3,9 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
-  CreateCurrencySchema,
   CurrencySchema,
-  UpdateCurrencySchema,
   type CreateCurrency,
   type Currency,
   type UpdateCurrency,
@@ -17,11 +15,9 @@ import {
 // SCHEMAS
 // ===================
 
-const CurrencyResponseSchema = createApiResponseSchema(CurrencySchema)
+const CurrencyResponseSchema = CurrencySchema
 
-const CurrencyListResponseSchema = createApiResponseSchema(
-  z.array(CurrencySchema),
-)
+const CurrencyListResponseSchema = z.array(CurrencySchema)
 
 // ===================
 // GET ALL
@@ -30,15 +26,11 @@ const CurrencyListResponseSchema = createApiResponseSchema(
 export const getCurrencies = async (): Promise<Currency[]> => {
   const response = await fetchServer('/catalogs/currencies')
 
-  const json: unknown = await response.json()
-
-  const parsed = CurrencyListResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(parsed.message ?? 'No fue posible obtener las monedas')
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    CurrencyListResponseSchema,
+    'No fue posible obtener las monedas',
+  )
 }
 
 // ===================
@@ -50,15 +42,11 @@ export const getCurrencyById = async (
 ): Promise<Currency> => {
   const response = await fetchServer(`/catalogs/currencies/${currencyId}`)
 
-  const json: unknown = await response.json()
-
-  const parsed = CurrencyResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(parsed.message ?? 'No fue posible obtener la moneda')
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    CurrencyResponseSchema,
+    'No fue posible obtener la moneda',
+  )
 }
 
 // ===================
@@ -68,22 +56,16 @@ export const getCurrencyById = async (
 export const createCurrency = async (
   input: CreateCurrency,
 ): Promise<Currency> => {
-  const payload = CreateCurrencySchema.parse(input)
-
   const response = await fetchServer('/catalogs/currencies', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(input),
   })
 
-  const json: unknown = await response.json()
-
-  const parsed = CurrencyResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(parsed.message ?? 'No fue posible crear la moneda')
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    CurrencyResponseSchema,
+    'No fue posible crear la moneda',
+  )
 }
 
 // ===================
@@ -94,22 +76,16 @@ export const updateCurrency = async (
   currencyId: number,
   input: UpdateCurrency,
 ): Promise<Currency> => {
-  const payload = UpdateCurrencySchema.parse(input)
-
   const response = await fetchServer(`/catalogs/currencies/${currencyId}`, {
     method: 'PUT',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(input),
   })
 
-  const json: unknown = await response.json()
-
-  const parsed = CurrencyResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(parsed.message ?? 'No fue posible actualizar la moneda')
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    CurrencyResponseSchema,
+    'No fue posible actualizar la moneda',
+  )
 }
 
 // ===================

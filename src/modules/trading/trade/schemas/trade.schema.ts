@@ -4,6 +4,7 @@ import { z } from 'zod'
 
 import { TRADE_STATUS_VALUES } from '@/modules/trading/trade/constants/trade.constants'
 import { TradeSaleSchema } from '@/modules/trading/trade-sale/schemas/trade-sale.schema'
+import { requiredNumber, requiredString } from '@/core/utils/zod-helpers'
 
 // ===================
 // STATUS
@@ -67,18 +68,38 @@ export type Trade = z.infer<typeof TradeSchema>
 // ===================
 
 export const CreateTradeSchema = z.object({
-  userTradingAccountId: z.number(),
+  userTradingAccountId: requiredNumber(
+    'Selecciona una cuenta de trading',
+    'La cuenta de trading no es válida',
+  )
+    .int('La cuenta de trading no es válida')
+    .positive('La cuenta de trading no es válida'),
 
-  instrumentId: z.number(),
+  instrumentId: requiredNumber(
+    'Selecciona un instrumento',
+    'El instrumento no es válido',
+  )
+    .int('El instrumento no es válido')
+    .positive('El instrumento no es válido'),
 
-  quantity: z.number().positive(),
+  quantity: requiredNumber('La cantidad es obligatoria', 'La cantidad debe ser válida')
+    .positive('La cantidad debe ser mayor que cero'),
 
-  purchasePrice: z.number().positive(),
+  purchasePrice: requiredNumber(
+    'El precio de compra es obligatorio',
+    'El precio de compra debe ser válido',
+  ).positive('El precio de compra debe ser mayor que cero'),
 
-  purchaseCommission: z.number().min(0),
-  purchaseCommissionRate: z.number().min(0),
+  purchaseCommission: requiredNumber(
+    'La comisión es obligatoria',
+    'La comisión debe ser válida',
+  ).min(0, 'La comisión no puede ser negativa'),
+  purchaseCommissionRate: requiredNumber(
+    'La tasa de comisión es obligatoria',
+    'La tasa de comisión debe ser válida',
+  ).min(0, 'La tasa de comisión no puede ser negativa'),
 
-  purchaseDate: z.string().min(1),
+  purchaseDate: requiredString('La fecha de compra es obligatoria'),
 })
 
 export type CreateTrade = z.infer<typeof CreateTradeSchema>
@@ -88,18 +109,38 @@ export type CreateTrade = z.infer<typeof CreateTradeSchema>
 // ===================
 
 export const UpdateTradeSchema = z.object({
-  userTradingAccountId: z.number(),
+  userTradingAccountId: requiredNumber(
+    'Selecciona una cuenta de trading',
+    'La cuenta de trading no es válida',
+  )
+    .int('La cuenta de trading no es válida')
+    .positive('La cuenta de trading no es válida'),
 
-  instrumentId: z.number(),
+  instrumentId: requiredNumber(
+    'Selecciona un instrumento',
+    'El instrumento no es válido',
+  )
+    .int('El instrumento no es válido')
+    .positive('El instrumento no es válido'),
 
-  quantity: z.number().positive(),
+  quantity: requiredNumber('La cantidad es obligatoria', 'La cantidad debe ser válida')
+    .positive('La cantidad debe ser mayor que cero'),
 
-  purchasePrice: z.number().positive(),
+  purchasePrice: requiredNumber(
+    'El precio de compra es obligatorio',
+    'El precio de compra debe ser válido',
+  ).positive('El precio de compra debe ser mayor que cero'),
 
-  purchaseCommission: z.number().min(0),
-  purchaseCommissionRate: z.number().min(0),
+  purchaseCommission: requiredNumber(
+    'La comisión es obligatoria',
+    'La comisión debe ser válida',
+  ).min(0, 'La comisión no puede ser negativa'),
+  purchaseCommissionRate: requiredNumber(
+    'La tasa de comisión es obligatoria',
+    'La tasa de comisión debe ser válida',
+  ).min(0, 'La tasa de comisión no puede ser negativa'),
 
-  purchaseDate: z.string().min(1),
+  purchaseDate: requiredString('La fecha de compra es obligatoria'),
 })
 
 export type UpdateTrade = z.infer<typeof UpdateTradeSchema>

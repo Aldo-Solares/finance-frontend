@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 
 import {
@@ -32,22 +32,19 @@ export async function createTradeSaleAction(
   const parsed = CreateTradeSaleSchema.safeParse(input)
 
   if (!parsed.success) {
-    return actionError<TradeSale>('Los datos de la venta no son válidos.')
+    return actionError(
+      parsed.error.issues[0]?.message ??
+        'Los datos de la venta no son válidos.',
+    )
   }
 
-  try {
+  return withActionState(async () => {
     const sale = await createTradeSale(parsed.data)
 
     revalidatePath('/trading/trade')
 
-    return actionSuccess(sale, 'Venta registrada correctamente.')
-  } catch (error) {
-    return actionError<TradeSale>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible registrar la venta.',
-    )
-  }
+    return sale
+  }, 'No fue posible registrar la venta.', 'Venta registrada correctamente.')
 }
 
 // ===================
@@ -61,22 +58,19 @@ export async function updateTradeSaleAction(
   const parsed = UpdateTradeSaleSchema.safeParse(input)
 
   if (!parsed.success) {
-    return actionError<TradeSale>('Los datos de la venta no son válidos.')
+    return actionError(
+      parsed.error.issues[0]?.message ??
+        'Los datos de la venta no son válidos.',
+    )
   }
 
-  try {
+  return withActionState(async () => {
     const sale = await updateTradeSale(tradeSaleId, parsed.data)
 
     revalidatePath('/trading/trade')
 
-    return actionSuccess(sale, 'Venta actualizada correctamente.')
-  } catch (error) {
-    return actionError<TradeSale>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la venta.',
-    )
-  }
+    return sale
+  }, 'No fue posible actualizar la venta.', 'Venta actualizada correctamente.')
 }
 
 // ===================

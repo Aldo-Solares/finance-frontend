@@ -29,7 +29,7 @@ export function UserPasswordForm() {
   }, [state.success])
 
   return (
-    <form ref={formRef} action={formAction}>
+    <form noValidate ref={formRef} action={formAction}>
       <div className="space-y-5 px-6 py-7 sm:px-8 sm:py-8">
         {/* ===================
             CURRENT PASSWORD

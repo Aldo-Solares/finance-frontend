@@ -1,11 +1,9 @@
 // @/modules/trading/trade-sale/services/trade-sale.service.ts
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
-  CreateTradeSaleSchema,
   TradeSaleSchema,
-  UpdateTradeSaleSchema,
   type CreateTradeSale,
   type TradeSale,
   type UpdateTradeSale,
@@ -14,44 +12,32 @@ import {
 export async function createTradeSale(
   input: CreateTradeSale,
 ): Promise<TradeSale> {
-  const payload = CreateTradeSaleSchema.parse(input)
-
   const response = await fetchServer('/trade-sales', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(input),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(TradeSaleSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible registrar la venta.')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    TradeSaleSchema,
+    'No fue posible registrar la venta.',
+  )
 }
 
 export async function updateTradeSale(
   tradeSaleId: number,
   input: UpdateTradeSale,
 ): Promise<TradeSale> {
-  const payload = UpdateTradeSaleSchema.parse(input)
-
   const response = await fetchServer(`/trade-sales/${tradeSaleId}`, {
     method: 'PUT',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(input),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(TradeSaleSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible actualizar la venta.')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    TradeSaleSchema,
+    'No fue posible actualizar la venta.',
+  )
 }
 
 export async function deleteTradeSale(tradeSaleId: number): Promise<void> {

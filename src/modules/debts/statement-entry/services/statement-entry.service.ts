@@ -3,7 +3,7 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
   StatementEntrySchema,
   type CreateStatementEntryRequest,
@@ -20,21 +20,11 @@ export async function findAllStatementEntries(): Promise<StatementEntry[]> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(StatementEntrySchema)).parse(
-    json,
+  return parseApiResponse(
+    response,
+    z.array(StatementEntrySchema),
+    'No fue posible obtener los movimientos',
   )
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible obtener los movimientos')
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de movimientos no contiene datos')
-  }
-
-  return result.data
 }
 
 // ===================
@@ -48,15 +38,11 @@ export async function findStatementEntryById(
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(StatementEntrySchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible obtener el movimiento')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    StatementEntrySchema,
+    'No fue posible obtener el movimiento',
+  )
 }
 
 // ===================
@@ -73,20 +59,11 @@ export async function findStatementEntriesByStatementId(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(StatementEntrySchema)).parse(
-    json,
+  return parseApiResponse(
+    response,
+    z.array(StatementEntrySchema),
+    'No fue posible obtener los movimientos del estado de cuenta',
   )
-
-  if (!result.success || result.data === null) {
-    throw new Error(
-      result.message ??
-        'No fue posible obtener los movimientos del estado de cuenta',
-    )
-  }
-
-  return result.data
 }
 
 // ===================
@@ -97,25 +74,18 @@ export async function findStatementEntriesByDebtor(
   debtor: string,
 ): Promise<StatementEntry[]> {
   const response = await fetchServer(
-    `/statement-entries/debtor/${encodeURIComponent(debtor)}`,
+    `/statement-entries/debtor/${encodeURIComponent(debtor)
+}`,
     {
       method: 'GET',
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(StatementEntrySchema)).parse(
-    json,
+  return parseApiResponse(
+    response,
+    z.array(StatementEntrySchema),
+    'No fue posible obtener los movimientos del deudor',
   )
-
-  if (!result.success || result.data === null) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener los movimientos del deudor',
-    )
-  }
-
-  return result.data
 }
 
 // ===================
@@ -127,23 +97,18 @@ export async function findStatementEntriesByStatementIdAndDebtor(
   debtor: string,
 ): Promise<StatementEntry[]> {
   const response = await fetchServer(
-    `/statement-entries/statement/${statementId}/debtor/${encodeURIComponent(debtor)}`,
+    `/statement-entries/statement/${statementId}/debtor/${encodeURIComponent(debtor)
+}`,
     {
       method: 'GET',
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(StatementEntrySchema)).parse(
-    json,
+  return parseApiResponse(
+    response,
+    z.array(StatementEntrySchema),
+    'No fue posible obtener los movimientos',
   )
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible obtener los movimientos')
-  }
-
-  return result.data
 }
 
 // ===================
@@ -158,15 +123,11 @@ export async function createStatementEntry(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(StatementEntrySchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible crear el movimiento')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    StatementEntrySchema,
+    'No fue posible crear el movimiento',
+  )
 }
 
 // ===================
@@ -182,15 +143,11 @@ export async function updateStatementEntry(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(StatementEntrySchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible actualizar el movimiento')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    StatementEntrySchema,
+    'No fue posible actualizar el movimiento',
+  )
 }
 
 // ===================
@@ -202,11 +159,9 @@ export async function deleteStatementEntry(entryId: number): Promise<void> {
     method: 'DELETE',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible eliminar el movimiento')
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible eliminar el movimiento',
+  )
 }

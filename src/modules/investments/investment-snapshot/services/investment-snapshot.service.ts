@@ -3,7 +3,7 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
   InvestmentPerformanceSchema,
   InvestmentSnapshotSchema,
@@ -24,23 +24,11 @@ export async function findAllInvestmentSnapshots(): Promise<
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(
+  return parseApiResponse(
+    response,
     z.array(InvestmentSnapshotSchema),
-  ).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener los registros de inversión',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de inversiones no contiene datos')
-  }
-
-  return result.data
+    'No fue posible obtener los registros de inversión',
+  )
 }
 
 // ===================
@@ -57,17 +45,11 @@ export async function findInvestmentSnapshotById(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(InvestmentSnapshotSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener el registro de inversión',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    InvestmentSnapshotSchema,
+    'No fue posible obtener el registro de inversión',
+  )
 }
 
 // ===================
@@ -79,17 +61,11 @@ export async function findInvestmentPerformance(): Promise<InvestmentPerformance
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(InvestmentPerformanceSchema).parse(
-    json,
+  return parseApiResponse(
+    response,
+    InvestmentPerformanceSchema,
+    'No fue posible obtener el rendimiento',
   )
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible obtener el rendimiento')
-  }
-
-  return result.data
 }
 
 // ===================
@@ -104,17 +80,11 @@ export async function createInvestmentSnapshot(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(InvestmentSnapshotSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(
-      result.message ?? 'No fue posible crear el registro de inversión',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    InvestmentSnapshotSchema,
+    'No fue posible crear el registro de inversión',
+  )
 }
 
 // ===================
@@ -133,17 +103,11 @@ export async function updateInvestmentSnapshot(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(InvestmentSnapshotSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(
-      result.message ?? 'No fue posible actualizar el registro de inversión',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    InvestmentSnapshotSchema,
+    'No fue posible actualizar el registro de inversión',
+  )
 }
 
 // ===================
@@ -160,13 +124,9 @@ export async function deleteInvestmentSnapshot(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible eliminar el registro de inversión',
-    )
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible eliminar el registro de inversión',
+  )
 }

@@ -8,7 +8,6 @@ import { redirect } from 'next/navigation'
 import { AUTH_TOKEN_COOKIE } from '@/core/constants/auth.constants'
 import {
   actionError,
-  actionSuccess,
   type ActionState,
   withActionState,
 } from '@/core/utils/action-state'
@@ -85,8 +84,8 @@ export async function registerAction(
 ): Promise<ActionState<RegisterResponse>> {
   const parsed = RegisterRequestSchema.safeParse({
     name: formData.get('name'),
-    lastName: normalizeNullableString(formData.get('lastName')),
-    secondLastName: normalizeNullableString(formData.get('secondLastName')),
+    lastName: formData.get('lastName'),
+    secondLastName: formData.get('secondLastName'),
     email: formData.get('email'),
     password: formData.get('password'),
   })
@@ -216,18 +215,4 @@ export async function logoutAction(): Promise<void> {
   cookieStore.delete(AUTH_TOKEN_COOKIE)
 
   redirect('/auth/login')
-}
-
-// ===================
-// NORMALIZATION
-// ===================
-
-function normalizeNullableString(
-  value: FormDataEntryValue | null,
-): string | null {
-  if (typeof value !== 'string' || value.trim() === '') {
-    return null
-  }
-
-  return value
 }

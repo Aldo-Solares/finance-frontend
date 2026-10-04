@@ -3,7 +3,7 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
   UpdateUserResponseSchema,
   UserSchema,
@@ -22,21 +22,11 @@ export async function getCurrentUser(): Promise<User> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(UserSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener el usuario actual',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta del usuario actual no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    UserSchema,
+    'No fue posible obtener el usuario actual',
+  )
 }
 
 // ===================
@@ -51,19 +41,11 @@ export async function updateCurrentUser(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(UpdateUserResponseSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible actualizar el usuario')
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de actualización no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    UpdateUserResponseSchema,
+    'No fue posible actualizar el usuario',
+  )
 }
 
 // ===================
@@ -78,13 +60,11 @@ export async function changePassword(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible actualizar la contraseña')
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible actualizar la contraseña',
+  )
 }
 
 // ===================
@@ -101,23 +81,11 @@ export async function updateCurrentUserProfileImage(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(UserSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible actualizar la imagen de perfil',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error(
-      'La respuesta de actualización de imagen de perfil no contiene datos',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    UserSchema,
+    'No fue posible actualizar la imagen de perfil',
+  )
 }
 
 // ===================
@@ -129,13 +97,9 @@ export async function removeCurrentUserProfileImage(): Promise<void> {
     method: 'DELETE',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible eliminar la imagen de perfil',
-    )
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible eliminar la imagen de perfil',
+  )
 }

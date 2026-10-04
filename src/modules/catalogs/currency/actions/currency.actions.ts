@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 import {
   CreateCurrencySchema,
@@ -30,22 +30,18 @@ export async function createCurrencyAction(
   const parsed = CreateCurrencySchema.safeParse(input)
 
   if (!parsed.success) {
-    return actionError<Currency>('Los datos de la moneda no son válidos.')
+    return actionError(
+      parsed.error.issues[0]?.message ?? 'Los datos de la moneda no son válidos.',
+    )
   }
 
-  try {
+  return withActionState(async () => {
     const currency = await createCurrency(parsed.data)
 
     revalidatePath('/admin/currency')
 
-    return actionSuccess(currency, 'Moneda creada correctamente.')
-  } catch (error) {
-    return actionError<Currency>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible crear la moneda.',
-    )
-  }
+    return currency
+  }, 'No fue posible crear la moneda.', 'Moneda creada correctamente.')
 }
 
 // ===================
@@ -59,22 +55,18 @@ export async function updateCurrencyAction(
   const parsed = UpdateCurrencySchema.safeParse(input)
 
   if (!parsed.success) {
-    return actionError<Currency>('Los datos de la moneda no son válidos.')
+    return actionError(
+      parsed.error.issues[0]?.message ?? 'Los datos de la moneda no son válidos.',
+    )
   }
 
-  try {
+  return withActionState(async () => {
     const currency = await updateCurrency(currencyId, parsed.data)
 
     revalidatePath('/admin/currency')
 
-    return actionSuccess(currency, 'Moneda actualizada correctamente.')
-  } catch (error) {
-    return actionError<Currency>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la moneda.',
-    )
-  }
+    return currency
+  }, 'No fue posible actualizar la moneda.', 'Moneda actualizada correctamente.')
 }
 
 // ===================

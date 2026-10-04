@@ -1,8 +1,7 @@
 // @/modules/user/services/user-settings.service.ts
 
 import { fetchServer } from '@/core/api/api-server'
-
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 
 import {
   UserSettingsSchema,
@@ -21,23 +20,11 @@ export async function getCurrentUserSettings(): Promise<UserSettings> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(UserSettingsSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener la configuración del usuario',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error(
-      'La respuesta de configuración del usuario no contiene datos',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    UserSettingsSchema,
+    'No fue posible obtener la configuración del usuario',
+  )
 }
 
 // ===================
@@ -55,24 +42,11 @@ export async function updateStatementCutoffReminder(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(UserSettingsSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ??
-        'No fue posible actualizar la preferencia de recordatorio',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error(
-      'La respuesta de actualización del recordatorio no contiene datos',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    UserSettingsSchema,
+    'No fue posible actualizar la preferencia de recordatorio',
+  )
 }
 
 // ===================
@@ -90,22 +64,11 @@ export async function updateProfileImageBackground(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(UserSettingsSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ??
-        'No fue posible actualizar el fondo de la imagen de perfil',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de actualización del fondo no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    UserSettingsSchema,
+    'No fue posible actualizar el fondo de la imagen de perfil',
+  )
 }
 
 // ===================
@@ -119,21 +82,9 @@ export async function updateDarkMode(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-  const result = createApiResponseSchema(UserSettingsSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ??
-        'No fue posible actualizar la preferencia de modo oscuro',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error(
-      'La respuesta de actualización del modo oscuro no contiene datos',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    UserSettingsSchema,
+    'No fue posible actualizar la preferencia de modo oscuro',
+  )
 }

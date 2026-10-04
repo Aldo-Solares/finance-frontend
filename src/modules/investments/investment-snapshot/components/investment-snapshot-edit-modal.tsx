@@ -81,7 +81,7 @@ export function InvestmentSnapshotEditModal({
           </button>
         </div>
 
-        <form action={action}>
+        <form noValidate action={action}>
           <input
             type="hidden"
             name="investmentSnapshotId"

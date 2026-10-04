@@ -3,8 +3,7 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 
 import {
   CreateInstrument,
@@ -17,11 +16,9 @@ import {
 // SCHEMAS
 // ===================
 
-const InstrumentResponseSchema = createApiResponseSchema(InstrumentSchema)
+const InstrumentResponseSchema = InstrumentSchema
 
-const InstrumentListResponseSchema = createApiResponseSchema(
-  z.array(InstrumentSchema),
-)
+const InstrumentListResponseSchema = z.array(InstrumentSchema)
 
 // ===================
 // GET ALL
@@ -30,15 +27,11 @@ const InstrumentListResponseSchema = createApiResponseSchema(
 export const getInstruments = async (): Promise<Instrument[]> => {
   const response = await fetchServer('/instruments')
 
-  const json: unknown = await response.json()
-
-  const parsed = InstrumentListResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(parsed.message ?? 'No fue posible obtener los instrumentos')
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    InstrumentListResponseSchema,
+    'No fue posible obtener los instrumentos',
+  )
 }
 
 // ===================
@@ -53,15 +46,11 @@ export const createInstrument = async (
     body: JSON.stringify(payload),
   })
 
-  const json: unknown = await response.json()
-
-  const parsed = InstrumentResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(parsed.message ?? 'No fue posible crear el instrumento')
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    InstrumentResponseSchema,
+    'No fue posible crear el instrumento',
+  )
 }
 
 // ===================
@@ -77,17 +66,11 @@ export const updateInstrument = async (
     body: JSON.stringify(payload),
   })
 
-  const json: unknown = await response.json()
-
-  const parsed = InstrumentResponseSchema.parse(json)
-
-  if (!parsed.success || !parsed.data) {
-    throw new Error(
-      parsed.message ?? 'No fue posible actualizar el instrumento',
-    )
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    InstrumentResponseSchema,
+    'No fue posible actualizar el instrumento',
+  )
 }
 
 // ===================

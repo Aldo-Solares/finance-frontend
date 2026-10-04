@@ -2,7 +2,7 @@
 
 import { z } from 'zod'
 
-import { requiredString } from '@/core/utils/zod-helpers'
+import { requiredNumber, requiredString } from '@/core/utils/zod-helpers'
 
 // ===================
 // COMMON SCHEMAS
@@ -17,6 +17,14 @@ const nullableNonNegativeIntegerSchema = z
   .int()
   .nonnegative()
   .nullable()
+const requestNullablePositiveIntegerSchema = z
+  .number({ error: 'Los meses sin intereses deben ser un número válido' })
+  .int('Los meses sin intereses deben ser un número entero')
+  .positive('Los meses sin intereses deben ser mayores que cero')
+  .nullable()
+const requestEntryTypeSchema = z.enum(['PURCHASE', 'RECURRING'], {
+  error: 'El tipo de movimiento no es válido',
+})
 
 // ===================
 // ENTRY TYPE
@@ -54,17 +62,28 @@ export const StatementEntrySchema = z.object({
 // ===================
 
 export const CreateStatementEntryRequestSchema = z.object({
-  statementId: z.number().int().positive(),
-  conceptId: z.number().int().positive(),
+  statementId: requiredNumber(
+    'Selecciona un estado de cuenta',
+    'El estado de cuenta no es válido',
+  )
+    .int('El estado de cuenta no es válido')
+    .positive('El estado de cuenta no es válido'),
+  conceptId: requiredNumber(
+    'Selecciona un concepto',
+    'El concepto no es válido',
+  )
+    .int('El concepto no es válido')
+    .positive('El concepto no es válido'),
   debtor: requiredString('El deudor es obligatorio'),
   specification: z.string().trim().nullable(),
   notes: z.string().nullable(),
-  entryType: StatementEntryTypeSchema,
+  entryType: requestEntryTypeSchema,
   date: nullableDateSchema,
-  amount: z.number().positive(),
+  amount: requiredNumber('El monto es obligatorio', 'El monto debe ser válido')
+    .positive('El monto debe ser mayor que cero'),
   paid: z.boolean(),
-  msiCurrent: nullablePositiveIntegerSchema,
-  msiTotal: nullablePositiveIntegerSchema,
+  msiCurrent: requestNullablePositiveIntegerSchema,
+  msiTotal: requestNullablePositiveIntegerSchema,
 })
 
 // ===================
@@ -72,17 +91,28 @@ export const CreateStatementEntryRequestSchema = z.object({
 // ===================
 
 export const UpdateStatementEntryRequestSchema = z.object({
-  statementId: z.number().int().positive(),
-  conceptId: z.number().int().positive(),
+  statementId: requiredNumber(
+    'Selecciona un estado de cuenta',
+    'El estado de cuenta no es válido',
+  )
+    .int('El estado de cuenta no es válido')
+    .positive('El estado de cuenta no es válido'),
+  conceptId: requiredNumber(
+    'Selecciona un concepto',
+    'El concepto no es válido',
+  )
+    .int('El concepto no es válido')
+    .positive('El concepto no es válido'),
   debtor: requiredString('El deudor es obligatorio'),
   specification: z.string().trim().nullable(),
   notes: z.string().nullable(),
-  entryType: StatementEntryTypeSchema,
+  entryType: requestEntryTypeSchema,
   date: nullableDateSchema,
-  amount: z.number().positive(),
+  amount: requiredNumber('El monto es obligatorio', 'El monto debe ser válido')
+    .positive('El monto debe ser mayor que cero'),
   paid: z.boolean(),
-  msiCurrent: nullablePositiveIntegerSchema,
-  msiTotal: nullablePositiveIntegerSchema,
+  msiCurrent: requestNullablePositiveIntegerSchema,
+  msiTotal: requestNullablePositiveIntegerSchema,
 })
 
 // ===================

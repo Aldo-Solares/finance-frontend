@@ -1,7 +1,7 @@
 // @/modules/dashboard/debts/services/debt-dashboard.service.ts
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
   DebtDashboardFilterSchema,
   DebtDashboardSchema,
@@ -53,13 +53,9 @@ export async function getDebtDashboard(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const parsed = createApiResponseSchema(DebtDashboardSchema).parse(json)
-
-  if (!parsed.success || parsed.data === null) {
-    throw new Error(parsed.message ?? 'No fue posible obtener el dashboard.')
-  }
-
-  return parsed.data
+  return parseApiResponse(
+    response,
+    DebtDashboardSchema,
+    'No fue posible obtener el dashboard.',
+  )
 }

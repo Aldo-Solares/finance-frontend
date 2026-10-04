@@ -95,7 +95,7 @@ export function StatementEditModal({
           </button>
         </div>
 
-        <form action={action}>
+        <form noValidate action={action}>
           <input
             type="hidden"
             name="statementId"

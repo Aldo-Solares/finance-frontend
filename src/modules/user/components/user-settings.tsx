@@ -64,7 +64,7 @@ export function UserSettings({ userSettings }: UserSettingsProps) {
       </header>
 
       <div className="divide-y divide-border">
-        <form action={darkModeFormAction}>
+        <form noValidate action={darkModeFormAction}>
           <div className="group flex min-h-[76px] items-center justify-between gap-5 px-5 py-4 transition-colors hover:bg-surface/50 sm:px-6">
             <div className="flex min-w-0 items-center gap-3.5">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-text-muted transition-colors group-hover:text-foreground">
@@ -92,7 +92,7 @@ export function UserSettings({ userSettings }: UserSettingsProps) {
           </div>
         </form>
 
-        <form action={reminderFormAction}>
+        <form noValidate action={reminderFormAction}>
           <div className="group flex min-h-[76px] items-center justify-between gap-5 px-5 py-4 transition-colors hover:bg-surface/50 sm:px-6">
             <div className="flex min-w-0 items-center gap-3.5">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-surface text-text-muted transition-colors group-hover:text-foreground">

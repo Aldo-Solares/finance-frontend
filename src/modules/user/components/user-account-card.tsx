@@ -94,7 +94,7 @@ export function UserAccountCard({ user }: UserAccountCardProps) {
       </div>
 
       {!user.emailVerified && (
-        <form
+        <form noValidate
           action={resendAction}
           className="border-t border-border px-6 py-5"
         >
@@ -134,7 +134,7 @@ export function UserAccountCard({ user }: UserAccountCardProps) {
       )}
 
       <div className="border-t border-border p-4">
-        <form action={logoutAction}>
+        <form noValidate action={logoutAction}>
           <button
             type="submit"
             className={[

@@ -30,10 +30,15 @@ export function UserCardAddModal({ cards, onClose }: UserCardAddModalProps) {
     setError(null)
 
     try {
-      await createUserCardAction({
+      const result = await createUserCardAction({
         cardId,
         active,
       })
+
+      if (!result.success) {
+        setError(result.message ?? 'No fue posible agregar la tarjeta.')
+        return
+      }
 
       onClose()
       router.refresh()
@@ -100,7 +105,7 @@ export function UserCardAddModal({ cards, onClose }: UserCardAddModalProps) {
 
         {/* FORM */}
 
-        <form onSubmit={handleSubmit}>
+        <form noValidate onSubmit={handleSubmit}>
           <div className="space-y-6 p-6">
             <div>
               <label

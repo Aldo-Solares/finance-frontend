@@ -168,7 +168,7 @@ export function ProfileImageSelector({
                   profileImage.profileImageId
 
                 return (
-                  <form key={profileImage.profileImageId} action={imageAction}>
+                  <form noValidate key={profileImage.profileImageId} action={imageAction}>
                     <input
                       type="hidden"
                       name="profileImageId"
@@ -227,7 +227,7 @@ export function ProfileImageSelector({
               })}
 
               {user.profileImage && (
-                <form action={removeAction}>
+                <form noValidate action={removeAction}>
                   <button
                     type="submit"
                     disabled={isAnyPending}
@@ -271,7 +271,7 @@ export function ProfileImageSelector({
               const isSelected = selectedBackground === background
 
               return (
-                <form key={background} action={backgroundAction}>
+                <form noValidate key={background} action={backgroundAction}>
                   <input
                     type="hidden"
                     name="profileImageBackground"

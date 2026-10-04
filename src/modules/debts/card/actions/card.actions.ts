@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 
 import {
@@ -42,20 +42,14 @@ export async function createCardAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const card = await createCard(parsed.data)
 
     revalidatePath('/admin/card')
     revalidatePath('/debts/card')
 
-    return actionSuccess(card)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible crear la tarjeta',
-    )
-  }
+    return card
+  }, 'No fue posible crear la tarjeta')
 }
 
 // ===================
@@ -83,20 +77,14 @@ export async function updateCardAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const card = await updateCard(cardId, parsed.data)
 
     revalidatePath('/admin/card')
     revalidatePath('/debts/card')
 
-    return actionSuccess(card)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la tarjeta',
-    )
-  }
+    return card
+  }, 'No fue posible actualizar la tarjeta')
 }
 
 // ===================

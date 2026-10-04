@@ -9,7 +9,7 @@ const ErrorResponseSchema = z.object({
 export const extractErrorMessage = async (
   response: Response,
 ): Promise<string> => {
-  const fallbackMessage = `Request failed with status ${response.status}`
+  const fallbackMessage = `No fue posible completar la solicitud (código ${response.status})`
 
   const text = await response.text()
 

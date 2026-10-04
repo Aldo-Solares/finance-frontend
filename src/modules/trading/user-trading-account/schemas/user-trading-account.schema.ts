@@ -2,6 +2,8 @@
 
 import { z } from 'zod'
 
+import { requiredNumber } from '@/core/utils/zod-helpers'
+
 // ===================
 // USER TRADING ACCOUNT
 // ===================
@@ -22,7 +24,12 @@ export type UserTradingAccount = z.infer<typeof UserTradingAccountSchema>
 // ===================
 
 export const CreateUserTradingAccountSchema = z.object({
-  tradingAccountId: z.number(),
+  tradingAccountId: requiredNumber(
+    'Selecciona una cuenta de trading',
+    'La cuenta seleccionada no es válida',
+  )
+    .int('La cuenta seleccionada no es válida')
+    .positive('La cuenta seleccionada no es válida'),
 })
 
 export type CreateUserTradingAccount = z.infer<
@@ -34,7 +41,12 @@ export type CreateUserTradingAccount = z.infer<
 // ===================
 
 export const UpdateUserTradingAccountSchema = z.object({
-  tradingAccountId: z.number(),
+  tradingAccountId: requiredNumber(
+    'Selecciona una cuenta de trading',
+    'La cuenta seleccionada no es válida',
+  )
+    .int('La cuenta seleccionada no es válida')
+    .positive('La cuenta seleccionada no es válida'),
 })
 
 export type UpdateUserTradingAccount = z.infer<

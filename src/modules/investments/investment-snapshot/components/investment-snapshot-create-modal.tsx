@@ -48,7 +48,7 @@ export function InvestmentSnapshotCreateModal({
           </p>
         </div>
 
-        <form action={formAction} className="space-y-5 p-6">
+        <form noValidate action={formAction} className="space-y-5 p-6">
           <div>
             <label
               htmlFor="balanceDate"

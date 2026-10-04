@@ -2,6 +2,8 @@
 
 import { z } from 'zod'
 
+import { requiredNumber, requiredString } from '@/core/utils/zod-helpers'
+
 // ===================
 // INSTRUMENT
 // ===================
@@ -21,9 +23,11 @@ export type Instrument = z.infer<typeof InstrumentSchema>
 // ===================
 
 export const CreateInstrumentSchema = z.object({
-  symbol: z.string().min(1),
-  name: z.string().min(1),
-  currencyId: z.number(),
+  symbol: requiredString('El símbolo es obligatorio'),
+  name: requiredString('El nombre del instrumento es obligatorio'),
+  currencyId: requiredNumber('Selecciona una moneda', 'La moneda no es válida')
+    .int('La moneda no es válida')
+    .positive('La moneda no es válida'),
 })
 
 export type CreateInstrument = z.infer<typeof CreateInstrumentSchema>
@@ -33,9 +37,11 @@ export type CreateInstrument = z.infer<typeof CreateInstrumentSchema>
 // ===================
 
 export const UpdateInstrumentSchema = z.object({
-  symbol: z.string().min(1),
-  name: z.string().min(1),
-  currencyId: z.number(),
+  symbol: requiredString('El símbolo es obligatorio'),
+  name: requiredString('El nombre del instrumento es obligatorio'),
+  currencyId: requiredNumber('Selecciona una moneda', 'La moneda no es válida')
+    .int('La moneda no es válida')
+    .positive('La moneda no es válida'),
 })
 
 export type UpdateInstrument = z.infer<typeof UpdateInstrumentSchema>

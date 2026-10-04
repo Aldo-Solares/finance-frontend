@@ -1,11 +1,9 @@
 // @/modules/trading/trade/services/trade.service.ts
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
-  CreateTradeSchema,
   TradeSchema,
-  UpdateTradeSchema,
   type CreateTrade,
   type Trade,
   type UpdateTrade,
@@ -20,15 +18,11 @@ export async function getTrades(): Promise<Trade[]> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(TradeSchema.array()).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible obtener las operaciones.')
-  }
-
-  return result.data ?? []
+  return parseApiResponse(
+    response,
+    TradeSchema.array(),
+    'No fue posible obtener las operaciones.',
+  )
 }
 
 // ===================
@@ -40,15 +34,11 @@ export async function getTradeById(tradeId: number): Promise<Trade> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(TradeSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible obtener la operación.')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    TradeSchema,
+    'No fue posible obtener la operación.',
+  )
 }
 
 // ===================
@@ -65,17 +55,11 @@ export async function getTradesByUserTradingAccountId(
     },
   )
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(TradeSchema.array()).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener las operaciones de la cuenta.',
-    )
-  }
-
-  return result.data ?? []
+  return parseApiResponse(
+    response,
+    TradeSchema.array(),
+    'No fue posible obtener las operaciones de la cuenta.',
+  )
 }
 
 // ===================
@@ -83,22 +67,16 @@ export async function getTradesByUserTradingAccountId(
 // ===================
 
 export async function createTrade(input: CreateTrade): Promise<Trade> {
-  const payload = CreateTradeSchema.parse(input)
-
   const response = await fetchServer('/trades', {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(input),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(TradeSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible crear la operación.')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    TradeSchema,
+    'No fue posible crear la operación.',
+  )
 }
 
 // ===================
@@ -109,22 +87,16 @@ export async function updateTrade(
   tradeId: number,
   input: UpdateTrade,
 ): Promise<Trade> {
-  const payload = UpdateTradeSchema.parse(input)
-
   const response = await fetchServer(`/trades/${tradeId}`, {
     method: 'PUT',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(input),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(TradeSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible actualizar la operación.')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    TradeSchema,
+    'No fue posible actualizar la operación.',
+  )
 }
 
 // ===================

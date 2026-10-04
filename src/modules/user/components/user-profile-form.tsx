@@ -42,7 +42,7 @@ export function UserProfileForm({ user }: UserProfileFormProps) {
   }, [state.success, router])
 
   return (
-    <form action={formAction} className="overflow-hidden">
+    <form noValidate action={formAction} className="overflow-hidden">
       <div className="px-6 py-7 sm:px-8 sm:py-8">
         {/* ===================
             PERSONAL INFORMATION

@@ -2,6 +2,8 @@
 
 import { z } from 'zod'
 
+import { requiredString } from '@/core/utils/zod-helpers'
+
 // ===================
 // CURRENCY
 // ===================
@@ -19,8 +21,8 @@ export type Currency = z.infer<typeof CurrencySchema>
 // ===================
 
 export const CreateCurrencySchema = z.object({
-  code: z.string().min(1),
-  symbol: z.string().min(1),
+  code: requiredString('El código de la moneda es obligatorio'),
+  symbol: requiredString('El símbolo de la moneda es obligatorio'),
 })
 
 export type CreateCurrency = z.infer<typeof CreateCurrencySchema>
@@ -30,8 +32,8 @@ export type CreateCurrency = z.infer<typeof CreateCurrencySchema>
 // ===================
 
 export const UpdateCurrencySchema = z.object({
-  code: z.string().min(1),
-  symbol: z.string().min(1),
+  code: requiredString('El código de la moneda es obligatorio'),
+  symbol: requiredString('El símbolo de la moneda es obligatorio'),
 })
 
 export type UpdateCurrency = z.infer<typeof UpdateCurrencySchema>

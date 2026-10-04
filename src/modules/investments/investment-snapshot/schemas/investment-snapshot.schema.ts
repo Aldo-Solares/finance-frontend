@@ -2,6 +2,8 @@
 
 import { z } from 'zod'
 
+import { requiredNumber, requiredString } from '@/core/utils/zod-helpers'
+
 export const InvestmentSnapshotSchema = z.object({
   investmentSnapshotId: z.number().int(),
   balanceDate: z.string(),
@@ -21,23 +23,33 @@ export const InvestmentPerformanceSchema = z.object({
 })
 
 export const CreateInvestmentSnapshotRequestSchema = z.object({
-  balanceDate: z.string().min(1, 'La fecha es obligatoria'),
+  balanceDate: requiredString('La fecha es obligatoria'),
 
-  balance: z.number().nonnegative('El saldo no puede ser negativo'),
+  balance: requiredNumber('El saldo es obligatorio', 'El saldo debe ser válido')
+    .nonnegative('El saldo no puede ser negativo'),
 
-  contribution: z.number().nonnegative('La aportación no puede ser negativa'),
+  contribution: requiredNumber(
+    'La aportación es obligatoria',
+    'La aportación debe ser válida',
+  ).nonnegative('La aportación no puede ser negativa'),
 
-  withdrawal: z.number().nonnegative('El retiro no puede ser negativo'),
+  withdrawal: requiredNumber('El retiro es obligatorio', 'El retiro debe ser válido')
+    .nonnegative('El retiro no puede ser negativo'),
 })
 
 export const UpdateInvestmentSnapshotRequestSchema = z.object({
-  balanceDate: z.string().min(1, 'La fecha es obligatoria'),
+  balanceDate: requiredString('La fecha es obligatoria'),
 
-  balance: z.number().nonnegative('El saldo no puede ser negativo'),
+  balance: requiredNumber('El saldo es obligatorio', 'El saldo debe ser válido')
+    .nonnegative('El saldo no puede ser negativo'),
 
-  contribution: z.number().nonnegative('La aportación no puede ser negativa'),
+  contribution: requiredNumber(
+    'La aportación es obligatoria',
+    'La aportación debe ser válida',
+  ).nonnegative('La aportación no puede ser negativa'),
 
-  withdrawal: z.number().nonnegative('El retiro no puede ser negativo'),
+  withdrawal: requiredNumber('El retiro es obligatorio', 'El retiro debe ser válido')
+    .nonnegative('El retiro no puede ser negativo'),
 })
 
 export type InvestmentSnapshot = z.infer<typeof InvestmentSnapshotSchema>

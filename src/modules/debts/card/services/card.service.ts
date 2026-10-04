@@ -3,8 +3,7 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 
 import {
   CardSchema,
@@ -22,19 +21,11 @@ export async function findAllCards(): Promise<Card[]> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(CardSchema)).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible obtener las tarjetas')
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de tarjetas no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    z.array(CardSchema),
+    'No fue posible obtener las tarjetas',
+  )
 }
 
 // ===================
@@ -46,19 +37,11 @@ export async function findCardById(cardId: number): Promise<Card> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(CardSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible obtener la tarjeta')
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de la tarjeta no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    CardSchema,
+    'No fue posible obtener la tarjeta',
+  )
 }
 
 // ===================
@@ -71,19 +54,11 @@ export async function createCard(request: CreateCardRequest): Promise<Card> {
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(CardSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible crear la tarjeta')
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de creación no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    CardSchema,
+    'No fue posible crear la tarjeta',
+  )
 }
 
 // ===================
@@ -99,19 +74,11 @@ export async function updateCard(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(CardSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible actualizar la tarjeta')
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de actualización no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    CardSchema,
+    'No fue posible actualizar la tarjeta',
+  )
 }
 
 // ===================
@@ -123,11 +90,9 @@ export async function deleteCard(cardId: number): Promise<void> {
     method: 'DELETE',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible eliminar la tarjeta')
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible eliminar la tarjeta',
+  )
 }

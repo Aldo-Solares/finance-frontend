@@ -6,6 +6,7 @@ import { X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
+import { normalizeRequiredNumber } from '@/core/utils/form-data'
 import { updateTradeSaleAction } from '@/modules/trading/trade-sale/actions/trade-sale.actions'
 import type { TradeSale } from '@/modules/trading/trade-sale/schemas/trade-sale.schema'
 import type { Trade } from '@/modules/trading/trade/schemas/trade.schema'
@@ -103,10 +104,10 @@ export function TradeSaleEditModal({
 
     try {
       const result = await updateTradeSaleAction(sale.tradeSaleId, {
-        quantity: Number(quantity),
-        salePrice: Number(salePrice),
-        commission: Number(commission),
-        commissionRate: Number(commissionRate),
+        quantity: normalizeRequiredNumber(quantity),
+        salePrice: normalizeRequiredNumber(salePrice),
+        commission: normalizeRequiredNumber(commission),
+        commissionRate: normalizeRequiredNumber(commissionRate),
         saleDate,
       })
 
@@ -148,7 +149,7 @@ export function TradeSaleEditModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 p-6">
+        <form noValidate onSubmit={handleSubmit} className="space-y-5 p-6">
           <div>
             <div className="mb-2 flex items-center justify-between gap-3">
               <label

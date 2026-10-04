@@ -6,6 +6,7 @@ import { X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { type FormEvent, useMemo, useState } from 'react'
 
+import { normalizeRequiredNumber } from '@/core/utils/form-data'
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema'
 import { updateTradeAction } from '@/modules/trading/trade/actions/trade.actions'
 import type { Trade } from '@/modules/trading/trade/schemas/trade.schema'
@@ -141,10 +142,10 @@ export function TradeEditModal({
       const result = await updateTradeAction(trade.tradeId, {
         userTradingAccountId,
         instrumentId,
-        quantity: Number(quantity),
-        purchasePrice: Number(purchasePrice),
-        purchaseCommission: Number(purchaseCommission),
-        purchaseCommissionRate: Number(purchaseCommissionRate),
+        quantity: normalizeRequiredNumber(quantity),
+        purchasePrice: normalizeRequiredNumber(purchasePrice),
+        purchaseCommission: normalizeRequiredNumber(purchaseCommission),
+        purchaseCommissionRate: normalizeRequiredNumber(purchaseCommissionRate),
         purchaseDate,
       })
 
@@ -196,7 +197,7 @@ export function TradeEditModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 p-6">
+        <form noValidate onSubmit={handleSubmit} className="space-y-5 p-6">
           <div>
             <label
               htmlFor="trade-edit-account"

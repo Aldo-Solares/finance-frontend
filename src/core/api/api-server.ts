@@ -10,7 +10,7 @@ const getApiUrl = (): string => {
   const apiUrl = process.env.API_URL
 
   if (!apiUrl) {
-    throw new Error('API_URL is not configured')
+    throw new Error('La URL del API no está configurada')
   }
 
   return apiUrl.replace(/\/$/, '')

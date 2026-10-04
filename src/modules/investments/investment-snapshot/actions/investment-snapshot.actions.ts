@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 
 import {
@@ -21,6 +21,7 @@ import {
   deleteInvestmentSnapshot,
   updateInvestmentSnapshot,
 } from '@/modules/investments/investment-snapshot/services/investment-snapshot.service'
+import { normalizeRequiredNumber } from '@/core/utils/form-data'
 
 // ===================
 // CREATE
@@ -32,9 +33,9 @@ export async function createInvestmentSnapshotAction(
 ): Promise<ActionState<InvestmentSnapshot>> {
   const parsed = CreateInvestmentSnapshotRequestSchema.safeParse({
     balanceDate: formData.get('balanceDate'),
-    balance: Number(formData.get('balance')),
-    contribution: Number(formData.get('contribution')),
-    withdrawal: Number(formData.get('withdrawal')),
+    balance: normalizeRequiredNumber(formData.get('balance')),
+    contribution: normalizeRequiredNumber(formData.get('contribution')),
+    withdrawal: normalizeRequiredNumber(formData.get('withdrawal')),
   })
 
   if (!parsed.success) {
@@ -44,19 +45,13 @@ export async function createInvestmentSnapshotAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const snapshot = await createInvestmentSnapshot(parsed.data)
 
     revalidatePath('/investments')
 
-    return actionSuccess(snapshot)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible crear el registro',
-    )
-  }
+    return snapshot
+  }, 'No fue posible crear el registro')
 }
 
 // ===================
@@ -75,9 +70,9 @@ export async function updateInvestmentSnapshotAction(
 
   const parsed = UpdateInvestmentSnapshotRequestSchema.safeParse({
     balanceDate: formData.get('balanceDate'),
-    balance: Number(formData.get('balance')),
-    contribution: Number(formData.get('contribution')),
-    withdrawal: Number(formData.get('withdrawal')),
+    balance: normalizeRequiredNumber(formData.get('balance')),
+    contribution: normalizeRequiredNumber(formData.get('contribution')),
+    withdrawal: normalizeRequiredNumber(formData.get('withdrawal')),
   })
 
   if (!parsed.success) {
@@ -87,7 +82,7 @@ export async function updateInvestmentSnapshotAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const snapshot = await updateInvestmentSnapshot(
       investmentSnapshotId,
       parsed.data,
@@ -95,14 +90,8 @@ export async function updateInvestmentSnapshotAction(
 
     revalidatePath('/investments')
 
-    return actionSuccess(snapshot)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar el registro',
-    )
-  }
+    return snapshot
+  }, 'No fue posible actualizar el registro')
 }
 
 // ===================

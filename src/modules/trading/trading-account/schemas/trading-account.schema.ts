@@ -2,6 +2,8 @@
 
 import { z } from 'zod'
 
+import { requiredNumber, requiredString } from '@/core/utils/zod-helpers'
+
 // ===================
 // TRADING ACCOUNT
 // ===================
@@ -22,9 +24,11 @@ export type TradingAccount = z.infer<typeof TradingAccountSchema>
 // ===================
 
 export const CreateTradingAccountSchema = z.object({
-  institution: z.string().min(1),
-  name: z.string().min(1),
-  currencyId: z.number(),
+  institution: requiredString('La institución es obligatoria'),
+  name: requiredString('El nombre de la cuenta es obligatorio'),
+  currencyId: requiredNumber('Selecciona una moneda', 'La moneda no es válida')
+    .int('La moneda no es válida')
+    .positive('La moneda no es válida'),
 })
 
 export type CreateTradingAccount = z.infer<typeof CreateTradingAccountSchema>
@@ -34,9 +38,11 @@ export type CreateTradingAccount = z.infer<typeof CreateTradingAccountSchema>
 // ===================
 
 export const UpdateTradingAccountSchema = z.object({
-  institution: z.string().min(1),
-  name: z.string().min(1),
-  currencyId: z.number(),
+  institution: requiredString('La institución es obligatoria'),
+  name: requiredString('El nombre de la cuenta es obligatorio'),
+  currencyId: requiredNumber('Selecciona una moneda', 'La moneda no es válida')
+    .int('La moneda no es válida')
+    .positive('La moneda no es válida'),
 })
 
 export type UpdateTradingAccount = z.infer<typeof UpdateTradingAccountSchema>

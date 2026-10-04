@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 import {
   CreateStatementEntryRequestSchema,
@@ -19,7 +19,11 @@ import {
   deleteStatementEntry,
   updateStatementEntry,
 } from '@/modules/debts/statement-entry/services/statement-entry.service'
-import { normalizeNullableString } from '@/core/utils/form-data'
+import {
+  normalizeNullableNumber,
+  normalizeNullableString,
+  normalizeRequiredNumber,
+} from '@/core/utils/form-data'
 
 // ===================
 // CREATE
@@ -30,17 +34,17 @@ export async function createStatementEntryAction(
   formData: FormData,
 ): Promise<ActionState<StatementEntry>> {
   const parsed = CreateStatementEntryRequestSchema.safeParse({
-    statementId: Number(formData.get('statementId')),
-    conceptId: Number(formData.get('conceptId')),
+    statementId: normalizeRequiredNumber(formData.get('statementId')),
+    conceptId: normalizeRequiredNumber(formData.get('conceptId')),
     debtor: formData.get('debtor'),
     specification: normalizeNullableString(formData.get('specification')),
     notes: normalizeNullableString(formData.get('notes')),
     entryType: formData.get('entryType'),
     date: normalizeNullableString(formData.get('date')),
-    amount: nullableNumber(formData.get('amount')),
+    amount: normalizeRequiredNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
-    msiCurrent: nullableNumber(formData.get('msiCurrent')),
-    msiTotal: nullableNumber(formData.get('msiTotal')),
+    msiCurrent: normalizeNullableNumber(formData.get('msiCurrent')),
+    msiTotal: normalizeNullableNumber(formData.get('msiTotal')),
   })
 
   if (!parsed.success) {
@@ -50,19 +54,13 @@ export async function createStatementEntryAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const entry = await createStatementEntry(parsed.data)
 
     revalidatePath('/debts/statement')
 
-    return actionSuccess(entry)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible crear el movimiento',
-    )
-  }
+    return entry
+  }, 'No fue posible crear el movimiento')
 }
 
 // ===================
@@ -80,17 +78,17 @@ export async function updateStatementEntryAction(
   }
 
   const parsed = UpdateStatementEntryRequestSchema.safeParse({
-    statementId: Number(formData.get('statementId')),
-    conceptId: Number(formData.get('conceptId')),
+    statementId: normalizeRequiredNumber(formData.get('statementId')),
+    conceptId: normalizeRequiredNumber(formData.get('conceptId')),
     debtor: formData.get('debtor'),
     specification: normalizeNullableString(formData.get('specification')),
     notes: normalizeNullableString(formData.get('notes')),
     entryType: formData.get('entryType'),
     date: normalizeNullableString(formData.get('date')),
-    amount: nullableNumber(formData.get('amount')),
+    amount: normalizeRequiredNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
-    msiCurrent: nullableNumber(formData.get('msiCurrent')),
-    msiTotal: nullableNumber(formData.get('msiTotal')),
+    msiCurrent: normalizeNullableNumber(formData.get('msiCurrent')),
+    msiTotal: normalizeNullableNumber(formData.get('msiTotal')),
   })
 
   if (!parsed.success) {
@@ -100,19 +98,13 @@ export async function updateStatementEntryAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const entry = await updateStatementEntry(entryId, parsed.data)
 
     revalidatePath('/debts/statement')
 
-    return actionSuccess(entry)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar el movimiento',
-    )
-  }
+    return entry
+  }, 'No fue posible actualizar el movimiento')
 }
 
 // @/modules/debts/statement/actions/statement.actions.ts
@@ -125,7 +117,4 @@ export async function deleteStatementEntryAction(entryId: number) {
   await deleteStatementEntry(entryId)
 
   revalidatePath('/debts/statement')
-}
-function nullableNumber(arg0: FormDataEntryValue | null) {
-  throw new Error('Function not implemented.')
 }

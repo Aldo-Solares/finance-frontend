@@ -35,7 +35,9 @@ export type UpdateStatementCutoffReminderRequest = z.infer<
 // ===================
 
 export const UpdateProfileImageBackgroundRequestSchema = z.object({
-  profileImageBackground: z.enum(PROFILE_IMAGE_BACKGROUNDS),
+  profileImageBackground: z.enum(PROFILE_IMAGE_BACKGROUNDS, {
+    error: 'El fondo de la imagen de perfil no es válido',
+  }),
 })
 
 export type UpdateProfileImageBackgroundRequest = z.infer<

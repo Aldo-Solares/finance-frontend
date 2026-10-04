@@ -3,7 +3,7 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 
 import {
   ProfileImageSchema,
@@ -20,21 +20,11 @@ export async function getProfileImages(): Promise<ProfileImage[]> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(ProfileImageSchema.array()).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener las imágenes de perfil',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de imágenes de perfil no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    ProfileImageSchema.array(),
+    'No fue posible obtener las imágenes de perfil',
+  )
 }
 
 // ===================
@@ -46,21 +36,11 @@ export async function getAllProfileImages(): Promise<ProfileImage[]> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(ProfileImageSchema.array()).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible obtener las imágenes de perfil',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de imágenes de perfil no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    ProfileImageSchema.array(),
+    'No fue posible obtener las imágenes de perfil',
+  )
 }
 
 // ===================
@@ -81,23 +61,11 @@ export async function createProfileImage(
     body: formData,
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(ProfileImageSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible crear la imagen de perfil',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error(
-      'La respuesta de creación de imagen de perfil no contiene datos',
-    )
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    ProfileImageSchema,
+    'No fue posible crear la imagen de perfil',
+  )
 }
 
 // ===================
@@ -113,21 +81,11 @@ export async function updateProfileImage(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(ProfileImageSchema).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible actualizar la imagen de perfil',
-    )
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de actualización no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    ProfileImageSchema,
+    'No fue posible actualizar la imagen de perfil',
+  )
 }
 
 // ===================
@@ -141,13 +99,9 @@ export async function deleteProfileImage(
     method: 'DELETE',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(
-      result.message ?? 'No fue posible eliminar la imagen de perfil',
-    )
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible eliminar la imagen de perfil',
+  )
 }

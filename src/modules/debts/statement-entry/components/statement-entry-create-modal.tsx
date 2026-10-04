@@ -114,7 +114,7 @@ export function StatementEntryCreateModal({
           </button>
         </div>
 
-        <form action={action} className="flex min-h-0 flex-1 flex-col">
+        <form noValidate action={action} className="flex min-h-0 flex-1 flex-col">
           <input type="hidden" name="statementId" value={statementId} />
 
           <input type="hidden" name="paid" value={paid ? 'true' : 'false'} />

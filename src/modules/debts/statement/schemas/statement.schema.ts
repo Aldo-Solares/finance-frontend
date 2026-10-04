@@ -3,9 +3,10 @@
 import { z } from 'zod'
 
 import { STATEMENT_STATUS_VALUES } from '@/modules/debts/statement/constants/statement.constants'
+import { requiredNumber, requiredString } from '@/core/utils/zod-helpers'
 
 const nullableDateSchema = z.string().nullable()
-const requiredDateSchema = z.string().min(1)
+const requiredDateSchema = requiredString('La fecha es obligatoria')
 
 // ===================
 // STATUS
@@ -40,7 +41,12 @@ export const StatementSchema = z.object({
 // ===================
 
 export const CreateStatementRequestSchema = z.object({
-  userCardId: z.number().int().positive(),
+  userCardId: requiredNumber(
+    'Selecciona una tarjeta',
+    'La tarjeta seleccionada no es válida',
+  )
+    .int('La tarjeta seleccionada no es válida')
+    .positive('La tarjeta seleccionada no es válida'),
   periodStart: requiredDateSchema,
   periodEnd: requiredDateSchema,
   paymentDate: requiredDateSchema,
@@ -51,7 +57,12 @@ export const CreateStatementRequestSchema = z.object({
 // ===================
 
 export const UpdateStatementRequestSchema = z.object({
-  userCardId: z.number().int().positive(),
+  userCardId: requiredNumber(
+    'Selecciona una tarjeta',
+    'La tarjeta seleccionada no es válida',
+  )
+    .int('La tarjeta seleccionada no es válida')
+    .positive('La tarjeta seleccionada no es válida'),
   periodStart: requiredDateSchema,
   periodEnd: requiredDateSchema,
   paymentDate: requiredDateSchema,

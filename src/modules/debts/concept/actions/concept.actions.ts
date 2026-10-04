@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 import {
   CreateConceptRequestSchema,
@@ -39,19 +39,13 @@ export async function createConceptAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const concept = await createConcept(parsed.data)
 
     revalidatePath('/admin/concept')
 
-    return actionSuccess(concept)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible crear el concepto',
-    )
-  }
+    return concept
+  }, 'No fue posible crear el concepto')
 }
 
 // ===================
@@ -79,20 +73,14 @@ export async function updateConceptAction(
     )
   }
 
-  try {
+  return withActionState(async () => {
     const concept = await updateConcept(conceptId, parsed.data)
 
     revalidatePath('/admin/concept')
     revalidatePath('/debts/statement')
 
-    return actionSuccess(concept)
-  } catch (error) {
-    return actionError(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar el concepto',
-    )
-  }
+    return concept
+  }, 'No fue posible actualizar el concepto')
 }
 
 // @/modules/admin/concept/actions/concept.actions.ts

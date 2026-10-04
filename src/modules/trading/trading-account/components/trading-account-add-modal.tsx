@@ -98,7 +98,7 @@ export function TradingAccountAddModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 p-6">
+        <form noValidate onSubmit={handleSubmit} className="space-y-5 p-6">
           <TextInput
             id="trading-account-institution"
             name="institution"

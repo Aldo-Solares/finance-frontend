@@ -5,7 +5,7 @@
 import {
   ActionState,
   actionError,
-  actionSuccess,
+  withActionState,
 } from '@/core/utils/action-state'
 import {
   CreateInstrument,
@@ -31,20 +31,17 @@ export const createInstrumentAction = async (
   const result = CreateInstrumentSchema.safeParse(payload)
 
   if (!result.success) {
-    return actionError<Instrument>('Los datos del instrumento no son válidos')
-  }
-
-  try {
-    const instrument = await createInstrument(result.data)
-
-    return actionSuccess(instrument, 'Instrumento creado correctamente')
-  } catch (error) {
-    return actionError<Instrument>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible crear el instrumento',
+    return actionError(
+      result.error.issues[0]?.message ??
+        'Los datos del instrumento no son válidos',
     )
   }
+
+  return withActionState(async () => {
+    const instrument = await createInstrument(result.data)
+
+    return instrument
+  }, 'No fue posible crear el instrumento', 'Instrumento creado correctamente')
 }
 
 // ===================
@@ -58,20 +55,17 @@ export const updateInstrumentAction = async (
   const result = UpdateInstrumentSchema.safeParse(payload)
 
   if (!result.success) {
-    return actionError<Instrument>('Los datos del instrumento no son válidos')
-  }
-
-  try {
-    const instrument = await updateInstrument(instrumentId, result.data)
-
-    return actionSuccess(instrument, 'Instrumento actualizado correctamente')
-  } catch (error) {
-    return actionError<Instrument>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar el instrumento',
+    return actionError(
+      result.error.issues[0]?.message ??
+        'Los datos del instrumento no son válidos',
     )
   }
+
+  return withActionState(async () => {
+    const instrument = await updateInstrument(instrumentId, result.data)
+
+    return instrument
+  }, 'No fue posible actualizar el instrumento', 'Instrumento actualizado correctamente')
 }
 
 // ===================

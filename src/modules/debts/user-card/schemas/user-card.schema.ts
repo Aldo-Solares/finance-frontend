@@ -1,6 +1,8 @@
 // @/modules/debts/user-card/schemas/user-card.schema.ts
 import { z } from 'zod'
 
+import { requiredNumber } from '@/core/utils/zod-helpers'
+
 // ===================
 // USER CARD RESPONSE
 // ===================
@@ -18,7 +20,12 @@ export const UserCardSchema = z.object({
 // ===================
 
 export const CreateUserCardRequestSchema = z.object({
-  cardId: z.number().int().positive(),
+  cardId: requiredNumber(
+    'Selecciona una tarjeta',
+    'La tarjeta seleccionada no es válida',
+  )
+    .int('La tarjeta seleccionada no es válida')
+    .positive('La tarjeta seleccionada no es válida'),
 })
 
 // ===================

@@ -3,7 +3,7 @@
 import { z } from 'zod'
 
 import { fetchServer } from '@/core/api/api-server'
-import { createApiResponseSchema } from '@/core/schemas/api-response.schema'
+import { parseApiResponse } from '@/core/api/api-response'
 import {
   ConceptSchema,
   type Concept,
@@ -20,19 +20,11 @@ export async function findAllConcepts(): Promise<Concept[]> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.array(ConceptSchema)).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible obtener los conceptos')
-  }
-
-  if (result.data === null) {
-    throw new Error('La respuesta de conceptos no contiene datos')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    z.array(ConceptSchema),
+    'No fue posible obtener los conceptos',
+  )
 }
 
 // ===================
@@ -44,15 +36,11 @@ export async function findConceptById(conceptId: number): Promise<Concept> {
     method: 'GET',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(ConceptSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible obtener el concepto')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    ConceptSchema,
+    'No fue posible obtener el concepto',
+  )
 }
 
 // ===================
@@ -67,15 +55,11 @@ export async function createConcept(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(ConceptSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible crear el concepto')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    ConceptSchema,
+    'No fue posible crear el concepto',
+  )
 }
 
 // ===================
@@ -91,15 +75,11 @@ export async function updateConcept(
     body: JSON.stringify(request),
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(ConceptSchema).parse(json)
-
-  if (!result.success || result.data === null) {
-    throw new Error(result.message ?? 'No fue posible actualizar el concepto')
-  }
-
-  return result.data
+  return parseApiResponse(
+    response,
+    ConceptSchema,
+    'No fue posible actualizar el concepto',
+  )
 }
 
 // ===================
@@ -111,11 +91,9 @@ export async function deleteConcept(conceptId: number): Promise<void> {
     method: 'DELETE',
   })
 
-  const json: unknown = await response.json()
-
-  const result = createApiResponseSchema(z.null()).parse(json)
-
-  if (!result.success) {
-    throw new Error(result.message ?? 'No fue posible eliminar el concepto')
-  }
+  await parseApiResponse(
+    response,
+    z.null(),
+    'No fue posible eliminar el concepto',
+  )
 }

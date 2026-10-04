@@ -6,8 +6,8 @@ import { revalidatePath } from 'next/cache'
 
 import {
   actionError,
-  actionSuccess,
   type ActionState,
+  withActionState,
 } from '@/core/utils/action-state'
 import {
   CreateUserTradingAccountSchema,
@@ -30,28 +30,20 @@ export async function createUserTradingAccountAction(
   const parsed = CreateUserTradingAccountSchema.safeParse(input)
 
   if (!parsed.success) {
-    return actionError<UserTradingAccount>(
-      'Los datos de la cuenta de trading no son válidos.',
+    return actionError(
+      parsed.error.issues[0]?.message ??
+        'Los datos de la cuenta de trading no son válidos.',
     )
   }
 
-  try {
+  return withActionState(async () => {
     const userTradingAccount = await createUserTradingAccount(parsed.data)
 
     revalidatePath('/trading/account')
     revalidatePath('/trading/trade')
 
-    return actionSuccess(
-      userTradingAccount,
-      'Cuenta de trading agregada correctamente.',
-    )
-  } catch (error) {
-    return actionError<UserTradingAccount>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible agregar la cuenta de trading.',
-    )
-  }
+    return userTradingAccount
+  }, 'No fue posible agregar la cuenta de trading.', 'Cuenta de trading agregada correctamente.')
 }
 
 // ===================
@@ -65,12 +57,13 @@ export async function updateUserTradingAccountAction(
   const parsed = UpdateUserTradingAccountSchema.safeParse(input)
 
   if (!parsed.success) {
-    return actionError<UserTradingAccount>(
-      'Los datos de la cuenta de trading no son válidos.',
+    return actionError(
+      parsed.error.issues[0]?.message ??
+        'Los datos de la cuenta de trading no son válidos.',
     )
   }
 
-  try {
+  return withActionState(async () => {
     const userTradingAccount = await updateUserTradingAccount(
       userTradingAccountId,
       parsed.data,
@@ -79,17 +72,8 @@ export async function updateUserTradingAccountAction(
     revalidatePath('/trading/account')
     revalidatePath('/trading/trade')
 
-    return actionSuccess(
-      userTradingAccount,
-      'Cuenta de trading actualizada correctamente.',
-    )
-  } catch (error) {
-    return actionError<UserTradingAccount>(
-      error instanceof Error
-        ? error.message
-        : 'No fue posible actualizar la cuenta de trading.',
-    )
-  }
+    return userTradingAccount
+  }, 'No fue posible actualizar la cuenta de trading.', 'Cuenta de trading actualizada correctamente.')
 }
 
 // @/modules/trading/account/actions/user-trading-account.actions.ts

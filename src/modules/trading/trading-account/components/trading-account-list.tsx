@@ -1,10 +1,8 @@
-// @/modules/trading/trading-account/components/trading-account-list.tsx
-
-'use client'
+import { Building2 } from 'lucide-react'
 
 import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema'
-
-import { TradingAccountItem } from './trading-account-item'
+import { AdminCatalogGrid } from '@/shared/admin/admin-catalog-grid'
+import { AdminCatalogItem } from '@/shared/admin/admin-catalog-item'
 
 type TradingAccountListProps = {
   tradingAccounts: TradingAccount[]
@@ -18,15 +16,29 @@ export const TradingAccountList = ({
   onDelete,
 }: TradingAccountListProps) => {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+    <AdminCatalogGrid>
       {tradingAccounts.map((tradingAccount) => (
-        <TradingAccountItem
+        <AdminCatalogItem
           key={tradingAccount.tradingAccountId}
-          tradingAccount={tradingAccount}
-          onEdit={onEdit}
-          onDelete={onDelete}
+          icon={Building2}
+          title={tradingAccount.name}
+          subtitle={tradingAccount.institution}
+          details={
+            <>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">
+                Moneda
+              </p>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {tradingAccount.currencyCode}
+              </p>
+            </>
+          }
+          editLabel={`Editar ${tradingAccount.name}`}
+          deleteLabel={`Eliminar ${tradingAccount.name}`}
+          onEdit={() => onEdit(tradingAccount)}
+          onDelete={() => onDelete(tradingAccount)}
         />
       ))}
-    </div>
+    </AdminCatalogGrid>
   )
 }

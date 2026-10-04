@@ -1,29 +1,14 @@
-// @/modules/trading/instrument/components/instrument-page.tsx
-
 'use client'
 
-import { ChartCandlestick, Coins, Plus } from 'lucide-react'
-
-import { useState } from 'react'
+import { ChartCandlestick, Coins } from 'lucide-react'
 
 import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'
-
 import { deleteInstrumentAction } from '@/modules/trading/instrument/actions/instrument.actions'
-
+import { InstrumentCreateFormModal } from '@/modules/trading/instrument/components/instrument-create-form-modal'
+import { InstrumentEditFormModal } from '@/modules/trading/instrument/components/instrument-edit-form-modal'
+import { InstrumentList } from '@/modules/trading/instrument/components/instrument-list'
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema'
-
-import { DeleteModal } from '@/shared/modal/delete-modal'
-
-import { HeroComponent } from '@/shared/hero/hero-component'
-
-import { InstrumentCreateFormModal } from './instrument-create-form-modal'
-
-import { InstrumentEditFormModal } from './instrument-edit-form-modal'
-
-import { InstrumentEmptyState } from './instrument-empty-state'
-
-import { InstrumentList } from './instrument-list'
-import { MetricCard } from '@/shared/metrics/metric-card'
+import { AdminCatalogPage } from '@/shared/admin/admin-catalog-page'
 
 type InstrumentPageProps = {
   instruments: Instrument[]
@@ -34,92 +19,53 @@ export const InstrumentPage = ({
   instruments,
   currencies,
 }: InstrumentPageProps) => {
-  const [formOpen, setFormOpen] = useState(false)
-  const [editingInstrument, setEditingInstrument] = useState<Instrument | null>(
-    null,
-  )
-  const [deletingInstrument, setDeletingInstrument] =
-    useState<Instrument | null>(null)
-
-  const handleCreate = () => {
-    setFormOpen(true)
-  }
-
-  const handleEdit = (instrument: Instrument) => {
-    setEditingInstrument(instrument)
-  }
-
-  const handleDelete = (instrument: Instrument) => {
-    setDeletingInstrument(instrument)
-  }
-
   return (
-    <>
-      <div className="space-y-8">
-        <HeroComponent
-          eyebrow="Trading"
-          title="Instrumentos"
-          description="Administra los instrumentos disponibles para registrar y consultar tus operaciones de trading."
-          action={{
-            label: 'Nuevo instrumento',
-            icon: Plus,
-            onClick: handleCreate,
-          }}
-        />
-
-        <section className="grid gap-3 sm:grid-cols-2">
-          <MetricCard
-            icon={ChartCandlestick}
-            label="Instrumentos disponibles"
-            value={instruments.length}
-          />
-
-          <MetricCard
-            icon={Coins}
-            label="Monedas disponibles"
-            value={currencies.length}
-          />
-        </section>
-
-        <section>
-          {instruments.length === 0 ? (
-            <InstrumentEmptyState onCreate={handleCreate} />
-          ) : (
-            <InstrumentList
-              instruments={instruments}
-              currencies={currencies}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          )}
-        </section>
-      </div>
-
-      {formOpen && (
-        <InstrumentCreateFormModal
+    <AdminCatalogPage
+      title="Instrumentos"
+      description="Administra los instrumentos disponibles para registrar y consultar tus operaciones de trading."
+      createLabel="Nuevo instrumento"
+      items={instruments}
+      metrics={[
+        {
+          icon: ChartCandlestick,
+          label: 'Instrumentos disponibles',
+          value: instruments.length,
+        },
+        {
+          icon: Coins,
+          label: 'Monedas disponibles',
+          value: currencies.length,
+        },
+      ]}
+      emptyIcon={ChartCandlestick}
+      emptyTitle="No hay instrumentos"
+      emptyDescription="Agrega los instrumentos financieros que utilizarás para registrar tus operaciones."
+      deleteTitle="Eliminar instrumento"
+      getDeleteDescription={(instrument) =>
+        `¿Estás seguro de que deseas eliminar ${instrument.symbol}? Esta acción no se puede deshacer.`
+      }
+      onDelete={async (instrument) => {
+        await deleteInstrumentAction(instrument.instrumentId)
+      }}
+      renderItems={({ onEdit, onDelete }) => (
+        <InstrumentList
+          instruments={instruments}
           currencies={currencies}
-          onClose={() => setFormOpen(false)}
+          onEdit={onEdit}
+          onDelete={onDelete}
         />
       )}
-
-      {editingInstrument && (
+      renderCreateDialog={(onClose) => (
+        <InstrumentCreateFormModal currencies={currencies} onClose={onClose} />
+      )}
+      renderEditDialog={(instrument, onClose) => (
         <InstrumentEditFormModal
-          instrument={editingInstrument}
+          key={instrument.instrumentId}
+          instrument={instrument}
           currencies={currencies}
-          onClose={() => setEditingInstrument(null)}
+          onClose={onClose}
         />
       )}
-
-      {deletingInstrument && (
-        <DeleteModal
-          title="Eliminar instrumento"
-          description={`¿Estás seguro de que deseas eliminar ${deletingInstrument.symbol}? Esta acción no se puede deshacer.`}
-          onClose={() => setDeletingInstrument(null)}
-          onConfirm={async () => {
-            await deleteInstrumentAction(deletingInstrument.instrumentId)
-          }}
-        />
-      )}
-    </>
+    />
   )
 }

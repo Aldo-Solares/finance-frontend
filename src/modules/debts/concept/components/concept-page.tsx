@@ -1,16 +1,10 @@
-// @/modules/debts/concept/components/concept-page.tsx
-
 'use client'
 
-import { useState } from 'react'
+import { Tags } from 'lucide-react'
 
-import { Plus } from 'lucide-react'
-
-import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import { deleteConceptAction } from '@/modules/debts/concept/actions/concept.actions'
-
-import { HeroComponent } from '@/shared/hero/hero-component'
-import { DeleteModal } from '@/shared/modal/delete-modal'
+import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
+import { AdminCatalogPage } from '@/shared/admin/admin-catalog-page'
 
 import { ConceptFormModal } from './concept-form-modal'
 import { ConceptGrid } from './concept-grid'
@@ -20,66 +14,46 @@ type ConceptPageProps = {
 }
 
 export function ConceptPage({ concepts }: ConceptPageProps) {
-  const [formOpen, setFormOpen] = useState(false)
-  const [selectedConcept, setSelectedConcept] = useState<Concept | null>(null)
-  const [deleteConcept, setDeleteConcept] = useState<Concept | null>(null)
-
-  const handleCreate = () => {
-    setSelectedConcept(null)
-    setFormOpen(true)
-  }
-
-  const handleEdit = (concept: Concept) => {
-    setSelectedConcept(concept)
-    setFormOpen(true)
-  }
-
-  const handleConfirmDelete = async () => {
-    if (!deleteConcept) return
-
-    await deleteConceptAction(deleteConcept.conceptId)
-  }
-
   return (
-    <>
-      <section className="w-full space-y-8">
-        <HeroComponent
-          eyebrow="Administración"
-          title="Conceptos"
-          description="Administra los conceptos utilizados para clasificar movimientos."
-          action={{
-            label: 'Nuevo concepto',
-            icon: Plus,
-            onClick: handleCreate,
-          }}
-        />
-
+    <AdminCatalogPage
+      title="Conceptos"
+      description="Administra los conceptos utilizados para clasificar movimientos."
+      createLabel="Nuevo concepto"
+      items={concepts}
+      metrics={[
+        {
+          icon: Tags,
+          label: 'Conceptos disponibles',
+          value: concepts.length,
+        },
+      ]}
+      emptyIcon={Tags}
+      emptyTitle="No hay conceptos"
+      emptyDescription="Agrega el primer concepto para comenzar a clasificar movimientos."
+      deleteTitle="Eliminar concepto"
+      getDeleteDescription={(concept) =>
+        `¿Seguro que deseas eliminar "${concept.name}"?`
+      }
+      onDelete={async (concept) => {
+        await deleteConceptAction(concept.conceptId)
+      }}
+      renderItems={({ onEdit, onDelete }) => (
         <ConceptGrid
           concepts={concepts}
-          onEdit={handleEdit}
-          onDelete={setDeleteConcept}
+          onEdit={onEdit}
+          onDelete={onDelete}
         />
-      </section>
-
-      {formOpen && (
+      )}
+      renderCreateDialog={(onClose) => (
+        <ConceptFormModal concept={null} onClose={onClose} />
+      )}
+      renderEditDialog={(concept, onClose) => (
         <ConceptFormModal
-          key={selectedConcept?.conceptId ?? 'create'}
-          concept={selectedConcept}
-          onClose={() => {
-            setFormOpen(false)
-            setSelectedConcept(null)
-          }}
+          key={concept.conceptId}
+          concept={concept}
+          onClose={onClose}
         />
       )}
-
-      {deleteConcept && (
-        <DeleteModal
-          title="Eliminar concepto"
-          description={`¿Seguro que deseas eliminar "${deleteConcept.name}"?`}
-          onClose={() => setDeleteConcept(null)}
-          onConfirm={handleConfirmDelete}
-        />
-      )}
-    </>
+    />
   )
 }

@@ -4,6 +4,8 @@ import { findAllConcepts } from '@/modules/debts/concept/services/concept.servic
 import { StatementEntryPage } from '@/modules/debts/statement-entry/components/statement-entry-page'
 import { findStatementEntriesByStatementId } from '@/modules/debts/statement-entry/services/statement-entry.service'
 import { findStatementById } from '@/modules/debts/statement/services/statement.service'
+import { getCurrentUser } from '@/modules/user/services/user.service'
+import { USER_ROLE } from '@/modules/user/constants/user.constants'
 
 type StatementEntryRoutePageProps = {
   params: Promise<{
@@ -16,10 +18,11 @@ export default async function Page({ params }: StatementEntryRoutePageProps) {
 
   const parsedStatementId = Number(statementId)
 
-  const [statement, entries, concepts] = await Promise.all([
+  const [statement, entries, concepts, user] = await Promise.all([
     findStatementById(parsedStatementId),
     findStatementEntriesByStatementId(parsedStatementId),
     findAllConcepts(),
+    getCurrentUser(),
   ])
 
   return (
@@ -27,6 +30,7 @@ export default async function Page({ params }: StatementEntryRoutePageProps) {
       statement={statement}
       entries={entries}
       concepts={concepts}
+      canExport={user.role === USER_ROLE.ADMIN}
     />
   )
 }

@@ -2,8 +2,7 @@
 
 'use client'
 
-import { ArrowLeft, Plus } from 'lucide-react'
-import Link from 'next/link'
+import { Download, Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import { deleteStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
@@ -34,6 +33,7 @@ type StatementEntryPageProps = {
   statement: Statement
   entries: StatementEntry[]
   concepts: Concept[]
+  canExport: boolean
 }
 
 const PAGE_SIZE = 10
@@ -42,6 +42,7 @@ export function StatementEntryPage({
   statement,
   entries,
   concepts,
+  canExport,
 }: StatementEntryPageProps) {
   const [createOpen, setCreateOpen] = useState(false)
 
@@ -212,22 +213,45 @@ export function StatementEntryPage({
             eyebrow={`${statement.bank} · ${statement.cardName}`}
             title={`${statement.month}/${statement.year}`}
             action={
-              concepts.length > 0 ? (
-                <button
-                  type="button"
-                  onClick={() => setCreateOpen(true)}
-                  className={[
-                    'inline-flex h-10 cursor-pointer items-center gap-2 rounded-xl',
-                    'bg-white px-4 text-xs font-semibold text-[#111111]',
-                    'transition-all duration-200',
-                    'hover:bg-white/90',
-                    'focus-visible:outline-none focus-visible:ring-2',
-                    'focus-visible:ring-primary/50',
-                  ].join(' ')}
-                >
-                  <Plus className="h-4 w-4" />
-                  Nuevo movimiento
-                </button>
+              concepts.length > 0 || canExport ? (
+                <div className="flex items-center gap-2">
+                  {canExport && (
+                    <a
+                      href={`/api/statements/${statement.statementId}/export`}
+                      aria-label="Descargar resumen anual en Excel"
+                      title="Descargar resumen anual en Excel"
+                      className={[
+                        'inline-flex h-10 items-center gap-2 rounded-xl',
+                        'border border-white/10 bg-white/[0.08] px-3.5',
+                        'text-xs font-semibold text-white transition-all duration-200',
+                        'hover:bg-white/[0.14]',
+                        'focus-visible:outline-none focus-visible:ring-2',
+                        'focus-visible:ring-primary/50',
+                      ].join(' ')}
+                    >
+                      <Download className="h-4 w-4" />
+                      <span className="hidden sm:inline">Descargar anual</span>
+                    </a>
+                  )}
+
+                  {concepts.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setCreateOpen(true)}
+                      className={[
+                        'inline-flex h-10 cursor-pointer items-center gap-2 rounded-xl',
+                        'bg-white px-4 text-xs font-semibold text-[#111111]',
+                        'transition-all duration-200',
+                        'hover:bg-white/90',
+                        'focus-visible:outline-none focus-visible:ring-2',
+                        'focus-visible:ring-primary/50',
+                      ].join(' ')}
+                    >
+                      <Plus className="h-4 w-4" />
+                      Nuevo movimiento
+                    </button>
+                  )}
+                </div>
               ) : undefined
             }
           />

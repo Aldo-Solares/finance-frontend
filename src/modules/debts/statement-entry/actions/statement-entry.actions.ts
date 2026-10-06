@@ -17,6 +17,7 @@ import {
 import {
   createStatementEntry,
   deleteStatementEntry,
+  paySelectedStatementEntries,
   updateStatementEntry,
 } from '@/modules/debts/statement-entry/services/statement-entry.service'
 import {
@@ -117,4 +118,36 @@ export async function deleteStatementEntryAction(entryId: number) {
   await deleteStatementEntry(entryId)
 
   revalidatePath('/debts/statement')
+}
+
+// ===================
+// PAY SELECTED
+// ===================
+
+export async function paySelectedStatementEntriesAction(
+  entryIds: number[],
+): Promise<{ success: boolean; message: string }> {
+  const uniqueEntryIds = [...new Set(entryIds)]
+
+  if (uniqueEntryIds.length === 0) {
+    return { success: false, message: 'Selecciona al menos un movimiento.' }
+  }
+
+  try {
+    const updatedEntries = await paySelectedStatementEntries(uniqueEntryIds)
+    revalidatePath('/debts/statement')
+
+    return {
+      success: true,
+      message: `${updatedEntries.length} movimientos marcados como pagados.`,
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : 'No fue posible marcar los movimientos como pagados.',
+    }
+  }
 }

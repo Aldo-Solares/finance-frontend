@@ -11,15 +11,28 @@ import { StatementEntryItem } from './statement-entry-item'
 
 type StatementEntryTableProps = {
   entries: StatementEntry[]
+  selectedEntryIds: ReadonlySet<number>
   onEdit: (entry: StatementEntry) => void
   onDelete: (entry: StatementEntry) => void
+  onToggleSelection: (entryId: number) => void
+  onTogglePageSelection: (entryIds: number[]) => void
 }
 
 export function StatementEntryTable({
   entries,
+  selectedEntryIds,
   onEdit,
   onDelete,
+  onToggleSelection,
+  onTogglePageSelection,
 }: StatementEntryTableProps) {
+  const selectableEntryIds = entries
+    .filter((entry) => !entry.paid)
+    .map((entry) => entry.entryId)
+  const allSelectableSelected =
+    selectableEntryIds.length > 0 &&
+    selectableEntryIds.every((entryId) => selectedEntryIds.has(entryId))
+
   if (entries.length === 0) {
     return <StatementEntryEmptyState />
   }
@@ -30,6 +43,17 @@ export function StatementEntryTable({
         <table className="w-full min-w-[1150px]">
           <thead className="border-b border-border bg-surface/70">
             <tr>
+              <HeaderCell>
+                <input
+                  type="checkbox"
+                  checked={allSelectableSelected}
+                  disabled={selectableEntryIds.length === 0}
+                  onChange={() => onTogglePageSelection(selectableEntryIds)}
+                  aria-label="Seleccionar todos los movimientos pendientes de esta página"
+                  className="h-4 w-4 cursor-pointer accent-primary disabled:cursor-not-allowed disabled:opacity-40"
+                />
+              </HeaderCell>
+
               <HeaderCell>Concepto</HeaderCell>
 
               <HeaderCell>Especificación</HeaderCell>
@@ -59,6 +83,8 @@ export function StatementEntryTable({
               <StatementEntryItem
                 key={entry.entryId}
                 entry={entry}
+                selected={selectedEntryIds.has(entry.entryId)}
+                onToggleSelection={onToggleSelection}
                 onEdit={onEdit}
                 onDelete={onDelete}
               />

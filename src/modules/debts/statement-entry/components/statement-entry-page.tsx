@@ -2,9 +2,11 @@
 
 'use client'
 
-import { Download, Plus } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { Check, Download, Plus } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 
+import { paySelectedStatementEntriesAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
 import { deleteStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
 
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
@@ -44,7 +46,16 @@ export function StatementEntryPage({
   concepts,
   canExport,
 }: StatementEntryPageProps) {
+  const router = useRouter()
   const [createOpen, setCreateOpen] = useState(false)
+  const [selectedEntryIds, setSelectedEntryIds] = useState<Set<number>>(
+    () => new Set(),
+  )
+  const [isPayingSelected, setIsPayingSelected] = useState(false)
+  const [paymentFeedback, setPaymentFeedback] = useState<{
+    success: boolean
+    message: string
+  } | null>(null)
 
   const [selectedEntry, setSelectedEntry] = useState<StatementEntry | null>(
     null,
@@ -151,6 +162,24 @@ export function StatementEntryPage({
     return filteredEntries.slice(start, start + PAGE_SIZE)
   }, [filteredEntries, currentPage])
 
+  const selectedPendingCount = useMemo(
+    () =>
+      entries.filter(
+        (entry) => !entry.paid && selectedEntryIds.has(entry.entryId),
+      ).length,
+    [entries, selectedEntryIds],
+  )
+
+  useEffect(() => {
+    const unpaidIds = new Set(
+      entries.filter((entry) => !entry.paid).map((entry) => entry.entryId),
+    )
+    setSelectedEntryIds((current) => {
+      const next = new Set([...current].filter((entryId) => unpaidIds.has(entryId)))
+      return next.size === current.size ? current : next
+    })
+  }, [entries])
+
   const hasActiveFilters =
     conceptFilter !== 'ALL' ||
     debtorFilter !== 'ALL' ||
@@ -203,6 +232,57 @@ export function StatementEntryPage({
     if (!deleteEntry) return
 
     await deleteStatementEntryAction(deleteEntry.entryId)
+  }
+
+  const handleToggleSelection = (entryId: number) => {
+    const entry = entries.find((current) => current.entryId === entryId)
+    if (!entry || entry.paid) return
+
+    setSelectedEntryIds((current) => {
+      const next = new Set(current)
+      if (next.has(entryId)) next.delete(entryId)
+      else next.add(entryId)
+      return next
+    })
+  }
+
+  const handleTogglePageSelection = (entryIds: number[]) => {
+    if (entryIds.length === 0) return
+
+    setSelectedEntryIds((current) => {
+      const next = new Set(current)
+      const shouldSelect = !entryIds.every((entryId) => next.has(entryId))
+      for (const entryId of entryIds) {
+        if (shouldSelect) next.add(entryId)
+        else next.delete(entryId)
+      }
+      return next
+    })
+  }
+
+  const handlePaySelected = async () => {
+    const entryIds = entries
+      .filter((entry) => !entry.paid && selectedEntryIds.has(entry.entryId))
+      .map((entry) => entry.entryId)
+    if (entryIds.length === 0) return
+
+    setIsPayingSelected(true)
+    setPaymentFeedback(null)
+    try {
+      const result = await paySelectedStatementEntriesAction(entryIds)
+      setPaymentFeedback(result)
+      if (result.success) {
+        setSelectedEntryIds(new Set())
+        router.refresh()
+      }
+    } catch (error) {
+      setPaymentFeedback({
+        success: false,
+        message: error instanceof Error ? error.message : 'No fue posible completar el pago.',
+      })
+    } finally {
+      setIsPayingSelected(false)
+    }
   }
 
   return (
@@ -325,6 +405,48 @@ export function StatementEntryPage({
           />
         )}
 
+        {(selectedPendingCount > 0 || paymentFeedback) && (
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-background px-4 py-3">
+            {paymentFeedback ? (
+              <p
+                role={paymentFeedback.success ? 'status' : 'alert'}
+                className={[
+                  'text-xs',
+                  paymentFeedback.success ? 'text-primary' : 'text-red-500',
+                ].join(' ')}
+              >
+                {paymentFeedback.message}
+              </p>
+            ) : (
+              <p className="text-xs text-text-muted">
+                {selectedPendingCount} movimientos seleccionados
+              </p>
+            )}
+
+            {selectedPendingCount > 0 && (
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handlePaySelected}
+                  disabled={isPayingSelected}
+                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-xs font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <Check className="h-4 w-4" />
+                  {isPayingSelected ? 'Pagando...' : 'Pagar seleccionados'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedEntryIds(new Set())}
+                  disabled={isPayingSelected}
+                  className="h-10 rounded-xl border border-border px-3 text-xs font-medium text-text-muted transition hover:bg-surface disabled:opacity-60"
+                >
+                  Limpiar
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -343,8 +465,11 @@ export function StatementEntryPage({
             <>
               <StatementEntryTable
                 entries={paginatedEntries}
+                selectedEntryIds={selectedEntryIds}
                 onEdit={setSelectedEntry}
                 onDelete={setDeleteEntry}
+                onToggleSelection={handleToggleSelection}
+                onTogglePageSelection={handleTogglePageSelection}
               />
 
               <Pagination

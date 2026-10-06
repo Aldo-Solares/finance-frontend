@@ -151,6 +151,25 @@ export async function updateStatementEntry(
 }
 
 // ===================
+// PAY SELECTED
+// ===================
+
+export async function paySelectedStatementEntries(
+  entryIds: number[],
+): Promise<StatementEntry[]> {
+  const response = await fetchServer('/statement-entries/pay-selected', {
+    method: 'PATCH',
+    body: JSON.stringify({ entryIds }),
+  })
+
+  return parseApiResponse(
+    response,
+    z.array(StatementEntrySchema),
+    'No fue posible marcar los movimientos como pagados',
+  )
+}
+
+// ===================
 // DELETE
 // ===================
 

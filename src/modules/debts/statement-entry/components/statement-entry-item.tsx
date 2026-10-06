@@ -16,14 +16,18 @@ import { DateDisplay } from '@/shared/display/date-display'
 
 type StatementEntryItemProps = {
   entry: StatementEntry
+  selected: boolean
   onEdit: (entry: StatementEntry) => void
   onDelete: (entry: StatementEntry) => void
+  onToggleSelection: (entryId: number) => void
 }
 
 export function StatementEntryItem({
   entry,
+  selected,
   onEdit,
   onDelete,
+  onToggleSelection,
 }: StatementEntryItemProps) {
   const isPurchase = entry.entryType === 'PURCHASE'
 
@@ -31,6 +35,17 @@ export function StatementEntryItem({
 
   return (
     <tr className="transition-colors hover:bg-surface/70">
+      <td className="px-4 py-4 text-center">
+        <input
+          type="checkbox"
+          checked={selected}
+          disabled={entry.paid}
+          onChange={() => onToggleSelection(entry.entryId)}
+          aria-label={`Seleccionar ${entry.conceptName}`}
+          className="h-4 w-4 cursor-pointer accent-primary disabled:cursor-not-allowed disabled:opacity-40"
+        />
+      </td>
+
       <td className="px-5 py-4">
         <p className="text-sm font-medium text-foreground">
           {entry.conceptName}

@@ -3,7 +3,9 @@
 'use client'
 
 import { Check, ChevronDown, Search } from 'lucide-react'
+import { createPortal } from 'react-dom'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useDropdownPosition } from '@/shared/inputs/use-dropdown-position'
 
 type SelectOption = {
   value: string | number
@@ -40,6 +42,8 @@ export function SearchableSelectInput({
   className = '',
 }: SearchableSelectInputProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
 
   const isControlled = value !== undefined
@@ -52,6 +56,7 @@ export function SearchableSelectInput({
 
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
+  const position = useDropdownPosition(open, triggerRef, 320)
 
   useEffect(() => {
     if (!open) {
@@ -61,7 +66,8 @@ export function SearchableSelectInput({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
+        !containerRef.current.contains(event.target as Node) &&
+        !dropdownRef.current?.contains(event.target as Node)
       ) {
         setOpen(false)
         setSearch('')
@@ -125,6 +131,7 @@ export function SearchableSelectInput({
           =================== */}
 
       <button
+        ref={triggerRef}
         type="button"
         disabled={disabled}
         aria-haspopup="listbox"
@@ -165,14 +172,25 @@ export function SearchableSelectInput({
           DROPDOWN
           =================== */}
 
-      {open && (
-        <div
-          className={[
-            'absolute left-0 right-0 top-full z-30 mt-2 overflow-hidden',
-            'rounded-2xl border border-border bg-background text-foreground',
-            'shadow-xl shadow-foreground/10',
-          ].join(' ')}
-        >
+      {open && position && typeof document !== 'undefined' &&
+        createPortal(
+          <div
+            ref={dropdownRef}
+            style={{
+              position: 'fixed',
+              left: position.left,
+              top: position.top,
+              bottom: position.bottom,
+              width: position.width,
+              maxHeight: position.maxHeight,
+              zIndex: 1000,
+            }}
+            className={[
+              'overflow-hidden',
+              'rounded-2xl border border-border bg-background text-foreground',
+              'shadow-xl shadow-foreground/10',
+            ].join(' ')}
+          >
           {/* ===================
               SEARCH
               =================== */}
@@ -206,7 +224,8 @@ export function SearchableSelectInput({
           <div
             role="listbox"
             aria-labelledby={id}
-            className="select-scrollbar max-h-60 overflow-y-auto p-1"
+            style={{ maxHeight: Math.max(0, position.maxHeight - 72) }}
+            className="select-scrollbar overflow-y-auto p-1"
           >
             {filteredOptions.length === 0 ? (
               <p className="px-3 py-6 text-center text-sm text-text-muted">
@@ -246,8 +265,9 @@ export function SearchableSelectInput({
               })
             )}
           </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   )
 }

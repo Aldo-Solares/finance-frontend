@@ -3,7 +3,9 @@
 'use client'
 
 import { Check, ChevronDown } from 'lucide-react'
+import { createPortal } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
+import { useDropdownPosition } from '@/shared/inputs/use-dropdown-position'
 
 type SelectOption = {
   value: string | number
@@ -36,6 +38,8 @@ export function SelectInput({
   className = '',
 }: SelectInputProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const isControlled = value !== undefined
 
@@ -46,6 +50,7 @@ export function SelectInput({
   const selectedValue = isControlled ? value : internalValue
 
   const [open, setOpen] = useState(false)
+  const position = useDropdownPosition(open, triggerRef, 248)
 
   useEffect(() => {
     if (!open) {
@@ -55,7 +60,8 @@ export function SelectInput({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
+        !containerRef.current.contains(event.target as Node) &&
+        !dropdownRef.current?.contains(event.target as Node)
       ) {
         setOpen(false)
       }
@@ -99,6 +105,7 @@ export function SelectInput({
           =================== */}
 
       <button
+        ref={triggerRef}
         type="button"
         disabled={disabled}
         aria-haspopup="listbox"
@@ -138,18 +145,30 @@ export function SelectInput({
           OPTIONS
           =================== */}
 
-      {open && (
-        <div
-          className={[
-            'absolute left-0 right-0 top-full z-30 mt-2 overflow-visible',
-            'rounded-2xl border border-border bg-background',
-            'text-foreground shadow-xl shadow-foreground/10',
-          ].join(' ')}
-        >
+      {open && position && typeof document !== 'undefined' &&
+        createPortal(
+          <div
+            ref={dropdownRef}
+            style={{
+              position: 'fixed',
+              left: position.left,
+              top: position.top,
+              bottom: position.bottom,
+              width: position.width,
+              maxHeight: position.maxHeight,
+              zIndex: 1000,
+            }}
+            className={[
+              'overflow-hidden',
+              'rounded-2xl border border-border bg-background',
+              'text-foreground shadow-xl shadow-foreground/10',
+            ].join(' ')}
+          >
           <div
             role="listbox"
             aria-labelledby={id}
-            className="select-scrollbar max-h-60 overflow-y-auto p-1"
+            style={{ maxHeight: position.maxHeight }}
+            className="select-scrollbar overflow-y-auto p-1"
           >
             {options.length === 0 ? (
               <p className="px-3 py-6 text-center text-sm text-text-muted">
@@ -189,8 +208,9 @@ export function SelectInput({
               })
             )}
           </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   )
 }

@@ -9,7 +9,9 @@ import {
   ChevronRight,
   X,
 } from 'lucide-react'
-import { useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useDropdownPosition } from '@/shared/inputs/use-dropdown-position'
 
 type DateInputProps = {
   id?: string
@@ -50,10 +52,46 @@ export function DateInput({
   className,
 }: DateInputProps) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const calendarRef = useRef<HTMLDivElement>(null)
 
   const parsedValue = parseDate(value)
 
   const [open, setOpen] = useState(false)
+  const position = useDropdownPosition(open, triggerRef, 400)
+  const viewportWidth =
+    typeof document === 'undefined'
+      ? 0
+      : document.documentElement.clientWidth || window.innerWidth
+  const calendarWidth = position
+    ? Math.min(Math.max(position.width, 300), Math.max(0, viewportWidth - 16))
+    : undefined
+  const calendarLeft =
+    position && calendarWidth !== undefined && viewportWidth > 0
+      ? Math.min(
+          Math.max(8, position.left),
+          viewportWidth - calendarWidth - 8,
+        )
+      : position?.left
+  useEffect(() => {
+    if (!open) return
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node
+      if (
+        containerRef.current?.contains(target) ||
+        calendarRef.current?.contains(target)
+      ) {
+        return
+      }
+
+      setOpen(false)
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [open])
+
 
   const [visibleMonth, setVisibleMonth] = useState(() =>
     parsedValue
@@ -110,6 +148,7 @@ export function DateInput({
           =================== */}
 
       <button
+        ref={triggerRef}
         id={id}
         type="button"
         disabled={disabled}
@@ -179,13 +218,23 @@ export function DateInput({
           CALENDAR
           =================== */}
 
-      {open && (
+      {open && position && typeof document !== 'undefined' &&
+        createPortal(
         <div
+          ref={calendarRef}
           role="dialog"
           aria-label="Seleccionar fecha"
+          style={{
+            position: 'fixed',
+            left: calendarLeft,
+            top: position.top,
+            bottom: position.bottom,
+            width: calendarWidth,
+            maxHeight: position.maxHeight,
+            zIndex: 1000,
+          }}
           className={[
-            'absolute left-0 top-[calc(100%+0.5rem)] z-30',
-            'w-full min-w-[300px] overflow-hidden rounded-2xl',
+            'overflow-y-auto rounded-2xl',
             'border border-border bg-background p-4 text-foreground',
             'shadow-xl shadow-foreground/10',
           ].join(' ')}
@@ -329,7 +378,8 @@ export function DateInput({
               </button>
             )}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   )

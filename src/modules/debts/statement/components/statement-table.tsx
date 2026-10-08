@@ -94,7 +94,7 @@ export function StatementTable({
                     scope="col"
                     className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted"
                   >
-                    Inicio / corte
+                    Fechas del periodo
                   </th>
 
                   <th

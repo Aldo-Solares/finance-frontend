@@ -2,7 +2,7 @@
 
 'use client'
 
-import { CalendarDays, LoaderCircle, Save, X } from 'lucide-react'
+import { LoaderCircle, Save, X } from 'lucide-react'
 import { useActionState, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 
@@ -10,6 +10,10 @@ import type { ActionState } from '@/core/utils/action-state'
 import { updateStatementAction } from '@/modules/debts/statement/actions/statement.actions'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
+import {
+  formatStatementDate,
+  getStatementPeriodStart,
+} from '@/modules/debts/statement/utils/statement-period'
 import { DateInput } from '@/shared/inputs/date-input'
 import { SelectInput } from '@/shared/inputs/select-input'
 import { TextInput } from '@/shared/inputs/text-input'
@@ -33,9 +37,11 @@ export function StatementEditModal({
 }: StatementEditModalProps) {
   const [userCardId, setUserCardId] = useState(statement.userCardId)
 
-  const [periodStart, setPeriodStart] = useState(statement.periodStart ?? '')
-
   const [periodEnd, setPeriodEnd] = useState(statement.periodEnd ?? '')
+
+  const [periodStart, setPeriodStart] = useState(
+    statement.periodStart ?? getStatementPeriodStart(statement.periodEnd ?? ''),
+  )
 
   const [paymentDate, setPaymentDate] = useState(statement.paymentDate ?? '')
 
@@ -51,6 +57,11 @@ export function StatementEditModal({
     value: userCard.userCardId,
     label: `${userCard.bank} · ${userCard.cardName}`,
   }))
+
+  const handlePeriodEndChange = (value: string) => {
+    setPeriodEnd(value)
+    setPeriodStart(getStatementPeriodStart(value))
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -81,7 +92,8 @@ export function StatementEditModal({
             </div>
 
             <p className="mt-3 text-sm text-text-muted">
-              Actualiza la información de este estado de cuenta.
+              Cambia la fecha de corte; el inicio del periodo se calcula
+              automáticamente.
             </p>
           </div>
 
@@ -101,6 +113,12 @@ export function StatementEditModal({
             name="statementId"
             value={statement.statementId}
           />
+          <input
+            type="hidden"
+            name="periodStart"
+            value={periodStart}
+            readOnly
+          />
 
           <div className="space-y-5 p-6">
             <div>
@@ -115,21 +133,13 @@ export function StatementEditModal({
               />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
-              <DateField
-                id="edit-period-start"
-                name="periodStart"
-                label="Inicio"
-                value={periodStart}
-                onChange={setPeriodStart}
-              />
-
+            <div className="grid gap-4 sm:grid-cols-2">
               <DateField
                 id="edit-period-end"
                 name="periodEnd"
-                label="Corte"
+                label="Fecha de corte"
                 value={periodEnd}
-                onChange={setPeriodEnd}
+                onChange={handlePeriodEndChange}
               />
 
               <DateField
@@ -141,14 +151,15 @@ export function StatementEditModal({
               />
             </div>
 
-            {periodEnd && (
+            {periodStart && periodEnd && (
               <div className="rounded-2xl border border-border bg-surface px-4 py-3">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-text-muted">
                   Periodo
                 </p>
 
                 <p className="mt-1 text-sm font-semibold text-foreground">
-                  {formatStatementPeriod(periodEnd)}
+                  Del {formatStatementDate(periodStart)} al{' '}
+                  {formatStatementDate(periodEnd)}
                 </p>
               </div>
             )}
@@ -241,20 +252,4 @@ function FieldLabel({
       {children}
     </label>
   )
-}
-
-function formatStatementPeriod(periodEnd: string): string {
-  const [year, month] = periodEnd.split('-').map(Number)
-
-  if (!year || !month) {
-    return ''
-  }
-
-  const date = new Date(year, month - 1, 1)
-
-  const monthName = new Intl.DateTimeFormat('es-MX', {
-    month: 'long',
-  }).format(date)
-
-  return `${monthName.charAt(0).toUpperCase()}${monthName.slice(1)} ${year}`
 }

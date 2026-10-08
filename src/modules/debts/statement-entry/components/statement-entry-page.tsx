@@ -343,7 +343,7 @@ export function StatementEntryPage({
             />
 
             <InfoCard
-              label="Corte"
+              label="Fecha de corte"
               value={<DateDisplay value={statement.periodEnd} />}
             />
 

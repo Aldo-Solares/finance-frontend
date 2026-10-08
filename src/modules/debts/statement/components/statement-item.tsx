@@ -71,7 +71,9 @@ export function StatementItem({
       <td className="px-5 py-4">
         <div className="flex items-center gap-3">
           <div>
-            <p className="text-xs font-medium text-text-muted">Inicio</p>
+            <p className="text-xs font-medium text-text-muted">
+              Inicio del periodo
+            </p>
 
             <DateDisplay value={statement.periodStart} />
           </div>
@@ -79,7 +81,9 @@ export function StatementItem({
           <span className="text-text-muted">→</span>
 
           <div>
-            <p className="text-xs font-medium text-text-muted">Corte</p>
+            <p className="text-xs font-medium text-text-muted">
+              Fecha de corte
+            </p>
 
             <DateDisplay value={statement.periodEnd} />
           </div>

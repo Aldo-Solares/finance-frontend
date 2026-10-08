@@ -58,7 +58,11 @@ export function DateInput({
   const parsedValue = parseDate(value)
 
   const [open, setOpen] = useState(false)
-  const position = useDropdownPosition(open, triggerRef, 400)
+  const [manualDate, setManualDate] = useState(
+    value ? formatDisplayDate(value) : '',
+  )
+  const [manualDateError, setManualDateError] = useState(false)
+  const position = useDropdownPosition(open, triggerRef, 460)
   const viewportWidth =
     typeof document === 'undefined'
       ? 0
@@ -92,16 +96,40 @@ export function DateInput({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [open])
 
-
   const [visibleMonth, setVisibleMonth] = useState(() =>
     parsedValue
       ? new Date(parsedValue.year, parsedValue.month - 1, 1)
       : new Date(new Date().getFullYear(), new Date().getMonth(), 1),
   )
 
+  useEffect(() => {
+    if (!open) return
+
+    const selectedDate = parseDate(value)
+    if (selectedDate) {
+      setVisibleMonth(
+        new Date(selectedDate.year, selectedDate.month - 1, 1),
+      )
+    }
+
+    setManualDate(value ? formatDisplayDate(value) : '')
+    setManualDateError(false)
+  }, [open, value])
+
   const calendarDays = useMemo(
     () => getCalendarDays(visibleMonth.getFullYear(), visibleMonth.getMonth()),
     [visibleMonth],
+  )
+
+  const firstYear = Math.min(1900, visibleMonth.getFullYear())
+  const lastYear = Math.max(2100, visibleMonth.getFullYear())
+  const calendarYears = useMemo(
+    () =>
+      Array.from(
+        { length: lastYear - firstYear + 1 },
+        (_, index) => firstYear + index,
+      ),
+    [firstYear, lastYear],
   )
 
   const displayValue = value ? formatDisplayDate(value) : ''
@@ -109,8 +137,24 @@ export function DateInput({
   const selectDate = (year: number, month: number, day: number) => {
     const nextValue = formatInputDate(year, month, day)
 
+    setVisibleMonth(new Date(year, month, 1))
     onChange?.(nextValue)
     setOpen(false)
+  }
+
+  const applyManualDate = () => {
+    const selectedDate = parseFlexibleDate(manualDate)
+
+    if (!selectedDate) {
+      setManualDateError(true)
+      return
+    }
+
+    selectDate(
+      selectedDate.year,
+      selectedDate.month - 1,
+      selectedDate.day,
+    )
   }
 
   const goToPreviousMonth = () => {
@@ -257,14 +301,50 @@ export function DateInput({
               <ChevronLeft className="h-4 w-4" />
             </button>
 
-            <div className="text-center">
-              <p className="text-sm font-semibold text-foreground">
-                {MONTH_NAMES[visibleMonth.getMonth()]}
-              </p>
+            <div className="flex min-w-0 items-center gap-2">
+              <select
+                aria-label="Mes"
+                value={visibleMonth.getMonth()}
+                onChange={(event) =>
+                  setVisibleMonth(
+                    (current) =>
+                      new Date(
+                        current.getFullYear(),
+                        Number(event.target.value),
+                        1,
+                      ),
+                  )
+                }
+                className="max-w-[132px] cursor-pointer truncate rounded-lg border border-border bg-background px-2 py-2 text-xs font-semibold text-foreground outline-none focus:border-primary"
+              >
+                {MONTH_NAMES.map((month, index) => (
+                  <option key={month} value={index}>
+                    {month}
+                  </option>
+                ))}
+              </select>
 
-              <p className="text-xs font-medium text-text-muted">
-                {visibleMonth.getFullYear()}
-              </p>
+              <select
+                aria-label="Año"
+                value={visibleMonth.getFullYear()}
+                onChange={(event) =>
+                  setVisibleMonth(
+                    (current) =>
+                      new Date(
+                        Number(event.target.value),
+                        current.getMonth(),
+                        1,
+                      ),
+                  )
+                }
+                className="w-[76px] cursor-pointer rounded-lg border border-border bg-background px-2 py-2 text-xs font-semibold text-foreground outline-none focus:border-primary"
+              >
+                {calendarYears.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <button
@@ -279,6 +359,44 @@ export function DateInput({
             >
               <ChevronRight className="h-4 w-4" />
             </button>
+          </div>
+
+          <div className="mb-3">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={10}
+                aria-label="Escribir fecha en formato día-mes-año"
+                placeholder="DD-MM-AAAA"
+                value={manualDate}
+                onChange={(event) => {
+                  setManualDate(event.target.value)
+                  setManualDateError(false)
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault()
+                    applyManualDate()
+                  }
+                }}
+                className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/10"
+              />
+
+              <button
+                type="button"
+                onClick={applyManualDate}
+                className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition hover:bg-primary-hover"
+              >
+                Ir
+              </button>
+            </div>
+
+            {manualDateError && (
+              <p role="alert" className="mt-1 text-xs text-primary">
+                Escribe una fecha válida, por ejemplo 16-10-2026.
+              </p>
+            )}
           </div>
 
           {/* ===================
@@ -409,6 +527,25 @@ function parseDate(value: string) {
     month,
     day,
   }
+}
+
+function parseFlexibleDate(value: string) {
+  const normalizedValue = value.trim()
+  const isoDate = parseDate(normalizedValue)
+
+  if (isoDate) {
+    return isoDate
+  }
+
+  const match = /^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/.exec(normalizedValue)
+
+  if (!match) {
+    return null
+  }
+
+  return parseDate(
+    formatInputDate(Number(match[3]), Number(match[2]), Number(match[1])),
+  )
 }
 
 // ===================

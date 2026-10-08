@@ -2,7 +2,7 @@
 
 'use client'
 
-import { CalendarDays, LoaderCircle, Plus, X } from 'lucide-react'
+import { LoaderCircle, Plus, X } from 'lucide-react'
 import { useActionState, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 
@@ -13,6 +13,10 @@ import {
 } from '@/modules/debts/statement/actions/statement.actions'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
+import {
+  formatStatementDate,
+  getStatementPeriodStart,
+} from '@/modules/debts/statement/utils/statement-period'
 import { DateInput } from '@/shared/inputs/date-input'
 import { SelectInput } from '@/shared/inputs/select-input'
 
@@ -37,9 +41,8 @@ export function StatementCreateModal({
 
   const [userCardId, setUserCardId] = useState(initialUserCardId)
 
-  const [periodStart, setPeriodStart] = useState('')
-
   const [periodEnd, setPeriodEnd] = useState('')
+  const periodStart = getStatementPeriodStart(periodEnd)
 
   const [paymentDate, setPaymentDate] = useState('')
 
@@ -62,8 +65,6 @@ export function StatementCreateModal({
       if (!result.success || result.data === null) {
         return
       }
-
-      setPeriodStart(result.data.periodStart ?? '')
 
       setPeriodEnd(result.data.periodEnd ?? '')
 
@@ -93,7 +94,6 @@ export function StatementCreateModal({
 
     setUserCardId(nextUserCardId)
 
-    setPeriodStart('')
     setPeriodEnd('')
     setPaymentDate('')
   }
@@ -127,7 +127,8 @@ export function StatementCreateModal({
             </div>
 
             <p className="mt-3 text-sm text-text-muted">
-              Registra las fechas del periodo.
+              El inicio del periodo se calcula automáticamente un mes antes de
+              la fecha de corte.
             </p>
           </div>
 
@@ -142,6 +143,13 @@ export function StatementCreateModal({
         </div>
 
         <form noValidate action={action}>
+          <input
+            type="hidden"
+            name="periodStart"
+            value={periodStart}
+            readOnly
+          />
+
           <div className="space-y-5 p-6">
             <div>
               <FieldLabel htmlFor="create-user-card-id">Tarjeta</FieldLabel>
@@ -155,19 +163,11 @@ export function StatementCreateModal({
               />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-3">
-              <DateField
-                id="create-period-start"
-                name="periodStart"
-                label="Inicio"
-                value={periodStart}
-                onChange={setPeriodStart}
-              />
-
+            <div className="grid gap-4 sm:grid-cols-2">
               <DateField
                 id="create-period-end"
                 name="periodEnd"
-                label="Corte"
+                label="Fecha de corte"
                 value={periodEnd}
                 onChange={setPeriodEnd}
               />
@@ -181,14 +181,19 @@ export function StatementCreateModal({
               />
             </div>
 
-            {periodEnd && (
+            {periodStart && periodEnd && (
               <div className="rounded-2xl border border-border bg-surface px-4 py-3">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-text-muted">
-                  Periodo
+                  Periodo estimado
                 </p>
 
                 <p className="mt-1 text-sm font-semibold text-foreground">
-                  {formatStatementPeriod(periodEnd)}
+                  Del {formatStatementDate(periodStart)} al{' '}
+                  {formatStatementDate(periodEnd)}
+                </p>
+
+                <p className="mt-1 text-xs text-text-muted">
+                  Si el mes anterior no tiene ese día, se usa su último día.
                 </p>
               </div>
             )}
@@ -270,20 +275,4 @@ function CreateButton() {
       {pending ? 'Guardando...' : 'Crear periodo'}
     </button>
   )
-}
-
-function formatStatementPeriod(periodEnd: string): string {
-  const [year, month] = periodEnd.split('-').map(Number)
-
-  if (!year || !month) {
-    return ''
-  }
-
-  const date = new Date(year, month - 1, 1)
-
-  const monthName = new Intl.DateTimeFormat('es-MX', {
-    month: 'long',
-  }).format(date)
-
-  return `${monthName.charAt(0).toUpperCase()}${monthName.slice(1)} ${year}`
 }

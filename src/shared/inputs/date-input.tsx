@@ -62,7 +62,7 @@ export function DateInput({
     value ? formatDisplayDate(value) : '',
   )
   const [manualDateError, setManualDateError] = useState(false)
-  const position = useDropdownPosition(open, triggerRef, 460)
+  const position = useDropdownPosition(open, triggerRef, 420)
   const viewportWidth =
     typeof document === 'undefined'
       ? 0
@@ -278,8 +278,8 @@ export function DateInput({
             zIndex: 1000,
           }}
           className={[
-            'overflow-y-auto rounded-2xl',
-            'border border-border bg-background p-4 text-foreground',
+            'select-scrollbar overflow-y-auto rounded-xl',
+            'border border-border bg-background p-3 text-foreground',
             'shadow-xl shadow-foreground/10',
           ].join(' ')}
         >
@@ -287,21 +287,21 @@ export function DateInput({
               MONTH NAVIGATION
               =================== */}
 
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-between">
             <button
               type="button"
               onClick={goToPreviousMonth}
               aria-label="Mes anterior"
               className={[
-                'flex h-9 w-9 items-center justify-center rounded-lg',
+                'flex h-8 w-8 items-center justify-center rounded-lg',
                 'text-text-muted transition-all duration-200',
                 'hover:bg-surface hover:text-foreground',
               ].join(' ')}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3.5 w-3.5" />
             </button>
 
-            <div className="flex min-w-0 items-center gap-2">
+            <div className="flex min-w-0 items-center gap-1">
               <select
                 aria-label="Mes"
                 value={visibleMonth.getMonth()}
@@ -315,7 +315,7 @@ export function DateInput({
                       ),
                   )
                 }
-                className="max-w-[132px] cursor-pointer truncate rounded-lg border border-border bg-background px-2 py-2 text-xs font-semibold text-foreground outline-none focus:border-primary"
+                className="h-9 w-[110px] cursor-pointer truncate rounded-lg border border-border bg-background px-2 py-1.5 text-xs font-semibold text-foreground outline-none focus:border-primary"
               >
                 {MONTH_NAMES.map((month, index) => (
                   <option key={month} value={index}>
@@ -337,7 +337,7 @@ export function DateInput({
                       ),
                   )
                 }
-                className="w-[76px] cursor-pointer rounded-lg border border-border bg-background px-2 py-2 text-xs font-semibold text-foreground outline-none focus:border-primary"
+                className="h-9 w-[70px] cursor-pointer rounded-lg border border-border bg-background px-2 py-1.5 text-xs font-semibold text-foreground outline-none focus:border-primary"
               >
                 {calendarYears.map((year) => (
                   <option key={year} value={year}>
@@ -352,16 +352,16 @@ export function DateInput({
               onClick={goToNextMonth}
               aria-label="Mes siguiente"
               className={[
-                'flex h-9 w-9 items-center justify-center rounded-lg',
+                'flex h-8 w-8 items-center justify-center rounded-lg',
                 'text-text-muted transition-all duration-200',
                 'hover:bg-surface hover:text-foreground',
               ].join(' ')}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-3.5 w-3.5" />
             </button>
           </div>
 
-          <div className="mb-3">
+          <div className="mb-2">
             <div className="flex items-center gap-2">
               <input
                 type="text"
@@ -380,13 +380,13 @@ export function DateInput({
                     applyManualDate()
                   }
                 }}
-                className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/10"
+                className="min-w-0 flex-1 rounded-lg border border-border bg-background px-2.5 py-1.5 text-sm text-foreground outline-none placeholder:text-text-muted focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
 
               <button
                 type="button"
                 onClick={applyManualDate}
-                className="rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition hover:bg-primary-hover"
+                className="rounded-lg bg-primary px-2.5 py-1.5 text-xs font-semibold text-primary-foreground transition hover:bg-primary-hover"
               >
                 Ir
               </button>
@@ -403,7 +403,7 @@ export function DateInput({
               WEEK DAYS
               =================== */}
 
-          <div className="mb-2 grid grid-cols-7">
+          <div className="mb-1 grid grid-cols-7">
             {WEEK_DAYS.map((day) => (
               <span
                 key={day}
@@ -424,7 +424,7 @@ export function DateInput({
           <div className="grid grid-cols-7 gap-1">
             {calendarDays.map((calendarDay, index) => {
               if (!calendarDay) {
-                return <span key={`empty-${index}`} className="h-9" />
+                return <span key={`empty-${index}`} className="h-8" />
               }
 
               const { year, month, day } = calendarDay
@@ -440,7 +440,7 @@ export function DateInput({
                   type="button"
                   onClick={() => selectDate(year, month - 1, day)}
                   className={[
-                    'relative flex h-9 items-center justify-center',
+                    'relative flex h-8 items-center justify-center',
                     'rounded-lg text-sm transition-all duration-150',
                     selected
                       ? [
@@ -467,12 +467,12 @@ export function DateInput({
               ACTIONS
               =================== */}
 
-          <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
+          <div className="mt-3 flex items-center justify-between border-t border-border pt-2">
             <button
               type="button"
               onClick={goToToday}
               className={[
-                'rounded-lg px-3 py-2 text-xs font-medium',
+                'rounded-lg px-2.5 py-1.5 text-xs font-medium',
                 'text-text-muted transition-all duration-200',
                 'hover:bg-primary-soft hover:text-primary',
               ].join(' ')}
@@ -486,7 +486,7 @@ export function DateInput({
                 onClick={clearDate}
                 className={[
                   'inline-flex items-center gap-1.5 rounded-lg',
-                  'px-3 py-2 text-xs font-medium text-text-muted',
+                  'px-2.5 py-1.5 text-xs font-medium text-text-muted',
                   'transition-all duration-200',
                   'hover:bg-surface hover:text-foreground',
                 ].join(' ')}

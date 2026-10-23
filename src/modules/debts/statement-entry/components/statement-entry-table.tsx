@@ -40,7 +40,7 @@ export function StatementEntryTable({
   return (
     <div className="overflow-hidden rounded-[1.6rem] border border-border bg-background">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1150px]">
+        <table className="w-full min-w-[1280px]">
           <thead className="border-b border-border bg-surface/70">
             <tr>
               <HeaderCell>
@@ -57,6 +57,8 @@ export function StatementEntryTable({
               <HeaderCell>Concepto</HeaderCell>
 
               <HeaderCell>Especificación</HeaderCell>
+
+              <HeaderCell>Comercio</HeaderCell>
 
               <HeaderCell>Deudor</HeaderCell>
 

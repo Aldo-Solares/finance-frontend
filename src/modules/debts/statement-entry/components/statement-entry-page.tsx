@@ -175,7 +175,9 @@ export function StatementEntryPage({
       entries.filter((entry) => !entry.paid).map((entry) => entry.entryId),
     )
     setSelectedEntryIds((current) => {
-      const next = new Set([...current].filter((entryId) => unpaidIds.has(entryId)))
+      const next = new Set(
+        [...current].filter((entryId) => unpaidIds.has(entryId)),
+      )
       return next.size === current.size ? current : next
     })
   }, [entries])
@@ -278,7 +280,10 @@ export function StatementEntryPage({
     } catch (error) {
       setPaymentFeedback({
         success: false,
-        message: error instanceof Error ? error.message : 'No fue posible completar el pago.',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'No fue posible completar el pago.',
       })
     } finally {
       setIsPayingSelected(false)
@@ -490,6 +495,7 @@ export function StatementEntryPage({
       {createOpen && (
         <StatementEntryCreateModal
           statementId={statement.statementId}
+          defaultMerchant={statement.defaultMerchant}
           concepts={concepts}
           onClose={() => setCreateOpen(false)}
         />
@@ -498,6 +504,7 @@ export function StatementEntryPage({
       {selectedEntry && (
         <StatementEntryEditModal
           entry={selectedEntry}
+          defaultMerchant={statement.defaultMerchant}
           concepts={concepts}
           onClose={() => setSelectedEntry(null)}
         />

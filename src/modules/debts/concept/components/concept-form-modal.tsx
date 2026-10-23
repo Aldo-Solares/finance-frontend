@@ -1,69 +1,51 @@
 // @/modules/debts/concept/components/concept-form-modal.tsx
 
-'use client';
+'use client'
 
-import {
-  useActionState,
-  useEffect,
-} from 'react';
-import { useFormStatus } from 'react-dom';
-import {
-  LoaderCircle,
-  Plus,
-  Save,
-  Tag,
-  X,
-} from 'lucide-react';
+import { useActionState, useEffect } from 'react'
+import { useFormStatus } from 'react-dom'
+import { LoaderCircle, Plus, Save, Tag, X } from 'lucide-react'
 
-import type { ActionState } from '@/core/utils/action-state';
+import type { ActionState } from '@/core/utils/action-state'
 import {
   createConceptAction,
   updateConceptAction,
-} from '@/modules/debts/concept/actions/concept.actions';
-import type { Concept } from '@/modules/debts/concept/schemas/concept.schema';
+} from '@/modules/debts/concept/actions/concept.actions'
+import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 
 type ConceptFormModalProps = {
-  concept: Concept | null;
-  onClose: () => void;
-};
+  concept: Concept | null
+  onClose: () => void
+}
 
 const initialState: ActionState<Concept> = {
   success: false,
   message: null,
   data: null,
-};
+}
 
-export function ConceptFormModal({
-  concept,
-  onClose,
-}: ConceptFormModalProps) {
-  const editing = concept !== null;
+export function ConceptFormModal({ concept, onClose }: ConceptFormModalProps) {
+  const editing = concept !== null
 
-  const [createState, createAction] =
-    useActionState(
-      createConceptAction,
-      initialState,
-    );
+  const [createState, createAction] = useActionState(
+    createConceptAction,
+    initialState,
+  )
 
-  const [updateState, updateAction] =
-    useActionState(
-      updateConceptAction,
-      initialState,
-    );
+  const [updateState, updateAction] = useActionState(
+    updateConceptAction,
+    initialState,
+  )
 
-  const state = editing
-    ? updateState
-    : createState;
+  const state = editing ? updateState : createState
 
-  const action = editing
-    ? updateAction
-    : createAction;
+  const action = editing ? updateAction : createAction
 
   useEffect(() => {
     if (state.success) {
-      onClose();
+      onClose()
     }
-  }, [state.success, onClose]);
+  }, [state.success, onClose])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -78,9 +60,7 @@ export function ConceptFormModal({
         <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
             <h2 className="text-base font-semibold text-foreground">
-              {editing
-                ? 'Editar concepto'
-                : 'Nuevo concepto'}
+              {editing ? 'Editar concepto' : 'Nuevo concepto'}
             </h2>
 
             <p className="mt-1 text-sm text-text-muted">
@@ -102,11 +82,7 @@ export function ConceptFormModal({
 
         <form noValidate action={action}>
           {editing && (
-            <input
-              type="hidden"
-              name="conceptId"
-              value={concept.conceptId}
-            />
+            <input type="hidden" name="conceptId" value={concept.conceptId} />
           )}
 
           <div className="p-6">
@@ -125,20 +101,17 @@ export function ConceptFormModal({
                 name="name"
                 type="text"
                 maxLength={100}
-                defaultValue={
-                  concept?.name ?? ''
-                }
-                placeholder="Ej. Supermercado"
+                defaultValue={concept?.name ?? ''}
+                placeholder="Nombre"
                 className="h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-text-muted focus:border-primary focus:bg-background"
               />
             </div>
 
-            {!state.success &&
-              state.message && (
-                <div className="mt-4 rounded-xl border border-primary bg-primary-soft px-4 py-3 text-sm text-primary">
-                  {state.message}
-                </div>
-              )}
+            {!state.success && state.message && (
+              <div className="mt-4 rounded-xl border border-primary bg-primary-soft px-4 py-3 text-sm text-primary">
+                {state.message}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 border-t border-border bg-surface/60 px-6 py-4">
@@ -150,22 +123,16 @@ export function ConceptFormModal({
               Cancelar
             </button>
 
-            <ConceptSaveButton
-              editing={editing}
-            />
+            <ConceptSaveButton editing={editing} />
           </div>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-function ConceptSaveButton({
-  editing,
-}: {
-  editing: boolean;
-}) {
-  const { pending } = useFormStatus();
+function ConceptSaveButton({ editing }: { editing: boolean }) {
+  const { pending } = useFormStatus()
 
   return (
     <button
@@ -187,5 +154,5 @@ function ConceptSaveButton({
           ? 'Guardar cambios'
           : 'Crear concepto'}
     </button>
-  );
+  )
 }

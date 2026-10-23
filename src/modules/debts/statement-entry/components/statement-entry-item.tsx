@@ -58,6 +58,12 @@ export function StatementEntryItem({
         </p>
       </td>
 
+      <td className="px-5 py-4">
+        <p className="max-w-56 truncate text-sm text-text-muted">
+          {entry.merchant ?? '—'}
+        </p>
+      </td>
+
       <td className="px-5 py-4 text-sm text-text-muted">{entry.debtor}</td>
 
       <td className="px-5 py-4">

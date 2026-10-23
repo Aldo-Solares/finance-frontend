@@ -24,7 +24,11 @@ export function CardCatalogTable({
           key={card.cardId}
           icon={CreditCard}
           title={card.cardName}
-          subtitle={card.bank}
+          subtitle={
+            card.defaultMerchant
+              ? `${card.bank} · Comercio: ${card.defaultMerchant}`
+              : card.bank
+          }
           editLabel={`Editar ${card.cardName}`}
           deleteLabel={`Eliminar ${card.cardName}`}
           onEdit={() => onEdit(card)}

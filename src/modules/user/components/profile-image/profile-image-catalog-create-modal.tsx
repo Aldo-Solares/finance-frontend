@@ -61,7 +61,8 @@ export function ProfileImageCatalogCreateModal({
     if (!parsed.success) {
       setPreview(null)
       setFileError(
-        parsed.error.issues[0]?.message ?? 'La imagen seleccionada no es válida',
+        parsed.error.issues[0]?.message ??
+          'La imagen seleccionada no es válida',
       )
       event.target.value = ''
       return
@@ -119,7 +120,7 @@ export function ProfileImageCatalogCreateModal({
                 type="text"
                 required
                 maxLength={100}
-                placeholder="Ej. Gato negro"
+                placeholder="Nombre"
                 className={[
                   'h-11 w-full rounded-xl border border-border bg-surface px-4',
                   'text-sm text-foreground outline-none',

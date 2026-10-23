@@ -12,6 +12,7 @@ export const CardSchema = z.object({
   cardId: z.number().int(),
   bank: z.string(),
   cardName: z.string(),
+  defaultMerchant: z.string().nullable().default(null),
 })
 
 // ===================
@@ -27,6 +28,11 @@ export const CreateCardRequestSchema = z.object({
     100,
     'El nombre de la tarjeta no puede superar los 100 caracteres',
   ),
+  defaultMerchant: z
+    .string()
+    .trim()
+    .max(100, 'El comercio no puede superar los 100 caracteres')
+    .nullable(),
 })
 
 // ===================
@@ -42,6 +48,11 @@ export const UpdateCardRequestSchema = z.object({
     100,
     'El nombre de la tarjeta no puede superar los 100 caracteres',
   ),
+  defaultMerchant: z
+    .string()
+    .trim()
+    .max(100, 'El comercio no puede superar los 100 caracteres')
+    .nullable(),
 })
 
 // ===================

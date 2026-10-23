@@ -26,6 +26,7 @@ export const StatementSchema = z.object({
   cardId: z.number().int(),
   bank: z.string(),
   cardName: z.string(),
+  defaultMerchant: z.string().nullable().default(null),
   year: z.number().int(),
   month: z.number().int().min(1).max(12),
   periodStart: nullableDateSchema,

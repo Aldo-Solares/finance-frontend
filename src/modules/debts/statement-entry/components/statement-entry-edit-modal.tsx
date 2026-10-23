@@ -31,6 +31,7 @@ import { NumberInput } from '@/shared/inputs/number-input'
 
 type StatementEntryEditModalProps = {
   entry: StatementEntry
+  defaultMerchant: string | null
   concepts: Concept[]
   onClose: () => void
 }
@@ -43,6 +44,7 @@ const initialState: ActionState<StatementEntry> = {
 
 export function StatementEntryEditModal({
   entry,
+  defaultMerchant,
   concepts,
   onClose,
 }: StatementEntryEditModalProps) {
@@ -118,7 +120,11 @@ export function StatementEntryEditModal({
           </button>
         </div>
 
-        <form noValidate action={action} className="flex min-h-0 flex-1 flex-col">
+        <form
+          noValidate
+          action={action}
+          className="flex min-h-0 flex-1 flex-col"
+        >
           <input type="hidden" name="entryId" value={entry.entryId} />
 
           <input type="hidden" name="statementId" value={entry.statementId} />
@@ -180,7 +186,7 @@ export function StatementEntryEditModal({
                     name="debtor"
                     type="text"
                     defaultValue={entry.debtor}
-                    placeholder="Ej. Yo"
+                    placeholder="Deudor"
                     required
                   />
                 </div>
@@ -195,6 +201,22 @@ export function StatementEntryEditModal({
                     name="specification"
                     defaultValue={entry.specification ?? ''}
                     placeholder="Especificación"
+                  />
+                </div>
+
+                <div>
+                  <FieldLabel htmlFor="merchant">Comercio</FieldLabel>
+
+                  <TextInput
+                    id="merchant"
+                    name="merchant"
+                    defaultValue={entry.merchant ?? defaultMerchant ?? ''}
+                    placeholder="Comercio"
+                    description={
+                      !entry.merchant && defaultMerchant
+                        ? `Sugerido por la tarjeta: ${defaultMerchant}. Puedes cambiarlo para este movimiento.`
+                        : undefined
+                    }
                   />
                 </div>
 
@@ -276,7 +298,7 @@ export function StatementEntryEditModal({
                       type="number"
                       min={1}
                       defaultValue={entry.msiCurrent ?? ''}
-                      placeholder="Ej. 3"
+                      placeholder="Mes actual"
                     />
 
                     <Field
@@ -285,7 +307,7 @@ export function StatementEntryEditModal({
                       type="number"
                       min={1}
                       defaultValue={entry.msiTotal ?? ''}
-                      placeholder="Ej. 12"
+                      placeholder="Total de meses"
                     />
 
                     <CalculatedField

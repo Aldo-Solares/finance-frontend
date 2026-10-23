@@ -33,6 +33,7 @@ import { TextInput } from '@/shared/inputs/text-input'
 
 type StatementEntryCreateModalProps = {
   statementId: number
+  defaultMerchant: string | null
   concepts: Concept[]
   onClose: () => void
 }
@@ -45,6 +46,7 @@ const initialState: ActionState<StatementEntry> = {
 
 export function StatementEntryCreateModal({
   statementId,
+  defaultMerchant,
   concepts,
   onClose,
 }: StatementEntryCreateModalProps) {
@@ -114,7 +116,11 @@ export function StatementEntryCreateModal({
           </button>
         </div>
 
-        <form noValidate action={action} className="flex min-h-0 flex-1 flex-col">
+        <form
+          noValidate
+          action={action}
+          className="flex min-h-0 flex-1 flex-col"
+        >
           <input type="hidden" name="statementId" value={statementId} />
 
           <input type="hidden" name="paid" value={paid ? 'true' : 'false'} />
@@ -182,6 +188,22 @@ export function StatementEntryCreateModal({
                     id="specification"
                     name="specification"
                     placeholder="Especificación"
+                  />
+                </div>
+
+                <div>
+                  <FieldLabel htmlFor="merchant">Comercio</FieldLabel>
+
+                  <TextInput
+                    id="merchant"
+                    name="merchant"
+                    defaultValue={defaultMerchant ?? ''}
+                    placeholder="Comercio"
+                    description={
+                      defaultMerchant
+                        ? `Sugerido por la tarjeta: ${defaultMerchant}. Puedes cambiarlo para este movimiento.`
+                        : undefined
+                    }
                   />
                 </div>
 
@@ -254,7 +276,7 @@ export function StatementEntryCreateModal({
                         id="msiCurrent"
                         name="msiCurrent"
                         min={1}
-                        placeholder="Ej. 1"
+                        placeholder="Mes actual"
                       />
                     </div>
 
@@ -265,7 +287,7 @@ export function StatementEntryCreateModal({
                         id="msiTotal"
                         name="msiTotal"
                         min={1}
-                        placeholder="Ej. 12"
+                        placeholder="Total de meses"
                       />
                     </div>
 

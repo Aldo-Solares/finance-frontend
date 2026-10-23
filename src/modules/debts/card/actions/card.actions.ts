@@ -21,7 +21,10 @@ import {
   deleteCard,
   updateCard,
 } from '@/modules/debts/card/services/card.service'
-import { normalizeRequiredString } from '@/core/utils/form-data'
+import {
+  normalizeNullableString,
+  normalizeRequiredString,
+} from '@/core/utils/form-data'
 
 // ===================
 // CREATE
@@ -34,6 +37,7 @@ export async function createCardAction(
   const parsed = CreateCardRequestSchema.safeParse({
     bank: normalizeRequiredString(formData.get('bank')),
     cardName: normalizeRequiredString(formData.get('cardName')),
+    defaultMerchant: normalizeNullableString(formData.get('defaultMerchant')),
   })
 
   if (!parsed.success) {
@@ -69,6 +73,7 @@ export async function updateCardAction(
   const parsed = UpdateCardRequestSchema.safeParse({
     bank: normalizeRequiredString(formData.get('bank')),
     cardName: normalizeRequiredString(formData.get('cardName')),
+    defaultMerchant: normalizeNullableString(formData.get('defaultMerchant')),
   })
 
   if (!parsed.success) {

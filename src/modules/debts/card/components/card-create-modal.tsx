@@ -76,7 +76,7 @@ export function CardCreateModal({ onClose }: CardCreateModalProps) {
                 type="text"
                 required
                 maxLength={100}
-                placeholder="Ej. BBVA"
+                placeholder="Banco"
                 className="h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none placeholder:text-text-muted focus:border-primary"
               />
             </div>
@@ -95,9 +95,32 @@ export function CardCreateModal({ onClose }: CardCreateModalProps) {
                 type="text"
                 required
                 maxLength={100}
-                placeholder="Ej. Azul"
+                placeholder="Nombre de la tarjeta"
                 className="h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none placeholder:text-text-muted focus:border-primary"
               />
+            </div>
+
+            <div>
+              <label
+                htmlFor="defaultMerchant"
+                className="mb-2 block text-xs font-medium text-text-muted"
+              >
+                Comercio predeterminado
+              </label>
+
+              <input
+                id="defaultMerchant"
+                name="defaultMerchant"
+                type="text"
+                maxLength={100}
+                placeholder="Comercio predeterminado"
+                className="h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none placeholder:text-text-muted focus:border-primary"
+              />
+
+              <p className="mt-2 text-xs leading-5 text-text-muted">
+                Para tarjetas departamentales, escribe la tienda. Si lo dejas
+                vacío, no se asignará un comercio automáticamente.
+              </p>
             </div>
 
             {!state.success && state.message && (

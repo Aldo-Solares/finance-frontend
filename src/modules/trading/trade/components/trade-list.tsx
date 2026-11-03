@@ -15,6 +15,10 @@ type TradeListProps = {
     trade: Trade,
     sale: TradeSale,
   ) => void;
+  onDeleteSale: (
+    trade: Trade,
+    sale: TradeSale,
+  ) => void;
 };
 
 export function TradeList({
@@ -23,9 +27,10 @@ export function TradeList({
   onDelete,
   onSell,
   onEditSale,
+  onDeleteSale,
 }: TradeListProps) {
   return (
-    <div className="grid gap-4 xl:grid-cols-2">
+    <div className="grid w-full min-w-0 gap-12">
       {trades.map((trade) => (
         <TradeItem
           key={trade.tradeId}
@@ -34,6 +39,7 @@ export function TradeList({
           onDelete={onDelete}
           onSell={onSell}
           onEditSale={onEditSale}
+          onDeleteSale={onDeleteSale}
         />
       ))}
     </div>

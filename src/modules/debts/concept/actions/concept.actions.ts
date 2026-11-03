@@ -35,7 +35,7 @@ export async function createConceptAction(
   if (!parsed.success) {
     return actionError(
       parsed.error.issues[0]?.message ??
-        'Los datos del concepto no son válidos',
+        'Los datos del categoría no son válidos',
     )
   }
 
@@ -45,7 +45,7 @@ export async function createConceptAction(
     revalidatePath('/admin/concept')
 
     return concept
-  }, 'No fue posible crear el concepto')
+  }, 'No fue posible crear el categoría')
 }
 
 // ===================
@@ -59,7 +59,7 @@ export async function updateConceptAction(
   const conceptId = Number(formData.get('conceptId'))
 
   if (!Number.isInteger(conceptId) || conceptId <= 0) {
-    return actionError('El concepto no es válido')
+    return actionError('El categoría no es válido')
   }
 
   const parsed = UpdateConceptRequestSchema.safeParse({
@@ -69,7 +69,7 @@ export async function updateConceptAction(
   if (!parsed.success) {
     return actionError(
       parsed.error.issues[0]?.message ??
-        'Los datos del concepto no son válidos',
+        'Los datos del categoría no son válidos',
     )
   }
 
@@ -80,7 +80,7 @@ export async function updateConceptAction(
     revalidatePath('/debts/statement')
 
     return concept
-  }, 'No fue posible actualizar el concepto')
+  }, 'No fue posible actualizar el categoría')
 }
 
 // @/modules/admin/concept/actions/concept.actions.ts

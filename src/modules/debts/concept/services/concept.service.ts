@@ -23,7 +23,7 @@ export async function findAllConcepts(): Promise<Concept[]> {
   return parseApiResponse(
     response,
     z.array(ConceptSchema),
-    'No fue posible obtener los conceptos',
+    'No fue posible obtener los categorías',
   )
 }
 
@@ -39,7 +39,7 @@ export async function findConceptById(conceptId: number): Promise<Concept> {
   return parseApiResponse(
     response,
     ConceptSchema,
-    'No fue posible obtener el concepto',
+    'No fue posible obtener el categoría',
   )
 }
 
@@ -58,7 +58,7 @@ export async function createConcept(
   return parseApiResponse(
     response,
     ConceptSchema,
-    'No fue posible crear el concepto',
+    'No fue posible crear el categoría',
   )
 }
 
@@ -78,7 +78,7 @@ export async function updateConcept(
   return parseApiResponse(
     response,
     ConceptSchema,
-    'No fue posible actualizar el concepto',
+    'No fue posible actualizar el categoría',
   )
 }
 
@@ -94,6 +94,6 @@ export async function deleteConcept(conceptId: number): Promise<void> {
   await parseApiResponse(
     response,
     z.null(),
-    'No fue posible eliminar el concepto',
+    'No fue posible eliminar el categoría',
   )
 }

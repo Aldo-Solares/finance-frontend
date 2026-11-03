@@ -2,10 +2,12 @@
 
 'use client'
 
-import { ArrowDownUp, Filter, RotateCcw } from 'lucide-react'
+import { ArrowDownUp } from 'lucide-react'
 
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import type { StatementEntryType } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
+import { FilterBar } from '@/shared/filters/filter-bar'
+import { FilterField } from '@/shared/filters/filter-field'
 import { SelectInput } from '@/shared/inputs/select-input'
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 
@@ -130,47 +132,25 @@ export function StatementEntryFilters({
     })),
   ]
 
+  const advancedFilterCount =
+    Number(entryTypeFilter !== 'ALL') +
+    Number(msiFilter !== 'ALL') +
+    Number(dateSort !== 'NEWEST')
+
   return (
-    <section className="rounded-[1.5rem] border border-border bg-background p-5 shadow-sm sm:p-6">
-      <div className="flex flex-col gap-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface text-foreground">
-              <Filter className="h-4 w-4" />
-            </div>
-
-            <div>
-              <h3 className="text-sm font-semibold text-foreground">
-                Filtros
-              </h3>
-
-              <p className="mt-1 text-xs leading-5 text-text-muted">
-                Filtra y ordena los movimientos del estado de cuenta.
-              </p>
-            </div>
-          </div>
-
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={onReset}
-              className="inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs font-medium text-text-muted transition hover:bg-surface hover:text-foreground"
-            >
-              <RotateCcw className="h-3.5 w-3.5" />
-              Limpiar
-            </button>
-          )}
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div>
-            <label
-              htmlFor="statement-entry-concept-filter"
-              className="mb-2 block text-xs font-medium text-text-muted"
-            >
-              Concepto
-            </label>
-
+    <FilterBar
+      title="Filtros de movimientos"
+      description="Elige lo esencial; el resto de opciones queda disponible cuando lo necesites."
+      hasActiveFilters={hasActiveFilters}
+      onReset={onReset}
+      advancedFilterCount={advancedFilterCount}
+      advancedDescription="Tipo de movimiento, MSI y orden de fechas"
+      primaryFilters={
+        <>
+          <FilterField
+            label="Categoría"
+            htmlFor="statement-entry-concept-filter"
+          >
             <SearchableSelectInput
               id="statement-entry-concept-filter"
               name="statement-entry-concept-filter"
@@ -178,16 +158,9 @@ export function StatementEntryFilters({
               value={conceptFilter}
               onChange={onConceptChange}
             />
-          </div>
+          </FilterField>
 
-          <div>
-            <label
-              htmlFor="statement-entry-debtor-filter"
-              className="mb-2 block text-xs font-medium text-text-muted"
-            >
-              Deudor
-            </label>
-
+          <FilterField label="Deudor" htmlFor="statement-entry-debtor-filter">
             <SelectInput
               id="statement-entry-debtor-filter"
               name="statement-entry-debtor-filter"
@@ -195,16 +168,9 @@ export function StatementEntryFilters({
               value={debtorFilter}
               onChange={onDebtorChange}
             />
-          </div>
+          </FilterField>
 
-          <div>
-            <label
-              htmlFor="statement-entry-payment-filter"
-              className="mb-2 block text-xs font-medium text-text-muted"
-            >
-              Pago
-            </label>
-
+          <FilterField label="Pago" htmlFor="statement-entry-payment-filter">
             <SelectInput
               id="statement-entry-payment-filter"
               name="statement-entry-payment-filter"
@@ -212,16 +178,12 @@ export function StatementEntryFilters({
               value={paymentFilter}
               onChange={(value) => onPaymentChange(value as PaymentFilter)}
             />
-          </div>
-
-          <div>
-            <label
-              htmlFor="statement-entry-type-filter"
-              className="mb-2 block text-xs font-medium text-text-muted"
-            >
-              Tipo
-            </label>
-
+          </FilterField>
+        </>
+      }
+      advancedFilters={
+        <>
+          <FilterField label="Tipo" htmlFor="statement-entry-type-filter">
             <SelectInput
               id="statement-entry-type-filter"
               name="statement-entry-type-filter"
@@ -231,16 +193,9 @@ export function StatementEntryFilters({
                 onEntryTypeChange(value as StatementEntryType | 'ALL')
               }
             />
-          </div>
+          </FilterField>
 
-          <div>
-            <label
-              htmlFor="statement-entry-msi-filter"
-              className="mb-2 block text-xs font-medium text-text-muted"
-            >
-              MSI
-            </label>
-
+          <FilterField label="MSI" htmlFor="statement-entry-msi-filter">
             <SelectInput
               id="statement-entry-msi-filter"
               name="statement-entry-msi-filter"
@@ -248,17 +203,17 @@ export function StatementEntryFilters({
               value={msiFilter}
               onChange={(value) => onMsiChange(value as MsiFilter)}
             />
-          </div>
+          </FilterField>
 
-          <div>
-            <label
-              htmlFor="statement-entry-date-sort"
-              className="mb-2 flex items-center gap-1.5 text-xs font-medium text-text-muted"
-            >
-              <ArrowDownUp className="h-3.5 w-3.5" />
-              Ordenar por fecha
-            </label>
-
+          <FilterField
+            label={
+              <>
+                <ArrowDownUp className="mr-1.5 h-3.5 w-3.5" />
+                Ordenar por fecha
+              </>
+            }
+            htmlFor="statement-entry-date-sort"
+          >
             <SelectInput
               id="statement-entry-date-sort"
               name="statement-entry-date-sort"
@@ -266,9 +221,9 @@ export function StatementEntryFilters({
               value={dateSort}
               onChange={(value) => onDateSortChange(value as DateSort)}
             />
-          </div>
-        </div>
-      </div>
-    </section>
+          </FilterField>
+        </>
+      }
+    />
   )
 }

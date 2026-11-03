@@ -52,11 +52,10 @@ export function StatementItem({
     <tr
       onClick={handleRowClick}
       className={[
-        'group cursor-pointer transition-colors hover:bg-surface/60',
-        separated ? 'border-t border-border' : '',
+        'group cursor-pointer odd:bg-background even:bg-surface/30 transition-colors hover:bg-primary-soft/40',
       ].join(' ')}
     >
-      <td className="px-5 py-4 sm:px-6">
+      <td className={['px-4 py-3.5 sm:px-6', separated ? 'border-t border-border' : ''].join(' ')}>
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-foreground">
             {monthName} {statement.year}
@@ -68,8 +67,8 @@ export function StatementItem({
         </div>
       </td>
 
-      <td className="px-5 py-4">
-        <div className="flex items-center gap-3">
+      <td className={['px-4 py-3.5', separated ? 'border-t border-border' : ''].join(' ')}>
+        <div className="flex items-center gap-3 tabular-nums">
           <div>
             <p className="text-xs font-medium text-text-muted">
               Inicio del periodo
@@ -90,11 +89,11 @@ export function StatementItem({
         </div>
       </td>
 
-      <td className="px-5 py-4">
+      <td className={['px-4 py-3.5 tabular-nums', separated ? 'border-t border-border' : ''].join(' ')}>
         <DateDisplay value={statement.paymentDate} showIcon />
       </td>
 
-      <td className="px-5 py-4">
+      <td className={['px-4 py-3.5', separated ? 'border-t border-border' : ''].join(' ')}>
         <div className="flex items-center gap-2">
           <span
             className={[
@@ -120,7 +119,7 @@ export function StatementItem({
         </div>
       </td>
 
-      <td className="px-5 py-4 sm:px-6">
+      <td className={['px-4 py-3.5 sm:px-6', separated ? 'border-t border-border' : ''].join(' ')}>
         <div className="flex items-center justify-end gap-1">
           <button
             type="button"

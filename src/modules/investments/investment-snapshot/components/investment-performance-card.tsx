@@ -1,6 +1,7 @@
 // @/modules/investments/investment-snapshot/components/investment-performance-card.tsx
 
 import type { InvestmentPerformance } from '@/modules/investments/investment-snapshot/schemas/investment-snapshot.schema'
+import { formatDisplayDate } from '@/shared/utils/date-format'
 
 type InvestmentPerformanceCardProps = {
   performance: InvestmentPerformance
@@ -108,15 +109,5 @@ function formatSignedMoney(
 function formatDate(
   value: string,
 ): string {
-  return new Intl.DateTimeFormat(
-    'es-MX',
-    {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      timeZone: 'UTC',
-    },
-  ).format(
-    new Date(`${value}T00:00:00Z`),
-  )
+  return formatDisplayDate(value)
 }

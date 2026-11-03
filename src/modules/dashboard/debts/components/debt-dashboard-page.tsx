@@ -14,6 +14,7 @@ import type { Statement } from '@/modules/debts/statement/schemas/statement.sche
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
 
 import { HeroComponent } from '@/shared/hero/hero-component'
+import { getDashboardPeriodLabel } from '@/modules/dashboard/debts/utils/debt-dashboard-formatters'
 
 type DebtDashboardPageProps = {
   dashboard: DebtDashboard
@@ -23,37 +24,6 @@ type DebtDashboardPageProps = {
   statementEntries: StatementEntry[]
 }
 
-const monthNames: Record<number, string> = {
-  1: 'Enero',
-  2: 'Febrero',
-  3: 'Marzo',
-  4: 'Abril',
-  5: 'Mayo',
-  6: 'Junio',
-  7: 'Julio',
-  8: 'Agosto',
-  9: 'Septiembre',
-  10: 'Octubre',
-  11: 'Noviembre',
-  12: 'Diciembre',
-}
-
-function getPeriodLabel(year: number, month: number) {
-  if (year === 0 && month === 0) {
-    return 'Todo el histórico'
-  }
-
-  if (year === 0) {
-    return `${monthNames[month] ?? 'Todos los meses'} · Todos los años`
-  }
-
-  if (month === 0) {
-    return `Todo ${year}`
-  }
-
-  return `${monthNames[month] ?? month} ${year}`
-}
-
 export function DebtDashboardPage({
   dashboard,
   userCards,
@@ -61,14 +31,14 @@ export function DebtDashboardPage({
   statements,
   statementEntries,
 }: DebtDashboardPageProps) {
-  const periodLabel = getPeriodLabel(dashboard.year, dashboard.month)
+  const periodLabel = getDashboardPeriodLabel(dashboard.year, dashboard.month)
 
   return (
     <div className="w-full space-y-6">
       <HeroComponent
         eyebrow="Dashboard"
         title="Gastos de tarjetas"
-        description={`${periodLabel} · Analiza tus gastos, pagos y distribución por tarjeta y concepto.`}
+        description={`${periodLabel} · Analiza tus gastos, pagos y distribución por tarjeta y categoría.`}
       />
 
       <DebtDashboardFilters
@@ -82,7 +52,7 @@ export function DebtDashboardPage({
 
       <DebtDashboardSummary dashboard={dashboard} />
 
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid items-start gap-4 xl:grid-cols-2">
         <DebtDashboardCardBreakdown cards={dashboard.cards} />
 
         <DebtDashboardConceptBreakdown concepts={dashboard.concepts} />

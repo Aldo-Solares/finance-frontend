@@ -4,12 +4,15 @@
 
 import { X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { normalizeRequiredNumber } from '@/core/utils/form-data'
 import { createTradeSaleAction } from '@/modules/trading/trade-sale/actions/trade-sale.actions'
 import type { Trade } from '@/modules/trading/trade/schemas/trade.schema'
-import { DateInput } from '@/shared/inputs/date-input'
+import {
+  DateInput,
+  getLocalDateInputValue,
+} from '@/shared/inputs/date-input'
 import { NumberInput } from '@/shared/inputs/number-input'
 
 type TradeSaleCreateModalProps = {
@@ -47,6 +50,10 @@ export function TradeSaleCreateModal({
   const [commissionRate, setCommissionRate] = useState('0.25')
   const [commission, setCommission] = useState('')
   const [saleDate, setSaleDate] = useState('')
+
+  useEffect(() => {
+    setSaleDate(getLocalDateInputValue())
+  }, [])
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -115,7 +122,7 @@ export function TradeSaleCreateModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
-      <div className="w-full max-w-lg rounded-2xl border border-border bg-background shadow-xl">
+      <div className="select-scrollbar max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-background shadow-xl">
         <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
             <h2 className="text-lg font-semibold text-foreground">
@@ -277,7 +284,7 @@ export function TradeSaleCreateModal({
             <button
               type="submit"
               disabled={pending}
-              className="h-10 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-10 rounded-lg bg-emerald-600 px-4 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-emerald-500 dark:text-black dark:hover:bg-emerald-400"
             >
               {pending ? 'Guardando...' : 'Registrar venta'}
             </button>

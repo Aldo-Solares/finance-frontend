@@ -5,6 +5,10 @@
 import { useMemo } from 'react'
 
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
+import {
+  DataTableHeaderCell,
+  DataTableViewport,
+} from '@/shared/tables/data-table'
 
 import { StatementEmptyState } from './statement-empty-state'
 import { StatementItem } from './statement-item'
@@ -79,60 +83,42 @@ export function StatementTable({
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[860px]">
-              <thead>
-                <tr className="border-b border-border bg-surface/70">
-                  <th
-                    scope="col"
-                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted sm:px-6"
-                  >
-                    Periodo
-                  </th>
+          <DataTableViewport
+            ariaLabel={`Estados de cuenta del año ${group.year}`}
+            minWidthClassName="min-w-[860px]"
+          >
+            <thead>
+              <tr>
+                <DataTableHeaderCell className="sm:px-6">
+                  Periodo
+                </DataTableHeaderCell>
 
-                  <th
-                    scope="col"
-                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted"
-                  >
-                    Fechas del periodo
-                  </th>
+                <DataTableHeaderCell>
+                  Fechas del periodo
+                </DataTableHeaderCell>
 
-                  <th
-                    scope="col"
-                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted"
-                  >
-                    Pago
-                  </th>
+                <DataTableHeaderCell>Pago</DataTableHeaderCell>
 
-                  <th
-                    scope="col"
-                    className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted"
-                  >
-                    Estado
-                  </th>
+                <DataTableHeaderCell>Estado</DataTableHeaderCell>
 
-                  <th
-                    scope="col"
-                    className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted sm:px-6"
-                  >
-                    Acciones
-                  </th>
-                </tr>
-              </thead>
+                <DataTableHeaderCell align="right" className="sm:px-6">
+                  Acciones
+                </DataTableHeaderCell>
+              </tr>
+            </thead>
 
-              <tbody>
-                {group.statements.map((statement, index) => (
-                  <StatementItem
-                    key={statement.statementId}
-                    statement={statement}
-                    separated={index > 0}
-                    onEdit={onEdit}
-                    onDelete={onDelete}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
+            <tbody>
+              {group.statements.map((statement, index) => (
+                <StatementItem
+                  key={statement.statementId}
+                  statement={statement}
+                  separated={index > 0}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                />
+              ))}
+            </tbody>
+          </DataTableViewport>
         </section>
       ))}
     </div>

@@ -12,6 +12,10 @@ import {
 import { createPortal } from 'react-dom'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDropdownPosition } from '@/shared/inputs/use-dropdown-position'
+import {
+  formatDisplayDate,
+  getSpanishMonthNumber,
+} from '@/shared/utils/date-format'
 
 type DateInputProps = {
   id?: string
@@ -365,10 +369,10 @@ export function DateInput({
             <div className="flex items-center gap-2">
               <input
                 type="text"
-                inputMode="numeric"
-                maxLength={10}
+                inputMode="text"
+                maxLength={11}
                 aria-label="Escribir fecha en formato día-mes-año"
-                placeholder="DD-MM-AAAA"
+                placeholder="DD-MMM-AAAA"
                 value={manualDate}
                 onChange={(event) => {
                   setManualDate(event.target.value)
@@ -394,7 +398,7 @@ export function DateInput({
 
             {manualDateError && (
               <p role="alert" className="mt-1 text-xs text-primary">
-                Escribe una fecha válida, por ejemplo 16-10-2026.
+                Escribe una fecha válida, por ejemplo 20-OCT-2026.
               </p>
             )}
           </div>
@@ -537,15 +541,23 @@ function parseFlexibleDate(value: string) {
     return isoDate
   }
 
-  const match = /^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/.exec(normalizedValue)
+  const match = /^(\d{1,2})[-/.]([a-zA-Z]{3,4}|\d{1,2})[-/.](\d{4})$/.exec(
+    normalizedValue,
+  )
 
   if (!match) {
     return null
   }
 
-  return parseDate(
-    formatInputDate(Number(match[3]), Number(match[2]), Number(match[1])),
-  )
+  const month = /^\d+$/.test(match[2])
+    ? Number(match[2])
+    : getSpanishMonthNumber(match[2])
+
+  if (!month) {
+    return null
+  }
+
+  return parseDate(formatInputDate(Number(match[3]), month, Number(match[1])))
 }
 
 // ===================
@@ -557,20 +569,6 @@ function formatInputDate(year: number, month: number, day: number) {
     year,
     String(month).padStart(2, '0'),
     String(day).padStart(2, '0'),
-  ].join('-')
-}
-
-function formatDisplayDate(value: string) {
-  const parsed = parseDate(value)
-
-  if (!parsed) {
-    return value
-  }
-
-  return [
-    String(parsed.day).padStart(2, '0'),
-    String(parsed.month).padStart(2, '0'),
-    parsed.year,
   ].join('-')
 }
 
@@ -614,7 +612,7 @@ function getDaysInMonth(year: number, month: number) {
   return new Date(year, month, 0).getDate()
 }
 
-function getLocalDateInputValue() {
+export function getLocalDateInputValue() {
   const now = new Date()
 
   return formatInputDate(now.getFullYear(), now.getMonth() + 1, now.getDate())

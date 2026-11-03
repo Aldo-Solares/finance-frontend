@@ -162,10 +162,20 @@ export async function payAllStatementsAction(
 // DELETE
 // ===================
 
-export async function deleteStatementAction(statementId: number) {
-  await deleteStatement(statementId)
+export async function deleteStatementAction(
+  statementId: number,
+): Promise<ActionState<null>> {
+  if (!Number.isInteger(statementId) || statementId <= 0) {
+    return actionError('El estado de cuenta no es válido')
+  }
 
-  revalidatePath('/debts/statement')
+  return withActionState(async () => {
+    await deleteStatement(statementId)
+
+    revalidatePath('/debts/statement')
+
+    return null
+  }, 'No fue posible eliminar el estado de cuenta')
 }
 
 // ===================

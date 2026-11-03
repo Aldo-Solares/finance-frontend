@@ -89,7 +89,13 @@ export function StatementPage({ statements, userCards }: StatementPageProps) {
   const handleConfirmDelete = async () => {
     if (!deleteStatement) return
 
-    await deleteStatementAction(deleteStatement.statementId)
+    const result = await deleteStatementAction(deleteStatement.statementId)
+
+    if (!result.success) {
+      throw new Error(
+        result.message ?? 'No fue posible eliminar el estado de cuenta',
+      )
+    }
   }
 
   return (

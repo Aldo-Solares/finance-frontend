@@ -276,7 +276,7 @@ export function AppNav({ user }: AppNavProps) {
                 className={getDropdownLinkClassName('/admin/concept')}
               >
                 <ListTree className="h-4 w-4" />
-                Conceptos
+                Categorías
               </Link>
 
               <Link

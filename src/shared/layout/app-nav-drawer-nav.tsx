@@ -200,7 +200,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
               className={getSubLinkClassName('/admin/concept')}
             >
               <ListTree className="h-4 w-4 shrink-0" />
-              Conceptos
+              Categorías
             </Link>
 
             <Link

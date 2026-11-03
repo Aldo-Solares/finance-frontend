@@ -5,6 +5,7 @@
 import {
   Check,
   Clock3,
+  LoaderCircle,
   Pencil,
   Repeat2,
   ShoppingBag,
@@ -20,6 +21,9 @@ type StatementEntryItemProps = {
   onEdit: (entry: StatementEntry) => void
   onDelete: (entry: StatementEntry) => void
   onToggleSelection: (entryId: number) => void
+  onMarkPaid: (entryId: number) => void
+  isMarkingPaid: boolean
+  disablePaymentActions: boolean
 }
 
 export function StatementEntryItem({
@@ -28,14 +32,17 @@ export function StatementEntryItem({
   onEdit,
   onDelete,
   onToggleSelection,
+  onMarkPaid,
+  isMarkingPaid,
+  disablePaymentActions,
 }: StatementEntryItemProps) {
   const isPurchase = entry.entryType === 'PURCHASE'
 
   const hasMsi = entry.msiCurrent !== null && entry.msiTotal !== null
 
   return (
-    <tr className="transition-colors hover:bg-surface/70">
-      <td className="px-4 py-4 text-center">
+    <tr className="odd:bg-background even:bg-surface/30 transition-colors hover:bg-primary-soft/40">
+      <td className="px-3 py-3 text-center">
         <input
           type="checkbox"
           checked={selected}
@@ -46,31 +53,31 @@ export function StatementEntryItem({
         />
       </td>
 
-      <td className="px-5 py-4">
+      <td className="px-4 py-3">
         <p className="text-sm font-medium text-foreground">
           {entry.conceptName}
         </p>
       </td>
 
-      <td className="px-5 py-4">
+      <td className="px-4 py-3">
         <p className="max-w-56 truncate text-sm text-text-muted">
-          {entry.specification ?? '—'}
+          {entry.description ?? '—'}
         </p>
       </td>
 
-      <td className="px-5 py-4">
+      <td className="px-4 py-3">
         <p className="max-w-56 truncate text-sm text-text-muted">
           {entry.merchant ?? '—'}
         </p>
       </td>
 
-      <td className="px-5 py-4 text-sm text-text-muted">{entry.debtor}</td>
+      <td className="px-4 py-3 text-sm text-text-muted">{entry.debtor}</td>
 
-      <td className="px-5 py-4">
+      <td className="px-4 py-3 tabular-nums">
         <DateDisplay value={entry.date} />
       </td>
 
-      <td className="px-5 py-4">
+      <td className="px-4 py-3">
         <span
           className={[
             'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
@@ -89,7 +96,7 @@ export function StatementEntryItem({
         </span>
       </td>
 
-      <td className="px-5 py-4">
+      <td className="px-4 py-3">
         {hasMsi ? (
           <div>
             <p className="text-sm font-medium text-primary">
@@ -108,8 +115,8 @@ export function StatementEntryItem({
         )}
       </td>
 
-      <td className="px-5 py-4 text-right">
-        <p className="text-sm font-medium text-foreground">
+      <td className="px-4 py-3 text-right tabular-nums">
+        <p className="whitespace-nowrap text-sm font-medium text-foreground">
           {formatMoney(entry.amount)}
         </p>
 
@@ -120,7 +127,7 @@ export function StatementEntryItem({
         )}
       </td>
 
-      <td className="px-5 py-4 text-right">
+      <td className="px-4 py-3 text-right tabular-nums">
         {entry.remainingMsiAmount !== null ? (
           <p className="text-sm text-text-muted">
             {formatMoney(entry.remainingMsiAmount)}
@@ -130,32 +137,38 @@ export function StatementEntryItem({
         )}
       </td>
 
-      <td className="px-5 py-4">
-        <span
-          className={[
-            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
-            entry.paid
-              ? 'bg-primary-soft text-primary'
-              : 'bg-surface text-text-muted',
-          ].join(' ')}
-        >
-          {entry.paid ? (
-            <Check className="h-3 w-3" />
-          ) : (
-            <Clock3 className="h-3 w-3" />
-          )}
-
-          {entry.paid ? 'Pagado' : 'Pendiente'}
-        </span>
+      <td className="px-4 py-3">
+        {entry.paid ? (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-medium text-primary">
+            <Check className="h-3 w-3" aria-hidden="true" />
+            Pagado
+          </span>
+        ) : (
+          <button
+            type="button"
+            onClick={() => onMarkPaid(entry.entryId)}
+            disabled={disablePaymentActions}
+            aria-label={`Marcar ${entry.conceptName} como pagado`}
+            title="Marcar como pagado"
+            className="inline-flex h-8 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-background px-2.5 text-xs font-medium text-text-muted transition hover:border-primary/30 hover:bg-primary-soft hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isMarkingPaid ? (
+              <LoaderCircle className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+            ) : (
+              <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
+            )}
+            {isMarkingPaid ? 'Marcando…' : 'Marcar pagado'}
+          </button>
+        )}
       </td>
 
-      <td className="px-5 py-4">
+      <td className="px-4 py-3">
         <p className="max-w-56 truncate text-sm text-text-muted">
           {entry.notes ?? '—'}
         </p>
       </td>
 
-      <td className="px-5 py-4">
+      <td className="px-4 py-3">
         <div className="flex justify-end gap-1">
           <button
             type="button"

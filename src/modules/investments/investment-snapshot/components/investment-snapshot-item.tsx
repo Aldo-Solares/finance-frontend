@@ -4,6 +4,7 @@
 
 import { Pencil, Trash2 } from 'lucide-react'
 
+import { formatDisplayDate } from '@/shared/utils/date-format'
 import type { InvestmentSnapshot } from '@/modules/investments/investment-snapshot/schemas/investment-snapshot.schema'
 
 type InvestmentSnapshotItemProps = {
@@ -94,10 +95,5 @@ function formatSignedMoney(value: number): string {
 }
 
 function formatDate(value: string): string {
-  return new Intl.DateTimeFormat('es-MX', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  }).format(new Date(`${value}T00:00:00Z`))
+  return formatDisplayDate(value)
 }

@@ -60,12 +60,12 @@ export function ConceptFormModal({ concept, onClose }: ConceptFormModalProps) {
         <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
             <h2 className="text-base font-semibold text-foreground">
-              {editing ? 'Editar concepto' : 'Nuevo concepto'}
+              {editing ? 'Editar categoría' : 'Nueva categoría'}
             </h2>
 
             <p className="mt-1 text-sm text-text-muted">
               {editing
-                ? 'Actualiza el nombre del concepto.'
+                ? 'Actualiza el nombre de la categoría.'
                 : 'Agrega una nueva clasificación para tus movimientos.'}
             </p>
           </div>
@@ -152,7 +152,7 @@ function ConceptSaveButton({ editing }: { editing: boolean }) {
         ? 'Guardando...'
         : editing
           ? 'Guardar cambios'
-          : 'Crear concepto'}
+          : 'Crear categoría'}
     </button>
   )
 }

@@ -1,128 +1,40 @@
 // @/modules/dashboard/debts/components/debt-dashboard-overview.tsx
 
-import { Clock3, CreditCard, ReceiptText, WalletCards } from 'lucide-react'
-
+import { DebtDashboardCardBreakdown } from '@/modules/dashboard/debts/components/debt-dashboard-card-breakdown'
+import { DebtDashboardHighlights } from '@/modules/dashboard/debts/components/debt-dashboard-highlights'
+import { DebtDashboardSummary } from '@/modules/dashboard/debts/components/debt-dashboard-summary'
 import type { DebtDashboard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
+import { getDashboardPeriodLabel } from '@/modules/dashboard/debts/utils/debt-dashboard-formatters'
 
 type DebtDashboardOverviewProps = {
   dashboard: DebtDashboard
 }
 
-function formatMoney(value: number) {
-  return new Intl.NumberFormat('es-MX', {
-    style: 'currency',
-    currency: 'MXN',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
-export function DebtDashboardOverview({
-  dashboard,
-}: DebtDashboardOverviewProps) {
-  const topCard = dashboard.cards[0]
-  const topConcept = dashboard.concepts[0]
+export function DebtDashboardOverview({ dashboard }: DebtDashboardOverviewProps) {
+  const periodLabel = getDashboardPeriodLabel(dashboard.year, dashboard.month)
 
   return (
-    <section className="space-y-4">
-      <div>
+    <section className="space-y-5">
+      <header>
         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-text-muted">
-          Resumen
+          Tu panorama
         </p>
-
-        <div className="mt-1 flex items-end justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold tracking-tight text-foreground">
-              Gastos del mes
-            </h2>
-
-            <p className="mt-1 text-sm text-text-muted">
-              Resumen rápido de tus tarjetas.
-            </p>
-          </div>
+        <div className="mt-1 flex flex-wrap items-end justify-between gap-2">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            Resumen de tus gastos
+          </h2>
+          <span className="rounded-full border border-border bg-background px-3 py-1 text-xs font-medium text-text-muted">
+            {periodLabel}
+          </span>
         </div>
-      </div>
+      </header>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <OverviewCard
-          icon={CreditCard}
-          label="Gasto total"
-          value={formatMoney(dashboard.totalExpenses)}
-          detail={`${dashboard.totalEntries} movimientos`}
-        />
+      <DebtDashboardSummary dashboard={dashboard} />
 
-        <OverviewCard
-          icon={Clock3}
-          label="Pendiente"
-          value={formatMoney(dashboard.totalPending)}
-          detail="Por pagar"
-        />
-
-        <OverviewCard
-          icon={WalletCards}
-          label="Mayor gasto"
-          value={
-            topCard ? `${topCard.bank} · ${topCard.cardName}` : 'Sin datos'
-          }
-          detail={
-            topCard ? formatMoney(topCard.totalExpenses) : 'Sin movimientos'
-          }
-        />
-
-        <OverviewCard
-          icon={ReceiptText}
-          label="Principal concepto"
-          value={topConcept ? topConcept.conceptName : 'Sin datos'}
-          detail={
-            topConcept
-              ? formatMoney(topConcept.totalExpenses)
-              : 'Sin movimientos'
-          }
-        />
+      <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)]">
+        <DebtDashboardCardBreakdown cards={dashboard.cards} />
+        <DebtDashboardHighlights dashboard={dashboard} />
       </div>
     </section>
-  )
-}
-
-type OverviewCardProps = {
-  icon: typeof CreditCard
-  label: string
-  value: string
-  detail: string
-}
-
-function OverviewCard({ icon: Icon, label, value, detail }: OverviewCardProps) {
-  return (
-    <div
-      className={[
-        'group relative overflow-hidden rounded-2xl',
-        'border border-border bg-background p-4',
-        'transition-all duration-200',
-        'hover:border-primary/20 hover:shadow-sm',
-      ].join(' ')}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-text-muted">
-          {label}
-        </p>
-
-        <div
-          className={[
-            'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
-            'bg-surface text-text-muted',
-            'transition-colors duration-200',
-            'group-hover:bg-primary-soft group-hover:text-primary',
-          ].join(' ')}
-        >
-          <Icon className="h-3.5 w-3.5" />
-        </div>
-      </div>
-
-      <p className="mt-4 truncate text-lg font-semibold tracking-tight text-foreground">
-        {value}
-      </p>
-
-      <p className="mt-1 truncate text-[11px] text-text-muted">{detail}</p>
-    </div>
   )
 }

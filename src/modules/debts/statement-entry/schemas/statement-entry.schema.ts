@@ -44,7 +44,7 @@ export const StatementEntrySchema = z.object({
   conceptId: z.number().int(),
   conceptName: z.string(),
   debtor: z.string(),
-  specification: z.string().nullable(),
+  description: z.string().nullable(),
   merchant: z.string().nullable(),
   notes: z.string().nullable(),
   entryType: StatementEntryTypeSchema,
@@ -70,19 +70,19 @@ export const CreateStatementEntryRequestSchema = z.object({
     .int('El estado de cuenta no es válido')
     .positive('El estado de cuenta no es válido'),
   conceptId: requiredNumber(
-    'Selecciona un concepto',
-    'El concepto no es válido',
+    'Selecciona una categoría',
+    'La categoría no es válida',
   )
-    .int('El concepto no es válido')
-    .positive('El concepto no es válido'),
+    .int('La categoría no es válida')
+    .positive('La categoría no es válida'),
   debtor: requiredString('El deudor es obligatorio'),
-  specification: z.string().trim().nullable(),
+  description: z.string().trim().nullable(),
   merchant: z.string().trim().nullable(),
   notes: z.string().nullable(),
   entryType: requestEntryTypeSchema,
   date: nullableDateSchema,
-  amount: requiredNumber('El monto es obligatorio', 'El monto debe ser válido')
-    .positive('El monto debe ser mayor que cero'),
+  amount: requiredNumber('El importe es obligatorio', 'El importe debe ser válido')
+    .positive('El importe debe ser mayor que cero'),
   paid: z.boolean(),
   msiCurrent: requestNullablePositiveIntegerSchema,
   msiTotal: requestNullablePositiveIntegerSchema,
@@ -100,19 +100,19 @@ export const UpdateStatementEntryRequestSchema = z.object({
     .int('El estado de cuenta no es válido')
     .positive('El estado de cuenta no es válido'),
   conceptId: requiredNumber(
-    'Selecciona un concepto',
-    'El concepto no es válido',
+    'Selecciona una categoría',
+    'La categoría no es válida',
   )
-    .int('El concepto no es válido')
-    .positive('El concepto no es válido'),
+    .int('La categoría no es válida')
+    .positive('La categoría no es válida'),
   debtor: requiredString('El deudor es obligatorio'),
-  specification: z.string().trim().nullable(),
+  description: z.string().trim().nullable(),
   merchant: z.string().trim().nullable(),
   notes: z.string().nullable(),
   entryType: requestEntryTypeSchema,
   date: nullableDateSchema,
-  amount: requiredNumber('El monto es obligatorio', 'El monto debe ser válido')
-    .positive('El monto debe ser mayor que cero'),
+  amount: requiredNumber('El importe es obligatorio', 'El importe debe ser válido')
+    .positive('El importe debe ser mayor que cero'),
   paid: z.boolean(),
   msiCurrent: requestNullablePositiveIntegerSchema,
   msiTotal: requestNullablePositiveIntegerSchema,

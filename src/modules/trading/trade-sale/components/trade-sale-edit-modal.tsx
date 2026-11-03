@@ -126,7 +126,7 @@ export function TradeSaleEditModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
-      <div className="w-full max-w-lg rounded-2xl border border-border bg-background shadow-xl">
+      <div className="select-scrollbar max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-background shadow-xl">
         <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
             <h2 className="text-lg font-semibold text-foreground">
@@ -288,7 +288,7 @@ export function TradeSaleEditModal({
             <button
               type="submit"
               disabled={pending}
-              className="h-10 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-10 rounded-lg bg-emerald-600 px-4 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-emerald-500 dark:text-black dark:hover:bg-emerald-400"
             >
               {pending ? 'Guardando...' : 'Guardar cambios'}
             </button>

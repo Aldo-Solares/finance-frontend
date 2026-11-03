@@ -1,89 +1,81 @@
 // @/modules/dashboard/debts/components/debt-dashboard-summary.tsx
 
-import { CircleDollarSign, Clock3, CreditCard, ReceiptText } from 'lucide-react'
+import {
+  CircleCheck,
+  CircleDollarSign,
+  Clock3,
+  ReceiptText,
+} from 'lucide-react'
 
 import type { DebtDashboard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
+import { formatDashboardMoney } from '@/modules/dashboard/debts/utils/debt-dashboard-formatters'
 
 type DebtDashboardSummaryProps = {
   dashboard: DebtDashboard
 }
 
-function formatMoney(value: number) {
-  return new Intl.NumberFormat('es-MX', {
-    style: 'currency',
-    currency: 'MXN',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
-}
-
 export function DebtDashboardSummary({ dashboard }: DebtDashboardSummaryProps) {
   const items = [
     {
-      label: 'Gasto total',
-      value: formatMoney(dashboard.totalExpenses),
-      description: `${dashboard.totalEntries} movimientos`,
-      icon: CreditCard,
-    },
-    {
-      label: 'Pagado',
-      value: formatMoney(dashboard.totalPaid),
-      description: 'Movimientos pagados',
+      label: 'Total gastado',
+      value: formatDashboardMoney(dashboard.totalExpenses),
+      description: 'Suma de todos los movimientos del periodo.',
       icon: CircleDollarSign,
     },
     {
+      label: 'Pagado',
+      value: formatDashboardMoney(dashboard.totalPaid),
+      description: 'Importe de los movimientos marcados como pagados.',
+      icon: CircleCheck,
+    },
+    {
       label: 'Pendiente',
-      value: formatMoney(dashboard.totalPending),
-      description: 'Movimientos pendientes',
+      value: formatDashboardMoney(dashboard.totalPending),
+      description: 'Importe que todavía no se ha marcado como pagado.',
       icon: Clock3,
     },
     {
-      label: 'Promedio',
-      value: formatMoney(dashboard.averageExpense),
-      description: 'Promedio por movimiento',
+      label: 'Promedio por movimiento',
+      value: formatDashboardMoney(dashboard.averageExpense),
+      description:
+        dashboard.totalEntries > 0
+          ? `Gasto total dividido entre ${dashboard.totalEntries} movimientos.`
+          : 'No hay movimientos registrados en este periodo.',
       icon: ReceiptText,
     },
   ]
 
   return (
-    <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <section
+      aria-label="Resumen de gastos"
+      className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
+    >
       {items.map((item) => {
         const Icon = item.icon
 
         return (
-          <div
+          <article
             key={item.label}
-            className={[
-              'group rounded-2xl border border-border bg-background p-4',
-              'transition-all duration-200',
-              'hover:border-primary/20 hover:shadow-sm',
-            ].join(' ')}
+            className="group grid min-h-40 grid-rows-[2rem_1.75rem_2.5rem] gap-y-3 rounded-2xl border border-border bg-background p-4 transition-all duration-200 hover:border-primary/25 hover:shadow-sm"
           >
-            <div className="flex items-center justify-between gap-3">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-text-muted">
+            <div className="flex items-start justify-between gap-3">
+              <p className="line-clamp-2 leading-4 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted">
                 {item.label}
               </p>
 
-              <div
-                className={[
-                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
-                  'bg-surface text-text-muted',
-                  'transition-colors duration-200',
-                  'group-hover:bg-primary-soft group-hover:text-primary',
-                ].join(' ')}
-              >
-                <Icon className="h-3.5 w-3.5" />
-              </div>
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface text-text-muted transition-colors group-hover:bg-primary-soft group-hover:text-primary">
+                <Icon className="h-4 w-4" aria-hidden="true" />
+              </span>
             </div>
 
-            <p className="mt-4 truncate text-xl font-semibold tracking-tight text-foreground">
+            <p className="truncate text-lg font-semibold leading-7 tracking-tight text-foreground sm:text-xl">
               {item.value}
             </p>
 
-            <p className="mt-1 truncate text-[11px] text-text-muted">
+            <p className="line-clamp-2 text-xs leading-5 text-text-muted">
               {item.description}
             </p>
-          </div>
+          </article>
         )
       })}
     </section>

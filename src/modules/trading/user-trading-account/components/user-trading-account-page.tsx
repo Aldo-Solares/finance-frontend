@@ -62,7 +62,7 @@ export function UserTradingAccountPage({
 
   return (
     <>
-      <div className="w-full space-y-6">
+      <div className="w-full space-y-6 sm:space-y-8">
         <HeroComponent
           eyebrow="Trading"
           title="Mis cuentas"
@@ -79,16 +79,30 @@ export function UserTradingAccountPage({
         />
 
         {userTradingAccounts.length === 0 ? (
-          <UserTradingAccountEmptyState
-            canCreate={canCreate}
-            onCreate={handleCreate}
-          />
+          <UserTradingAccountEmptyState canCreate={canCreate} />
         ) : (
-          <UserTradingAccountList
-            userTradingAccounts={userTradingAccounts}
-            onEdit={handleEdit}
-            onDelete={setDeletingAccount}
-          />
+          <section className="space-y-4">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">
+                  Colección
+                </p>
+                <h2 className="mt-1 text-lg font-semibold tracking-tight text-foreground">
+                  Cuentas asociadas
+                </h2>
+              </div>
+              <span className="shrink-0 text-xs text-text-muted">
+                {userTradingAccounts.length}{' '}
+                {userTradingAccounts.length === 1 ? 'cuenta' : 'cuentas'}
+              </span>
+            </div>
+
+            <UserTradingAccountList
+              userTradingAccounts={userTradingAccounts}
+              onEdit={handleEdit}
+              onDelete={setDeletingAccount}
+            />
+          </section>
         )}
       </div>
 
@@ -110,7 +124,7 @@ export function UserTradingAccountPage({
       {deletingAccount && (
         <DeleteModal
           title="Eliminar cuenta"
-          description="¿Seguro que deseas eliminar esta cuenta de trading?"
+          description={`¿Seguro que deseas eliminar "${deletingAccount.name}" de tus cuentas de trading?`}
           onClose={() => setDeletingAccount(null)}
           onConfirm={handleConfirmDelete}
         />

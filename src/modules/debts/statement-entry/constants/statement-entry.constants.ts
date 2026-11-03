@@ -6,16 +6,29 @@ import type { StatementEntryType } from '@/modules/debts/statement-entry/schemas
 // ENTRY TYPES
 // ===================
 
-export const STATEMENT_ENTRY_TYPE_OPTIONS: {
-  value: StatementEntryType
-  label: string
-}[] = [
-  {
-    value: 'PURCHASE',
-    label: 'Compra',
-  },
-  {
-    value: 'RECURRING',
-    label: 'Recurrente',
-  },
-]
+const RECURRING_MERCHANTS = new Set([
+  'netflix',
+  'totalplay',
+  'gimnasio',
+  'smartfit',
+  'spotify',
+])
+
+export function resolveStatementEntryType(
+  category: string | null | undefined,
+  merchant: string | null | undefined,
+): StatementEntryType {
+  const normalizedCategory = (category ?? '').trim().toLocaleLowerCase()
+  const normalizedMerchant = (merchant ?? '')
+    .toLocaleLowerCase()
+    .replace(/[^a-z0-9]/g, '')
+
+  if (
+    normalizedCategory === 'suscripciones' ||
+    RECURRING_MERCHANTS.has(normalizedMerchant)
+  ) {
+    return 'RECURRING'
+  }
+
+  return 'PURCHASE'
+}

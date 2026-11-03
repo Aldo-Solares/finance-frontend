@@ -20,15 +20,11 @@ import { useFormStatus } from 'react-dom'
 import type { ActionState } from '@/core/utils/action-state'
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import { createStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
-import { STATEMENT_ENTRY_TYPE_OPTIONS } from '@/modules/debts/statement-entry/constants/statement-entry.constants'
-import type {
-  StatementEntry,
-  StatementEntryType,
-} from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
+import { resolveStatementEntryType } from '@/modules/debts/statement-entry/constants/statement-entry.constants'
+import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 import { DateInput } from '@/shared/inputs/date-input'
 import { NumberInput } from '@/shared/inputs/number-input'
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
-import { SelectInput } from '@/shared/inputs/select-input'
 import { TextInput } from '@/shared/inputs/text-input'
 
 type StatementEntryCreateModalProps = {
@@ -56,15 +52,18 @@ export function StatementEntryCreateModal({
   )
 
   const [date, setDate] = useState(getLocalDateInputValue())
-
   const [paid, setPaid] = useState(false)
-
-  const [entryType, setEntryType] = useState<StatementEntryType>('PURCHASE')
-
+  const [selectedConceptId, setSelectedConceptId] = useState(
+    String(concepts[0]?.conceptId ?? ''),
+  )
+  const [merchant, setMerchant] = useState(defaultMerchant ?? '')
   const [msiOpen, setMsiOpen] = useState(false)
-
   const [paymentOpen, setPaymentOpen] = useState(false)
 
+  const selectedConcept = concepts.find(
+    (concept) => String(concept.conceptId) === selectedConceptId,
+  )
+  const entryType = resolveStatementEntryType(selectedConcept?.name, merchant)
   const isPurchase = entryType === 'PURCHASE'
 
   useEffect(() => {
@@ -135,33 +134,33 @@ export function StatementEntryCreateModal({
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div>
                     <FieldLabel htmlFor="entryType">Tipo</FieldLabel>
-
-                    <SelectInput
+                    <input type="hidden" name="entryType" value={entryType} />
+                    <div
                       id="entryType"
-                      name="entryType"
-                      value={entryType}
-                      options={STATEMENT_ENTRY_TYPE_OPTIONS}
-                      onChange={(value) =>
-                        setEntryType(value as StatementEntryType)
-                      }
-                      required
-                    />
+                      className="flex h-11 items-center rounded-xl border border-border bg-surface px-4 text-sm text-foreground"
+                    >
+                      {entryType === 'PURCHASE' ? 'Compra' : 'Recurrente'}
+                    </div>
+                    <p className="mt-1.5 text-xs text-text-muted">
+                      Se determina por la categoría y el comercio.
+                    </p>
                   </div>
 
                   <div>
-                    <FieldLabel htmlFor="conceptId">Concepto</FieldLabel>
+                    <FieldLabel htmlFor="conceptId">Categoría</FieldLabel>
 
                     <SearchableSelectInput
                       id="conceptId"
                       name="conceptId"
-                      defaultValue={concepts[0]?.conceptId ?? ''}
+                      value={selectedConceptId}
+                      onChange={setSelectedConceptId}
                       options={concepts.map((concept) => ({
                         value: concept.conceptId,
                         label: concept.name,
                       }))}
-                      placeholder="Seleccionar concepto..."
-                      searchPlaceholder="Buscar concepto..."
-                      emptyMessage="No se encontraron conceptos."
+                      placeholder="Seleccionar categoría..."
+                      searchPlaceholder="Buscar categoría..."
+                      emptyMessage="No se encontraron categorías."
                       required
                     />
                   </div>
@@ -180,14 +179,14 @@ export function StatementEntryCreateModal({
                 </div>
 
                 <div>
-                  <FieldLabel htmlFor="specification">
-                    Especificación
+                  <FieldLabel htmlFor="description">
+                    Descripción del gasto
                   </FieldLabel>
 
                   <TextInput
-                    id="specification"
-                    name="specification"
-                    placeholder="Especificación"
+                    id="description"
+                    name="description"
+                    placeholder="Descripción del gasto"
                   />
                 </div>
 
@@ -197,7 +196,8 @@ export function StatementEntryCreateModal({
                   <TextInput
                     id="merchant"
                     name="merchant"
-                    defaultValue={defaultMerchant ?? ''}
+                    value={merchant}
+                    onChange={setMerchant}
                     placeholder="Comercio"
                     description={
                       defaultMerchant
@@ -243,7 +243,7 @@ export function StatementEntryCreateModal({
 
                   <div>
                     <FieldLabel htmlFor="amount">
-                      {isPurchase ? 'Monto de esta parcialidad' : 'Monto'}
+                      Importe
                     </FieldLabel>
 
                     <NumberInput

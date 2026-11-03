@@ -16,21 +16,21 @@ type ConceptPageProps = {
 export function ConceptPage({ concepts }: ConceptPageProps) {
   return (
     <AdminCatalogPage
-      title="Conceptos"
-      description="Administra los conceptos utilizados para clasificar movimientos."
-      createLabel="Nuevo concepto"
+      title="Categorías"
+      description="Administra las categorías utilizadas para clasificar movimientos."
+      createLabel="Nueva categoría"
       items={concepts}
       metrics={[
         {
           icon: Tags,
-          label: 'Conceptos disponibles',
+          label: 'Categorías disponibles',
           value: concepts.length,
         },
       ]}
       emptyIcon={Tags}
-      emptyTitle="No hay conceptos"
-      emptyDescription="Agrega el primer concepto para comenzar a clasificar movimientos."
-      deleteTitle="Eliminar concepto"
+      emptyTitle="No hay categorías"
+      emptyDescription="Agrega la primera categoría para clasificar movimientos."
+      deleteTitle="Eliminar categoría"
       getDeleteDescription={(concept) =>
         `¿Seguro que deseas eliminar "${concept.name}"?`
       }

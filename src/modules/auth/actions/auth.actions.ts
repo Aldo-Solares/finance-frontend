@@ -2,6 +2,7 @@
 
 'use server'
 
+import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
@@ -125,6 +126,9 @@ export async function verifyEmailAction(
   return withActionState(async () => {
     await verifyEmail(parsed.data)
 
+    revalidatePath('/user')
+    revalidatePath('/', 'layout')
+
     return null
   }, 'No fue posible verificar el correo electrónico')
 }
@@ -147,11 +151,15 @@ export async function resendVerificationAction(
     )
   }
 
-  return withActionState(async () => {
-    await resendVerification(parsed.data)
+  return withActionState(
+    async () => {
+      await resendVerification(parsed.data)
 
-    return null
-  }, 'No fue posible enviar el correo de verificación')
+      return null
+    },
+    'No fue posible procesar la solicitud',
+    'Si el correo está registrado y requiere verificación, se enviará un enlace. Revisa tu bandeja de entrada o spam.',
+  )
 }
 
 // ===================

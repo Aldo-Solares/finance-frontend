@@ -2,9 +2,11 @@
 
 'use client'
 
-import type { ReactNode } from 'react'
-
 import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
+import {
+  DataTableHeaderCell,
+  DataTableViewport,
+} from '@/shared/tables/data-table'
 
 import { StatementEntryEmptyState } from './statement-entry-empty-state'
 import { StatementEntryItem } from './statement-entry-item'
@@ -16,6 +18,9 @@ type StatementEntryTableProps = {
   onDelete: (entry: StatementEntry) => void
   onToggleSelection: (entryId: number) => void
   onTogglePageSelection: (entryIds: number[]) => void
+  onMarkPaid: (entryId: number) => void
+  markingPaidEntryId: number | null
+  isPayingSelected: boolean
 }
 
 export function StatementEntryTable({
@@ -25,6 +30,9 @@ export function StatementEntryTable({
   onDelete,
   onToggleSelection,
   onTogglePageSelection,
+  onMarkPaid,
+  markingPaidEntryId,
+  isPayingSelected,
 }: StatementEntryTableProps) {
   const selectableEntryIds = entries
     .filter((entry) => !entry.paid)
@@ -39,79 +47,67 @@ export function StatementEntryTable({
 
   return (
     <div className="overflow-hidden rounded-[1.6rem] border border-border bg-background">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[1280px]">
-          <thead className="border-b border-border bg-surface/70">
-            <tr>
-              <HeaderCell>
-                <input
-                  type="checkbox"
-                  checked={allSelectableSelected}
-                  disabled={selectableEntryIds.length === 0}
-                  onChange={() => onTogglePageSelection(selectableEntryIds)}
-                  aria-label="Seleccionar todos los movimientos pendientes de esta página"
-                  className="h-4 w-4 cursor-pointer accent-primary disabled:cursor-not-allowed disabled:opacity-40"
-                />
-              </HeaderCell>
-
-              <HeaderCell>Concepto</HeaderCell>
-
-              <HeaderCell>Especificación</HeaderCell>
-
-              <HeaderCell>Comercio</HeaderCell>
-
-              <HeaderCell>Deudor</HeaderCell>
-
-              <HeaderCell>Fecha</HeaderCell>
-
-              <HeaderCell>Tipo</HeaderCell>
-
-              <HeaderCell>MSI</HeaderCell>
-
-              <HeaderCell align="right">Monto</HeaderCell>
-
-              <HeaderCell align="right">Saldo MSI</HeaderCell>
-
-              <HeaderCell>Pago</HeaderCell>
-
-              <HeaderCell>Notas</HeaderCell>
-
-              <HeaderCell align="right">Acciones</HeaderCell>
-            </tr>
-          </thead>
-
-          <tbody className="divide-y divide-border">
-            {entries.map((entry) => (
-              <StatementEntryItem
-                key={entry.entryId}
-                entry={entry}
-                selected={selectedEntryIds.has(entry.entryId)}
-                onToggleSelection={onToggleSelection}
-                onEdit={onEdit}
-                onDelete={onDelete}
+      <DataTableViewport
+        ariaLabel="Movimientos del estado de cuenta"
+        minWidthClassName="min-w-[1280px]"
+      >
+        <thead>
+          <tr>
+            <DataTableHeaderCell align="center" className="w-12 px-3">
+              <input
+                type="checkbox"
+                checked={allSelectableSelected}
+                disabled={selectableEntryIds.length === 0}
+                onChange={() => onTogglePageSelection(selectableEntryIds)}
+                aria-label="Seleccionar todos los movimientos pendientes de esta página"
+                className="h-4 w-4 cursor-pointer accent-primary disabled:cursor-not-allowed disabled:opacity-40"
               />
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </DataTableHeaderCell>
+
+            <DataTableHeaderCell>Categoría</DataTableHeaderCell>
+
+            <DataTableHeaderCell>Descripción del gasto</DataTableHeaderCell>
+
+            <DataTableHeaderCell>Comercio</DataTableHeaderCell>
+
+            <DataTableHeaderCell>Deudor</DataTableHeaderCell>
+
+            <DataTableHeaderCell>Fecha</DataTableHeaderCell>
+
+            <DataTableHeaderCell>Tipo</DataTableHeaderCell>
+
+            <DataTableHeaderCell>MSI</DataTableHeaderCell>
+
+            <DataTableHeaderCell align="right">Importe</DataTableHeaderCell>
+
+            <DataTableHeaderCell align="right">Saldo MSI</DataTableHeaderCell>
+
+            <DataTableHeaderCell>Pago</DataTableHeaderCell>
+
+            <DataTableHeaderCell>Notas</DataTableHeaderCell>
+
+            <DataTableHeaderCell align="right">Acciones</DataTableHeaderCell>
+          </tr>
+        </thead>
+
+        <tbody>
+          {entries.map((entry) => (
+            <StatementEntryItem
+              key={entry.entryId}
+              entry={entry}
+              selected={selectedEntryIds.has(entry.entryId)}
+              onToggleSelection={onToggleSelection}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onMarkPaid={onMarkPaid}
+              isMarkingPaid={markingPaidEntryId === entry.entryId}
+              disablePaymentActions={
+                isPayingSelected || markingPaidEntryId !== null
+              }
+            />
+          ))}
+        </tbody>
+      </DataTableViewport>
     </div>
-  )
-}
-
-type HeaderCellProps = {
-  children: ReactNode
-  align?: 'left' | 'right'
-}
-
-function HeaderCell({ children, align = 'left' }: HeaderCellProps) {
-  return (
-    <th
-      className={[
-        'whitespace-nowrap px-5 py-4 text-[10px] font-semibold uppercase tracking-[0.13em] text-text-muted',
-        align === 'right' ? 'text-right' : 'text-left',
-      ].join(' ')}
-    >
-      {children}
-    </th>
   )
 }

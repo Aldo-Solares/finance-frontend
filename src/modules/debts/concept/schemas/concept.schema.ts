@@ -10,16 +10,16 @@ export const ConceptSchema = z.object({
 })
 
 export const CreateConceptRequestSchema = z.object({
-  name: requiredString('El nombre del concepto es obligatorio').max(
+  name: requiredString('El nombre del categoría es obligatorio').max(
     100,
-    'El nombre del concepto no puede superar los 100 caracteres',
+    'El nombre del categoría no puede superar los 100 caracteres',
   ),
 })
 
 export const UpdateConceptRequestSchema = z.object({
-  name: requiredString('El nombre del concepto es obligatorio').max(
+  name: requiredString('El nombre del categoría es obligatorio').max(
     100,
-    'El nombre del concepto no puede superar los 100 caracteres',
+    'El nombre del categoría no puede superar los 100 caracteres',
   ),
 })
 

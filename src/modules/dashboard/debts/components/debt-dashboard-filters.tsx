@@ -9,6 +9,7 @@ import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/sta
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
 import { FilterBar } from '@/shared/filters/filter-bar'
+import { FilterField } from '@/shared/filters/filter-field'
 import { SelectInput } from '@/shared/inputs/select-input'
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 
@@ -123,6 +124,14 @@ export function DebtDashboardFilters({
     searchParams.has('status') ||
     searchParams.has('debtor')
 
+  const advancedFilterCount = [
+    'userCardId',
+    'conceptId',
+    'paid',
+    'status',
+    'debtor',
+  ].filter((key) => searchParams.has(key)).length
+
   const yearOptions = [
     {
       value: '0',
@@ -220,101 +229,88 @@ export function DebtDashboardFilters({
     <div className="relative z-20 overflow-visible">
       <FilterBar
         title="Filtros del dashboard"
-        description="Refina la información del periodo que deseas consultar."
+        description="Elige el periodo del resumen; puedes afinarlo con filtros adicionales."
         hasActiveFilters={hasActiveFilters}
         onReset={handleReset}
-      >
-        <FilterField label="Año" htmlFor="dashboard-year">
-          <SelectInput
-            id="dashboard-year"
-            name="dashboard-year"
-            options={yearOptions}
-            value={selectedYear}
-            onChange={handleYearChange}
-          />
-        </FilterField>
+        advancedFilterCount={advancedFilterCount}
+        advancedDescription="Tarjeta, categoría, pago, estado y deudor"
+        primaryFilters={
+          <>
+            <FilterField label="Año" htmlFor="dashboard-year">
+              <SelectInput
+                id="dashboard-year"
+                name="dashboard-year"
+                options={yearOptions}
+                value={selectedYear}
+                onChange={handleYearChange}
+              />
+            </FilterField>
 
-        <FilterField label="Mes" htmlFor="dashboard-month">
-          <SearchableSelectInput
-            id="dashboard-month"
-            name="dashboard-month"
-            options={monthOptions}
-            value={selectedMonth}
-            onChange={(value) => updateFilter('month', value)}
-          />
-        </FilterField>
+            <FilterField label="Mes" htmlFor="dashboard-month">
+              <SearchableSelectInput
+                id="dashboard-month"
+                name="dashboard-month"
+                options={monthOptions}
+                value={selectedMonth}
+                onChange={(value) => updateFilter('month', value)}
+              />
+            </FilterField>
+          </>
+        }
+        advancedFilters={
+          <>
+            <FilterField label="Tarjeta" htmlFor="dashboard-user-card">
+              <SelectInput
+                id="dashboard-user-card"
+                name="dashboard-user-card"
+                options={userCardOptions}
+                value={searchParams.get('userCardId') ?? ''}
+                onChange={(value) => updateFilter('userCardId', value)}
+              />
+            </FilterField>
 
-        <FilterField label="Tarjeta" htmlFor="dashboard-user-card">
-          <SelectInput
-            id="dashboard-user-card"
-            name="dashboard-user-card"
-            options={userCardOptions}
-            value={searchParams.get('userCardId') ?? ''}
-            onChange={(value) => updateFilter('userCardId', value)}
-          />
-        </FilterField>
+            <FilterField label="Categoría" htmlFor="dashboard-concept">
+              <SearchableSelectInput
+                id="dashboard-concept"
+                name="dashboard-concept"
+                options={conceptOptions}
+                value={searchParams.get('conceptId') ?? ''}
+                onChange={(value) => updateFilter('conceptId', value)}
+              />
+            </FilterField>
 
-        <FilterField label="Concepto" htmlFor="dashboard-concept">
-          <SearchableSelectInput
-            id="dashboard-concept"
-            name="dashboard-concept"
-            options={conceptOptions}
-            value={searchParams.get('conceptId') ?? ''}
-            onChange={(value) => updateFilter('conceptId', value)}
-          />
-        </FilterField>
+            <FilterField label="Pago de movimientos" htmlFor="dashboard-paid">
+              <SelectInput
+                id="dashboard-paid"
+                name="dashboard-paid"
+                options={paymentOptions}
+                value={searchParams.get('paid') ?? ''}
+                onChange={(value) => updateFilter('paid', value)}
+              />
+            </FilterField>
 
-        <FilterField label="Pago" htmlFor="dashboard-paid">
-          <SelectInput
-            id="dashboard-paid"
-            name="dashboard-paid"
-            options={paymentOptions}
-            value={searchParams.get('paid') ?? ''}
-            onChange={(value) => updateFilter('paid', value)}
-          />
-        </FilterField>
+            <FilterField label="Estado de cuenta" htmlFor="dashboard-status">
+              <SelectInput
+                id="dashboard-status"
+                name="dashboard-status"
+                options={statusOptions}
+                value={searchParams.get('status') ?? ''}
+                onChange={(value) => updateFilter('status', value)}
+              />
+            </FilterField>
 
-        <FilterField label="Estado" htmlFor="dashboard-status">
-          <SelectInput
-            id="dashboard-status"
-            name="dashboard-status"
-            options={statusOptions}
-            value={searchParams.get('status') ?? ''}
-            onChange={(value) => updateFilter('status', value)}
-          />
-        </FilterField>
-
-        <FilterField label="Deudor" htmlFor="dashboard-debtor">
-          <SelectInput
-            id="dashboard-debtor"
-            name="dashboard-debtor"
-            options={debtorOptions}
-            value={searchParams.get('debtor') ?? ''}
-            onChange={(value) => updateFilter('debtor', value)}
-          />
-        </FilterField>
-      </FilterBar>
-    </div>
-  )
-}
-
-type FilterFieldProps = {
-  label: string
-  htmlFor: string
-  children: React.ReactNode
-}
-
-function FilterField({ label, htmlFor, children }: FilterFieldProps) {
-  return (
-    <div className="min-w-0">
-      <label
-        htmlFor={htmlFor}
-        className="mb-2 block text-xs font-medium text-text-muted"
-      >
-        {label}
-      </label>
-
-      {children}
+            <FilterField label="Deudor" htmlFor="dashboard-debtor">
+              <SelectInput
+                id="dashboard-debtor"
+                name="dashboard-debtor"
+                options={debtorOptions}
+                value={searchParams.get('debtor') ?? ''}
+                onChange={(value) => updateFilter('debtor', value)}
+              />
+            </FilterField>
+          </>
+        }
+      />
     </div>
   )
 }

@@ -2,7 +2,7 @@
 
 'use client'
 
-import { Plus } from 'lucide-react'
+import { ChevronDown, Plus } from 'lucide-react'
 import { useState } from 'react'
 
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema'
@@ -13,6 +13,7 @@ import { TradeEditModal } from '@/modules/trading/trade/components/trade-edit-mo
 import { TradeEmptyState } from '@/modules/trading/trade/components/trade-empty-state'
 import { TradeList } from '@/modules/trading/trade/components/trade-list'
 
+import { deleteTradeSaleAction } from '@/modules/trading/trade-sale/actions/trade-sale.actions'
 import { TradeSaleCreateModal } from '@/modules/trading/trade-sale/components/trade-sale-create-modal'
 import { TradeSaleEditModal } from '@/modules/trading/trade-sale/components/trade-sale-edit-modal'
 import type { TradeSale } from '@/modules/trading/trade-sale/schemas/trade-sale.schema'
@@ -37,6 +38,10 @@ export function TradePage({
   const [createOpen, setCreateOpen] = useState(false)
   const [editingTrade, setEditingTrade] = useState<Trade | null>(null)
   const [deletingTrade, setDeletingTrade] = useState<Trade | null>(null)
+  const [deletingSale, setDeletingSale] = useState<{
+    trade: Trade
+    sale: TradeSale
+  } | null>(null)
   const [saleTrade, setSaleTrade] = useState<Trade | null>(null)
   const [editingSale, setEditingSale] = useState<TradeSale | null>(null)
 
@@ -64,6 +69,12 @@ export function TradePage({
     await deleteTradeAction(deletingTrade.tradeId)
   }
 
+  const handleConfirmDeleteSale = async () => {
+    if (!deletingSale) return
+
+    await deleteTradeSaleAction(deletingSale.sale.tradeSaleId)
+  }
+
   const handleSell = (trade: Trade) => {
     setSaleTrade(trade)
     setEditingSale(null)
@@ -85,7 +96,7 @@ export function TradePage({
         <HeroComponent
           eyebrow="Trading"
           title="Operaciones"
-          description="Administra tus compras, ventas parciales y posiciones cerradas."
+          description="Gestiona tus posiciones activas y consulta las cerradas desde el historial."
           action={
             canCreate
               ? {
@@ -109,6 +120,7 @@ export function TradePage({
               onDelete={setDeletingTrade}
               onSell={handleSell}
               onEditSale={handleEditSale}
+              onDeleteSale={(trade, sale) => setDeletingSale({ trade, sale })}
             />
 
             <TradeSection
@@ -119,16 +131,16 @@ export function TradePage({
               onDelete={setDeletingTrade}
               onSell={handleSell}
               onEditSale={handleEditSale}
+              onDeleteSale={(trade, sale) => setDeletingSale({ trade, sale })}
             />
 
-            <TradeSection
-              title="Cerradas"
-              description="Compras que ya fueron vendidas completamente."
+            <TradeArchiveSection
               trades={closedTrades}
               onEdit={handleEdit}
               onDelete={setDeletingTrade}
               onSell={handleSell}
               onEditSale={handleEditSale}
+              onDeleteSale={(trade, sale) => setDeletingSale({ trade, sale })}
             />
           </>
         )}
@@ -160,6 +172,19 @@ export function TradePage({
         />
       )}
 
+      {deletingSale && (
+        <DeleteModal
+          title="Eliminar venta"
+          description={
+            '¿Seguro que deseas eliminar esta venta de ' +
+            deletingSale.trade.instrumentSymbol +
+            '? Esta acción no se puede deshacer.'
+          }
+          onClose={() => setDeletingSale(null)}
+          onConfirm={handleConfirmDeleteSale}
+        />
+      )}
+
       {saleTrade && editingSale === null && (
         <TradeSaleCreateModal trade={saleTrade} onClose={handleCloseSale} />
       )}
@@ -183,6 +208,7 @@ type TradeSectionProps = {
   onDelete: (trade: Trade) => void
   onSell: (trade: Trade) => void
   onEditSale: (trade: Trade, sale: TradeSale) => void
+  onDeleteSale: (trade: Trade, sale: TradeSale) => void
 }
 
 function TradeSection({
@@ -193,6 +219,7 @@ function TradeSection({
   onDelete,
   onSell,
   onEditSale,
+  onDeleteSale,
 }: TradeSectionProps) {
   if (trades.length === 0) {
     return null
@@ -212,7 +239,55 @@ function TradeSection({
         onDelete={onDelete}
         onSell={onSell}
         onEditSale={onEditSale}
+        onDeleteSale={onDeleteSale}
       />
+    </section>
+  )
+}
+
+
+function TradeArchiveSection({
+  trades,
+  onEdit,
+  onDelete,
+  onSell,
+  onEditSale,
+  onDeleteSale,
+}: Omit<TradeSectionProps, 'title' | 'description'>) {
+  if (trades.length === 0) {
+    return null
+  }
+
+  return (
+    <section className="space-y-4">
+      <details className="group">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-xl px-2 py-2 transition hover:bg-surface/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 [&::-webkit-details-marker]:hidden">
+          <div>
+            <h2 className="text-xl font-semibold text-foreground">
+              Operaciones cerradas
+            </h2>
+            <p className="mt-1 text-sm text-text-muted">
+              Consulta aquí las posiciones que ya vendiste por completo.
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-3">
+            <span className="rounded-full bg-background px-2.5 py-1 text-xs font-medium text-text-muted ring-1 ring-border">
+              {trades.length}
+            </span>
+            <ChevronDown className="size-4 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true" />
+          </div>
+        </summary>
+        <div className="pt-4">
+          <TradeList
+            trades={trades}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onSell={onSell}
+            onEditSale={onEditSale}
+            onDeleteSale={onDeleteSale}
+          />
+        </div>
+      </details>
     </section>
   )
 }

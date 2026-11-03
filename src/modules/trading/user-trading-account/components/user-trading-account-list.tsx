@@ -7,12 +7,8 @@ import type { UserTradingAccount } from '@/modules/trading/user-trading-account/
 
 type UserTradingAccountListProps = {
   userTradingAccounts: UserTradingAccount[]
-  onEdit: (
-    userTradingAccount: UserTradingAccount,
-  ) => void
-  onDelete: (
-    userTradingAccount: UserTradingAccount,
-  ) => void
+  onEdit: (userTradingAccount: UserTradingAccount) => void
+  onDelete: (userTradingAccount: UserTradingAccount) => void
 }
 
 export function UserTradingAccountList({
@@ -21,21 +17,15 @@ export function UserTradingAccountList({
   onDelete,
 }: UserTradingAccountListProps) {
   return (
-    <div className="grid gap-4 xl:grid-cols-2">
-      {userTradingAccounts.map(
-        (userTradingAccount) => (
-          <UserTradingAccountItem
-            key={
-              userTradingAccount.userTradingAccountId
-            }
-            userTradingAccount={
-              userTradingAccount
-            }
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        ),
-      )}
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {userTradingAccounts.map((userTradingAccount) => (
+        <UserTradingAccountItem
+          key={userTradingAccount.userTradingAccountId}
+          userTradingAccount={userTradingAccount}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      ))}
     </div>
   )
 }

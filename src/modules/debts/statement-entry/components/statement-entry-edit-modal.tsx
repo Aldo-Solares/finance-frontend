@@ -20,11 +20,8 @@ import { useFormStatus } from 'react-dom'
 import type { ActionState } from '@/core/utils/action-state'
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import { updateStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
-import { STATEMENT_ENTRY_TYPE_OPTIONS } from '@/modules/debts/statement-entry/constants/statement-entry.constants'
-import type {
-  StatementEntry,
-  StatementEntryType,
-} from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
+import { resolveStatementEntryType } from '@/modules/debts/statement-entry/constants/statement-entry.constants'
+import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 import { DateInput } from '@/shared/inputs/date-input'
 import { TextInput } from '@/shared/inputs/text-input'
 import { NumberInput } from '@/shared/inputs/number-input'
@@ -54,19 +51,22 @@ export function StatementEntryEditModal({
   )
 
   const [date, setDate] = useState(entry.date ?? '')
-
   const [paid, setPaid] = useState(entry.paid)
-
-  const [entryType, setEntryType] = useState<StatementEntryType>(
-    entry.entryType,
+  const [selectedConceptId, setSelectedConceptId] = useState(
+    String(entry.conceptId),
   )
-
+  const [merchant, setMerchant] = useState(
+    entry.merchant ?? defaultMerchant ?? '',
+  )
   const [msiOpen, setMsiOpen] = useState(
     entry.msiCurrent !== null || entry.msiTotal !== null,
   )
-
   const [paymentOpen, setPaymentOpen] = useState(false)
 
+  const selectedConcept = concepts.find(
+    (concept) => String(concept.conceptId) === selectedConceptId,
+  )
+  const entryType = resolveStatementEntryType(selectedConcept?.name, merchant)
   const isPurchase = entryType === 'PURCHASE'
 
   const hasMsiData = entry.msiCurrent !== null || entry.msiTotal !== null
@@ -141,32 +141,26 @@ export function StatementEntryEditModal({
                 <div className="grid gap-4 sm:grid-cols-3">
                   <div>
                     <FieldLabel htmlFor="entryType">Tipo</FieldLabel>
-
-                    <select
+                    <input type="hidden" name="entryType" value={entryType} />
+                    <div
                       id="entryType"
-                      name="entryType"
-                      value={entryType}
-                      onChange={(event) =>
-                        setEntryType(event.target.value as StatementEntryType)
-                      }
-                      required
-                      className={fieldClassName}
+                      className="flex h-11 items-center rounded-xl border border-border bg-surface px-4 text-sm text-foreground"
                     >
-                      {STATEMENT_ENTRY_TYPE_OPTIONS.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                      {entryType === 'PURCHASE' ? 'Compra' : 'Recurrente'}
+                    </div>
+                    <p className="mt-1.5 text-xs text-text-muted">
+                      Se determina por la categoría y el comercio.
+                    </p>
                   </div>
 
                   <div>
-                    <FieldLabel htmlFor="conceptId">Concepto</FieldLabel>
+                    <FieldLabel htmlFor="conceptId">Categoría</FieldLabel>
 
                     <select
                       id="conceptId"
                       name="conceptId"
-                      defaultValue={entry.conceptId}
+                      value={selectedConceptId}
+                      onChange={(event) => setSelectedConceptId(event.target.value)}
                       required
                       className={fieldClassName}
                     >
@@ -192,15 +186,15 @@ export function StatementEntryEditModal({
                 </div>
 
                 <div>
-                  <FieldLabel htmlFor="specification">
-                    Especificación
+                  <FieldLabel htmlFor="description">
+                    Descripción del gasto
                   </FieldLabel>
 
                   <TextInput
-                    id="specification"
-                    name="specification"
-                    defaultValue={entry.specification ?? ''}
-                    placeholder="Especificación"
+                    id="description"
+                    name="description"
+                    defaultValue={entry.description ?? ''}
+                    placeholder="Descripción del gasto"
                   />
                 </div>
 
@@ -210,7 +204,8 @@ export function StatementEntryEditModal({
                   <TextInput
                     id="merchant"
                     name="merchant"
-                    defaultValue={entry.merchant ?? defaultMerchant ?? ''}
+                    value={merchant}
+                    onChange={setMerchant}
                     placeholder="Comercio"
                     description={
                       !entry.merchant && defaultMerchant
@@ -261,7 +256,7 @@ export function StatementEntryEditModal({
 
                   <div>
                     <FieldLabel htmlFor="amount">
-                      {isPurchase ? 'Monto de esta parcialidad' : 'Monto'}
+                      Importe
                     </FieldLabel>
 
                     <NumberInput

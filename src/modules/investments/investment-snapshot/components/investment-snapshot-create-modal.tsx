@@ -5,7 +5,10 @@
 import { useActionState, useEffect, useState } from 'react'
 
 import { createInvestmentSnapshotAction } from '@/modules/investments/investment-snapshot/actions/investment-snapshot.actions'
-import { DateInput } from '@/shared/inputs/date-input'
+import {
+  DateInput,
+  getLocalDateInputValue,
+} from '@/shared/inputs/date-input'
 import { NumberInput } from '@/shared/inputs/number-input'
 
 const initialState = {
@@ -23,6 +26,10 @@ export function InvestmentSnapshotCreateModal({
 }: InvestmentSnapshotCreateModalProps) {
   const [balanceDate, setBalanceDate] = useState('')
 
+  useEffect(() => {
+    setBalanceDate(getLocalDateInputValue())
+  }, [])
+
   const [state, formAction, pending] = useActionState(
     createInvestmentSnapshotAction,
     initialState,
@@ -36,7 +43,7 @@ export function InvestmentSnapshotCreateModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/30 p-4">
-      <div className="w-full max-w-lg rounded-2xl border border-border bg-background shadow-xl">
+      <div className="select-scrollbar max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-background shadow-xl">
         <div className="border-b border-border px-6 py-5">
           <h2 className="text-lg font-semibold text-foreground">
             Actualizar SmartCash

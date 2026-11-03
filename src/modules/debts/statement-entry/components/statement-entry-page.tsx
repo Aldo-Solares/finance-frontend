@@ -52,6 +52,9 @@ export function StatementEntryPage({
     () => new Set(),
   )
   const [isPayingSelected, setIsPayingSelected] = useState(false)
+  const [markingPaidEntryId, setMarkingPaidEntryId] = useState<number | null>(
+    null,
+  )
   const [paymentFeedback, setPaymentFeedback] = useState<{
     success: boolean
     message: string
@@ -263,6 +266,8 @@ export function StatementEntryPage({
   }
 
   const handlePaySelected = async () => {
+    if (markingPaidEntryId !== null || isPayingSelected) return
+
     const entryIds = entries
       .filter((entry) => !entry.paid && selectedEntryIds.has(entry.entryId))
       .map((entry) => entry.entryId)
@@ -287,6 +292,35 @@ export function StatementEntryPage({
       })
     } finally {
       setIsPayingSelected(false)
+    }
+  }
+
+  const handleMarkEntryPaid = async (entryId: number) => {
+    if (markingPaidEntryId !== null || isPayingSelected) return
+
+    setMarkingPaidEntryId(entryId)
+    setPaymentFeedback(null)
+    try {
+      const result = await paySelectedStatementEntriesAction([entryId])
+      setPaymentFeedback(result)
+      if (result.success) {
+        setSelectedEntryIds((current) => {
+          const next = new Set(current)
+          next.delete(entryId)
+          return next
+        })
+        router.refresh()
+      }
+    } catch (error) {
+      setPaymentFeedback({
+        success: false,
+        message:
+          error instanceof Error
+            ? error.message
+            : 'No fue posible completar el pago.',
+      })
+    } finally {
+      setMarkingPaidEntryId(null)
     }
   }
 
@@ -379,11 +413,11 @@ export function StatementEntryPage({
         {concepts.length === 0 && (
           <div className="rounded-[1.5rem] border border-primary bg-primary-soft px-5 py-4">
             <p className="text-sm font-medium text-primary">
-              No existen conceptos disponibles.
+              No hay categorías disponibles.
             </p>
 
             <p className="mt-1 text-xs text-primary/70">
-              Un administrador debe crear al menos un concepto antes de
+              El catálogo debe contener categorías antes de
               registrar movimientos.
             </p>
           </div>
@@ -433,7 +467,7 @@ export function StatementEntryPage({
                 <button
                   type="button"
                   onClick={handlePaySelected}
-                  disabled={isPayingSelected}
+                  disabled={isPayingSelected || markingPaidEntryId !== null}
                   className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-xs font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <Check className="h-4 w-4" />
@@ -442,7 +476,7 @@ export function StatementEntryPage({
                 <button
                   type="button"
                   onClick={() => setSelectedEntryIds(new Set())}
-                  disabled={isPayingSelected}
+                  disabled={isPayingSelected || markingPaidEntryId !== null}
                   className="h-10 rounded-xl border border-border px-3 text-xs font-medium text-text-muted transition hover:bg-surface disabled:opacity-60"
                 >
                   Limpiar
@@ -475,6 +509,9 @@ export function StatementEntryPage({
                 onDelete={setDeleteEntry}
                 onToggleSelection={handleToggleSelection}
                 onTogglePageSelection={handleTogglePageSelection}
+                onMarkPaid={handleMarkEntryPaid}
+                markingPaidEntryId={markingPaidEntryId}
+                isPayingSelected={isPayingSelected}
               />
 
               <Pagination

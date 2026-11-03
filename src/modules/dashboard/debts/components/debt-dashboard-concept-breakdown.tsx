@@ -2,19 +2,12 @@
 
 import { ReceiptText } from 'lucide-react'
 
+import { DebtDashboardPanelHeader } from '@/modules/dashboard/debts/components/debt-dashboard-panel-header'
 import type { DebtDashboardConcept } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
+import { formatDashboardMoney } from '@/modules/dashboard/debts/utils/debt-dashboard-formatters'
 
 type DebtDashboardConceptBreakdownProps = {
   concepts: DebtDashboardConcept[]
-}
-
-function formatMoney(value: number) {
-  return new Intl.NumberFormat('es-MX', {
-    style: 'currency',
-    currency: 'MXN',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value)
 }
 
 export function DebtDashboardConceptBreakdown({
@@ -22,30 +15,17 @@ export function DebtDashboardConceptBreakdown({
 }: DebtDashboardConceptBreakdownProps) {
   return (
     <section className="rounded-2xl border border-border bg-background p-5 sm:p-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-            Distribución
-          </p>
-
-          <h2 className="mt-1 text-lg font-semibold tracking-tight text-foreground">
-            Gastos por concepto
-          </h2>
-
-          <p className="mt-1 text-sm text-text-muted">
-            En qué se concentra tu gasto durante el periodo.
-          </p>
-        </div>
-
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface text-text-muted">
-          <ReceiptText className="h-4 w-4" />
-        </div>
-      </div>
+      <DebtDashboardPanelHeader
+        eyebrow="Distribución"
+        title="Gastos por categoría"
+        description="En qué se concentra tu gasto durante el periodo."
+        icon={ReceiptText}
+      />
 
       {concepts.length === 0 ? (
         <div className="mt-6 rounded-xl border border-dashed border-border bg-surface/40 px-4 py-6 text-center">
           <p className="text-sm text-text-muted">
-            No hay conceptos para este periodo.
+            No hay categorías para este periodo.
           </p>
         </div>
       ) : (
@@ -65,11 +45,11 @@ export function DebtDashboardConceptBreakdown({
 
                 <div className="shrink-0 text-right">
                   <p className="text-sm font-semibold text-foreground">
-                    {formatMoney(concept.totalExpenses)}
+                    {formatDashboardMoney(concept.totalExpenses)}
                   </p>
 
                   <p className="mt-0.5 text-[11px] text-text-muted">
-                    {concept.percentage.toFixed(2)}%
+                    {concept.percentage.toFixed(1)}%
                   </p>
                 </div>
               </div>

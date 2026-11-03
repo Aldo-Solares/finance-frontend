@@ -54,7 +54,7 @@ export function InvestmentSnapshotEditModal({
         className="absolute inset-0 cursor-default bg-foreground/55 backdrop-blur-sm"
       />
 
-      <div className="relative z-10 w-full max-w-lg overflow-hidden rounded-[2rem] border border-border bg-background shadow-2xl">
+      <div className="select-scrollbar relative z-10 max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[2rem] border border-border bg-background shadow-2xl">
         <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-text-muted">

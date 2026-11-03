@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { ArrowRight, Layers3, LockKeyhole, Smartphone } from 'lucide-react'
+import { ArrowRight, Layers3, LockKeyhole, LogIn, Smartphone } from 'lucide-react'
 
 export function NotLoggedHeroInfo() {
   return (
@@ -33,8 +33,9 @@ export function NotLoggedHeroInfo() {
         </Link>
         <Link
           href="/auth/login"
-          className="group inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-7 text-sm font-medium text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary-hover"
+          className="group inline-flex h-12 items-center gap-2 rounded-xl border border-border bg-background/70 px-7 text-sm font-medium text-foreground transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-surface"
         >
+          <LogIn className="h-4 w-4 text-primary" />
           Ya tengo cuenta
         </Link>
       </div>

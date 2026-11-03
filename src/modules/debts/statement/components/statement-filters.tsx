@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
 import { FilterBar } from '@/shared/filters/filter-bar'
+import { FilterField } from '@/shared/filters/filter-field'
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 import { SelectInput } from '@/shared/inputs/select-input'
 
@@ -127,6 +128,10 @@ export function StatementFilters({
     searchParams.has('status') ||
     searchParams.has('paid')
 
+  const advancedFilterCount = ['status', 'paid'].filter((key) =>
+    searchParams.has(key),
+  ).length
+
   const userCardOptions = [
     {
       value: '',
@@ -204,80 +209,67 @@ export function StatementFilters({
       description="Refina los periodos que deseas consultar."
       hasActiveFilters={hasActiveFilters}
       onReset={handleReset}
-    >
-      <FilterField label="Tarjeta" htmlFor="statement-user-card">
-        <SearchableSelectInput
-          id="statement-user-card"
-          name="statement-user-card"
-          options={userCardOptions}
-          value={selectedUserCardId}
-          onChange={handleUserCardChange}
-          placeholder="Todas"
-          searchPlaceholder="Buscar tarjeta..."
-          emptyMessage="No se encontraron tarjetas."
-        />
-      </FilterField>
+      advancedFilterCount={advancedFilterCount}
+      advancedDescription="Estado de cuenta y situación del pago"
+      primaryFilters={
+        <>
+          <FilterField label="Tarjeta" htmlFor="statement-user-card">
+            <SearchableSelectInput
+              id="statement-user-card"
+              name="statement-user-card"
+              options={userCardOptions}
+              value={selectedUserCardId}
+              onChange={handleUserCardChange}
+              placeholder="Todas"
+              searchPlaceholder="Buscar tarjeta..."
+              emptyMessage="No se encontraron tarjetas."
+            />
+          </FilterField>
 
-      <FilterField label="Año" htmlFor="statement-year">
-        <SelectInput
-          id="statement-year"
-          name="statement-year"
-          options={yearOptions}
-          value={selectedYear}
-          onChange={handleYearChange}
-        />
-      </FilterField>
+          <FilterField label="Año" htmlFor="statement-year">
+            <SelectInput
+              id="statement-year"
+              name="statement-year"
+              options={yearOptions}
+              value={selectedYear}
+              onChange={handleYearChange}
+            />
+          </FilterField>
 
-      <FilterField label="Mes" htmlFor="statement-month">
-        <SelectInput
-          id="statement-month"
-          name="statement-month"
-          options={monthOptions}
-          value={selectedMonth}
-          onChange={(value) => updateFilter('month', value)}
-        />
-      </FilterField>
+          <FilterField label="Mes" htmlFor="statement-month">
+            <SelectInput
+              id="statement-month"
+              name="statement-month"
+              options={monthOptions}
+              value={selectedMonth}
+              onChange={(value) => updateFilter('month', value)}
+            />
+          </FilterField>
+        </>
+      }
+      advancedFilters={
+        <>
+          <FilterField label="Estado" htmlFor="statement-status">
+            <SelectInput
+              id="statement-status"
+              name="statement-status"
+              options={statusOptions}
+              value={searchParams.get('status') ?? ''}
+              onChange={(value) => updateFilter('status', value)}
+            />
+          </FilterField>
 
-      <FilterField label="Estado" htmlFor="statement-status">
-        <SelectInput
-          id="statement-status"
-          name="statement-status"
-          options={statusOptions}
-          value={searchParams.get('status') ?? ''}
-          onChange={(value) => updateFilter('status', value)}
-        />
-      </FilterField>
-
-      <FilterField label="Pago" htmlFor="statement-paid">
-        <SelectInput
-          id="statement-paid"
-          name="statement-paid"
-          options={paymentOptions}
-          value={searchParams.get('paid') ?? ''}
-          onChange={(value) => updateFilter('paid', value)}
-        />
-      </FilterField>
-    </FilterBar>
-  )
-}
-
-type FilterFieldProps = {
-  label: string
-  htmlFor: string
-  children: React.ReactNode
-}
-
-function FilterField({ label, htmlFor, children }: FilterFieldProps) {
-  return (
-    <div className="min-w-0">
-      <label
-        htmlFor={htmlFor}
-        className="mb-2 block text-xs font-medium text-text-muted"
-      >
-        {label}
-      </label>
-
-      {children}
-    </div>
+          <FilterField label="Pago" htmlFor="statement-paid">
+            <SelectInput
+              id="statement-paid"
+              name="statement-paid"
+              options={paymentOptions}
+              value={searchParams.get('paid') ?? ''}
+              onChange={(value) => updateFilter('paid', value)}
+            />
+          </FilterField>
+        </>
+      }
+    />
   )
 }

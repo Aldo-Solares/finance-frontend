@@ -51,10 +51,11 @@ export function ResendVerificationForm() {
           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
 
           <div>
-            <p className="font-medium">Correo enviado</p>
+            <p className="font-medium">Solicitud procesada</p>
 
             <p className="mt-0.5 text-text-muted">
-              Revisa tu bandeja de entrada para verificar tu cuenta.
+              {state.message ??
+                'Si el correo está registrado y requiere verificación, se enviará un enlace.'}
             </p>
           </div>
         </div>

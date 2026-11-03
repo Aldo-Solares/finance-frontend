@@ -38,7 +38,7 @@ export async function createStatementEntryAction(
     statementId: normalizeRequiredNumber(formData.get('statementId')),
     conceptId: normalizeRequiredNumber(formData.get('conceptId')),
     debtor: formData.get('debtor'),
-    specification: normalizeNullableString(formData.get('specification')),
+    description: normalizeNullableString(formData.get('description')),
     merchant: normalizeNullableString(formData.get('merchant')),
     notes: normalizeNullableString(formData.get('notes')),
     entryType: formData.get('entryType'),
@@ -83,7 +83,7 @@ export async function updateStatementEntryAction(
     statementId: normalizeRequiredNumber(formData.get('statementId')),
     conceptId: normalizeRequiredNumber(formData.get('conceptId')),
     debtor: formData.get('debtor'),
-    specification: normalizeNullableString(formData.get('specification')),
+    description: normalizeNullableString(formData.get('description')),
     merchant: normalizeNullableString(formData.get('merchant')),
     notes: normalizeNullableString(formData.get('notes')),
     entryType: formData.get('entryType'),
@@ -141,7 +141,10 @@ export async function paySelectedStatementEntriesAction(
 
     return {
       success: true,
-      message: `${updatedEntries.length} movimientos marcados como pagados.`,
+      message:
+        updatedEntries.length === 1
+          ? '1 movimiento marcado como pagado.'
+          : `${updatedEntries.length} movimientos marcados como pagados.`,
     }
   } catch (error) {
     return {

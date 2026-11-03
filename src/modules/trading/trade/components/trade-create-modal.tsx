@@ -4,13 +4,16 @@
 
 import { X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { type FormEvent, useMemo, useState } from 'react'
+import { type FormEvent, useEffect, useMemo, useState } from 'react'
 
 import { normalizeRequiredNumber } from '@/core/utils/form-data'
 import type { Instrument } from '@/modules/trading/instrument/schemas/instrument.schema'
 import { createTradeAction } from '@/modules/trading/trade/actions/trade.actions'
 import type { UserTradingAccount } from '@/modules/trading/user-trading-account/schemas/user-trading-account.schema'
-import { DateInput } from '@/shared/inputs/date-input'
+import {
+  DateInput,
+  getLocalDateInputValue,
+} from '@/shared/inputs/date-input'
 import { NumberInput } from '@/shared/inputs/number-input'
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 
@@ -73,6 +76,10 @@ export function TradeCreateModal({
   const [purchaseCommissionRate, setPurchaseCommissionRate] = useState('0.25')
   const [purchaseCommission, setPurchaseCommission] = useState('')
   const [purchaseDate, setPurchaseDate] = useState('')
+
+  useEffect(() => {
+    setPurchaseDate(getLocalDateInputValue())
+  }, [])
 
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -163,7 +170,7 @@ export function TradeCreateModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4">
-      <div className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-border bg-background shadow-xl">
+      <div className="select-scrollbar max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-border bg-background shadow-xl">
         <div className="flex items-start justify-between border-b border-border px-6 py-5">
           <div>
             <h2 className="text-lg font-semibold text-foreground">

@@ -20,7 +20,7 @@ export function ConceptGrid({ concepts, onEdit, onDelete }: ConceptGridProps) {
           key={concept.conceptId}
           icon={Tag}
           title={concept.name}
-          subtitle={`Concepto #${concept.conceptId}`}
+          subtitle={`Categoría #${concept.conceptId}`}
           editLabel={`Editar ${concept.name}`}
           deleteLabel={`Eliminar ${concept.name}`}
           onEdit={() => onEdit(concept)}

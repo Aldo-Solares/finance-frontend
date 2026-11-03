@@ -31,11 +31,11 @@ export function DebtDashboardConceptBreakdown({
       ) : (
         <div className="mt-6 space-y-4">
           {concepts.map((concept) => (
-            <div key={concept.conceptId}>
+            <div key={concept.categoryId}>
               <div className="flex items-center justify-between gap-4">
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium text-foreground">
-                    {concept.conceptName}
+                    {concept.categoryName}
                   </p>
 
                   <p className="mt-0.5 text-[11px] text-text-muted">

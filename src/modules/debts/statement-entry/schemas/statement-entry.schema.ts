@@ -41,8 +41,8 @@ export type StatementEntryType = z.infer<typeof StatementEntryTypeSchema>
 export const StatementEntrySchema = z.object({
   entryId: z.number().int(),
   statementId: z.number().int(),
-  conceptId: z.number().int(),
-  conceptName: z.string(),
+  categoryId: z.number().int(),
+  categoryName: z.string(),
   debtor: z.string(),
   description: z.string().nullable(),
   merchant: z.string().nullable(),
@@ -51,11 +51,11 @@ export const StatementEntrySchema = z.object({
   date: nullableDateSchema,
   amount: z.number().positive(),
   paid: z.boolean(),
-  msiCurrent: nullablePositiveIntegerSchema,
-  msiTotal: nullablePositiveIntegerSchema,
+  installmentNumber: nullablePositiveIntegerSchema,
+  totalInstallments: nullablePositiveIntegerSchema,
   purchaseAmount: nullablePositiveNumberSchema,
-  remainingMsi: nullableNonNegativeIntegerSchema,
-  remainingMsiAmount: nullableNonNegativeNumberSchema,
+  remainingInstallments: nullableNonNegativeIntegerSchema,
+  remainingInstallmentsAmount: nullableNonNegativeNumberSchema,
 })
 
 // ===================
@@ -69,7 +69,7 @@ export const CreateStatementEntryRequestSchema = z.object({
   )
     .int('El estado de cuenta no es válido')
     .positive('El estado de cuenta no es válido'),
-  conceptId: requiredNumber(
+  categoryId: requiredNumber(
     'Selecciona una categoría',
     'La categoría no es válida',
   )
@@ -84,8 +84,8 @@ export const CreateStatementEntryRequestSchema = z.object({
   amount: requiredNumber('El importe es obligatorio', 'El importe debe ser válido')
     .positive('El importe debe ser mayor que cero'),
   paid: z.boolean(),
-  msiCurrent: requestNullablePositiveIntegerSchema,
-  msiTotal: requestNullablePositiveIntegerSchema,
+  installmentNumber: requestNullablePositiveIntegerSchema,
+  totalInstallments: requestNullablePositiveIntegerSchema,
 })
 
 // ===================
@@ -99,7 +99,7 @@ export const UpdateStatementEntryRequestSchema = z.object({
   )
     .int('El estado de cuenta no es válido')
     .positive('El estado de cuenta no es válido'),
-  conceptId: requiredNumber(
+  categoryId: requiredNumber(
     'Selecciona una categoría',
     'La categoría no es válida',
   )
@@ -114,8 +114,8 @@ export const UpdateStatementEntryRequestSchema = z.object({
   amount: requiredNumber('El importe es obligatorio', 'El importe debe ser válido')
     .positive('El importe debe ser mayor que cero'),
   paid: z.boolean(),
-  msiCurrent: requestNullablePositiveIntegerSchema,
-  msiTotal: requestNullablePositiveIntegerSchema,
+  installmentNumber: requestNullablePositiveIntegerSchema,
+  totalInstallments: requestNullablePositiveIntegerSchema,
 })
 
 // ===================

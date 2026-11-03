@@ -82,7 +82,7 @@ export function ConceptFormModal({ concept, onClose }: ConceptFormModalProps) {
 
         <form noValidate action={action}>
           {editing && (
-            <input type="hidden" name="conceptId" value={concept.conceptId} />
+            <input type="hidden" name="categoryId" value={concept.categoryId} />
           )}
 
           <div className="p-6">

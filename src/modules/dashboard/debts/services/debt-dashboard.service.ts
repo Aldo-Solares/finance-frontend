@@ -28,8 +28,8 @@ export async function getDebtDashboard(
     params.set('cardId', filter.userCardId.toString())
   }
 
-  if (filter.conceptId !== undefined) {
-    params.set('conceptId', filter.conceptId.toString())
+  if (filter.categoryId !== undefined) {
+    params.set('categoryId', filter.categoryId.toString())
   }
 
   if (filter.paid !== undefined) {

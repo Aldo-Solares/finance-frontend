@@ -16,7 +16,7 @@ type PageProps = {
     year?: string
     month?: string
     userCardId?: string
-    conceptId?: string
+    categoryId?: string
     paid?: string
     status?: string
     debtor?: string
@@ -87,8 +87,8 @@ export default async function Page({
       params.userCardId,
     ),
 
-    conceptId: parseOptionalNumber(
-      params.conceptId,
+    categoryId: parseOptionalNumber(
+      params.categoryId,
     ),
 
     paid: parseOptionalBoolean(

@@ -56,9 +56,9 @@ export async function updateConceptAction(
   _previousState: ActionState<Concept>,
   formData: FormData,
 ): Promise<ActionState<Concept>> {
-  const conceptId = Number(formData.get('conceptId'))
+  const categoryId = Number(formData.get('categoryId'))
 
-  if (!Number.isInteger(conceptId) || conceptId <= 0) {
+  if (!Number.isInteger(categoryId) || categoryId <= 0) {
     return actionError('El categoría no es válido')
   }
 
@@ -74,7 +74,7 @@ export async function updateConceptAction(
   }
 
   return withActionState(async () => {
-    const concept = await updateConcept(conceptId, parsed.data)
+    const concept = await updateConcept(categoryId, parsed.data)
 
     revalidatePath('/admin/concept')
     revalidatePath('/debts/statement')
@@ -89,8 +89,8 @@ export async function updateConceptAction(
 // DELETE
 // ===================
 
-export async function deleteConceptAction(conceptId: number) {
-  await deleteConcept(conceptId)
+export async function deleteConceptAction(categoryId: number) {
+  await deleteConcept(categoryId)
 
   revalidatePath('/admin/concept')
 }

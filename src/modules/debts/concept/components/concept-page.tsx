@@ -35,7 +35,7 @@ export function ConceptPage({ concepts }: ConceptPageProps) {
         `¿Seguro que deseas eliminar "${concept.name}"?`
       }
       onDelete={async (concept) => {
-        await deleteConceptAction(concept.conceptId)
+        await deleteConceptAction(concept.categoryId)
       }}
       renderItems={({ onEdit, onDelete }) => (
         <ConceptGrid
@@ -49,7 +49,7 @@ export function ConceptPage({ concepts }: ConceptPageProps) {
       )}
       renderEditDialog={(concept, onClose) => (
         <ConceptFormModal
-          key={concept.conceptId}
+          key={concept.categoryId}
           concept={concept}
           onClose={onClose}
         />

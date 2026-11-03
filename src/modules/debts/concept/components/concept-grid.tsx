@@ -17,10 +17,10 @@ export function ConceptGrid({ concepts, onEdit, onDelete }: ConceptGridProps) {
     <AdminCatalogGrid>
       {concepts.map((concept) => (
         <AdminCatalogItem
-          key={concept.conceptId}
+          key={concept.categoryId}
           icon={Tag}
           title={concept.name}
-          subtitle={`Categoría #${concept.conceptId}`}
+          subtitle={`Categoría #${concept.categoryId}`}
           editLabel={`Editar ${concept.name}`}
           deleteLabel={`Eliminar ${concept.name}`}
           onEdit={() => onEdit(concept)}

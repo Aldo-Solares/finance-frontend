@@ -14,7 +14,7 @@ export function DebtDashboardHighlights({
   dashboard,
 }: DebtDashboardHighlightsProps) {
   const topCard = dashboard.cards[0]
-  const topConcept = dashboard.concepts[0]
+  const topConcept = dashboard.categories[0]
 
   return (
     <section className="rounded-2xl border border-border bg-background p-5 sm:p-6">
@@ -36,7 +36,7 @@ export function DebtDashboardHighlights({
         <HighlightCard
           icon={ReceiptText}
           label="Categoría principal"
-          name={topConcept?.conceptName ?? 'Sin movimientos'}
+          name={topConcept?.categoryName ?? 'Sin movimientos'}
           amount={topConcept ? formatDashboardMoney(topConcept.totalExpenses) : '—'}
           detail={topConcept ? `${topConcept.percentage.toFixed(1)}% del gasto · ${topConcept.totalEntries} movimientos` : 'Agrega movimientos para ver el resumen.'}
         />

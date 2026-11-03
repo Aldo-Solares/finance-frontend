@@ -38,7 +38,7 @@ export function StatementEntryItem({
 }: StatementEntryItemProps) {
   const isPurchase = entry.entryType === 'PURCHASE'
 
-  const hasMsi = entry.msiCurrent !== null && entry.msiTotal !== null
+  const hasMsi = entry.installmentNumber !== null && entry.totalInstallments !== null
 
   return (
     <tr className="odd:bg-background even:bg-surface/30 transition-colors hover:bg-primary-soft/40">
@@ -48,14 +48,14 @@ export function StatementEntryItem({
           checked={selected}
           disabled={entry.paid}
           onChange={() => onToggleSelection(entry.entryId)}
-          aria-label={`Seleccionar ${entry.conceptName}`}
+          aria-label={`Seleccionar ${entry.categoryName}`}
           className="h-4 w-4 cursor-pointer accent-primary disabled:cursor-not-allowed disabled:opacity-40"
         />
       </td>
 
       <td className="px-4 py-3">
         <p className="text-sm font-medium text-foreground">
-          {entry.conceptName}
+          {entry.categoryName}
         </p>
       </td>
 
@@ -100,13 +100,13 @@ export function StatementEntryItem({
         {hasMsi ? (
           <div>
             <p className="text-sm font-medium text-primary">
-              {entry.msiCurrent}/{entry.msiTotal}
+              {entry.installmentNumber}/{entry.totalInstallments}
             </p>
 
-            {entry.remainingMsi !== null && (
+            {entry.remainingInstallments !== null && (
               <p className="mt-0.5 text-xs text-text-muted">
-                {entry.remainingMsi}{' '}
-                {entry.remainingMsi === 1 ? 'restante' : 'restantes'}
+                {entry.remainingInstallments}{' '}
+                {entry.remainingInstallments === 1 ? 'restante' : 'restantes'}
               </p>
             )}
           </div>
@@ -128,9 +128,9 @@ export function StatementEntryItem({
       </td>
 
       <td className="px-4 py-3 text-right tabular-nums">
-        {entry.remainingMsiAmount !== null ? (
+        {entry.remainingInstallmentsAmount !== null ? (
           <p className="text-sm text-text-muted">
-            {formatMoney(entry.remainingMsiAmount)}
+            {formatMoney(entry.remainingInstallmentsAmount)}
           </p>
         ) : (
           <span className="text-sm text-text-muted">—</span>
@@ -148,7 +148,7 @@ export function StatementEntryItem({
             type="button"
             onClick={() => onMarkPaid(entry.entryId)}
             disabled={disablePaymentActions}
-            aria-label={`Marcar ${entry.conceptName} como pagado`}
+            aria-label={`Marcar ${entry.categoryName} como pagado`}
             title="Marcar como pagado"
             className="inline-flex h-8 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-background px-2.5 text-xs font-medium text-text-muted transition hover:border-primary/30 hover:bg-primary-soft hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
           >

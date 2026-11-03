@@ -16,7 +16,7 @@ import {
 // ===================
 
 export async function findAllConcepts(): Promise<Concept[]> {
-  const response = await fetchServer('/concepts', {
+  const response = await fetchServer('/categories', {
     method: 'GET',
   })
 
@@ -31,8 +31,8 @@ export async function findAllConcepts(): Promise<Concept[]> {
 // FIND BY ID
 // ===================
 
-export async function findConceptById(conceptId: number): Promise<Concept> {
-  const response = await fetchServer(`/concepts/${conceptId}`, {
+export async function findConceptById(categoryId: number): Promise<Concept> {
+  const response = await fetchServer(`/categories/${categoryId}`, {
     method: 'GET',
   })
 
@@ -50,7 +50,7 @@ export async function findConceptById(conceptId: number): Promise<Concept> {
 export async function createConcept(
   request: CreateConceptRequest,
 ): Promise<Concept> {
-  const response = await fetchServer('/concepts', {
+  const response = await fetchServer('/categories', {
     method: 'POST',
     body: JSON.stringify(request),
   })
@@ -67,10 +67,10 @@ export async function createConcept(
 // ===================
 
 export async function updateConcept(
-  conceptId: number,
+  categoryId: number,
   request: UpdateConceptRequest,
 ): Promise<Concept> {
-  const response = await fetchServer(`/concepts/${conceptId}`, {
+  const response = await fetchServer(`/categories/${categoryId}`, {
     method: 'PUT',
     body: JSON.stringify(request),
   })
@@ -86,8 +86,8 @@ export async function updateConcept(
 // DELETE
 // ===================
 
-export async function deleteConcept(conceptId: number): Promise<void> {
-  const response = await fetchServer(`/concepts/${conceptId}`, {
+export async function deleteConcept(categoryId: number): Promise<void> {
+  const response = await fetchServer(`/categories/${categoryId}`, {
     method: 'DELETE',
   })
 

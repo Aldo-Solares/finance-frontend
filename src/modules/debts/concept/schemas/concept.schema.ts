@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { requiredString } from '@/core/utils/zod-helpers'
 
 export const ConceptSchema = z.object({
-  conceptId: z.number().int(),
+  categoryId: z.number().int(),
   name: z.string(),
 })
 

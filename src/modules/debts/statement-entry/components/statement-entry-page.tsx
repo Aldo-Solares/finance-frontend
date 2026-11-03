@@ -109,7 +109,7 @@ export function StatementEntryPage({
       .filter((entry) => {
         if (
           conceptFilter !== 'ALL' &&
-          String(entry.conceptId) !== conceptFilter
+          String(entry.categoryId) !== conceptFilter
         ) {
           return false
         }
@@ -561,11 +561,11 @@ export function StatementEntryPage({
 
 function hasMsi(entry: StatementEntry): boolean {
   return (
-    entry.msiCurrent !== null ||
-    entry.msiTotal !== null ||
+    entry.installmentNumber !== null ||
+    entry.totalInstallments !== null ||
     entry.purchaseAmount !== null ||
-    entry.remainingMsi !== null ||
-    entry.remainingMsiAmount !== null
+    entry.remainingInstallments !== null ||
+    entry.remainingInstallmentsAmount !== null
   )
 }
 

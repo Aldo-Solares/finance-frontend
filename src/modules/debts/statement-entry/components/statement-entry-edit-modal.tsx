@@ -53,23 +53,23 @@ export function StatementEntryEditModal({
   const [date, setDate] = useState(entry.date ?? '')
   const [paid, setPaid] = useState(entry.paid)
   const [selectedConceptId, setSelectedConceptId] = useState(
-    String(entry.conceptId),
+    String(entry.categoryId),
   )
   const [merchant, setMerchant] = useState(
     entry.merchant ?? defaultMerchant ?? '',
   )
   const [msiOpen, setMsiOpen] = useState(
-    entry.msiCurrent !== null || entry.msiTotal !== null,
+    entry.installmentNumber !== null || entry.totalInstallments !== null,
   )
   const [paymentOpen, setPaymentOpen] = useState(false)
 
   const selectedConcept = concepts.find(
-    (concept) => String(concept.conceptId) === selectedConceptId,
+    (concept) => String(concept.categoryId) === selectedConceptId,
   )
   const entryType = resolveStatementEntryType(selectedConcept?.name, merchant)
   const isPurchase = entryType === 'PURCHASE'
 
-  const hasMsiData = entry.msiCurrent !== null || entry.msiTotal !== null
+  const hasMsiData = entry.installmentNumber !== null || entry.totalInstallments !== null
 
   useEffect(() => {
     if (state.success) {
@@ -154,11 +154,11 @@ export function StatementEntryEditModal({
                   </div>
 
                   <div>
-                    <FieldLabel htmlFor="conceptId">Categoría</FieldLabel>
+                    <FieldLabel htmlFor="categoryId">Categoría</FieldLabel>
 
                     <select
-                      id="conceptId"
-                      name="conceptId"
+                      id="categoryId"
+                      name="categoryId"
                       value={selectedConceptId}
                       onChange={(event) => setSelectedConceptId(event.target.value)}
                       required
@@ -166,8 +166,8 @@ export function StatementEntryEditModal({
                     >
                       {concepts.map((concept) => (
                         <option
-                          key={concept.conceptId}
-                          value={concept.conceptId}
+                          key={concept.categoryId}
+                          value={concept.categoryId}
                         >
                           {concept.name}
                         </option>
@@ -289,19 +289,19 @@ export function StatementEntryEditModal({
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Field
                       label="Mes actual"
-                      name="msiCurrent"
+                      name="installmentNumber"
                       type="number"
                       min={1}
-                      defaultValue={entry.msiCurrent ?? ''}
+                      defaultValue={entry.installmentNumber ?? ''}
                       placeholder="Mes actual"
                     />
 
                     <Field
                       label="Total de meses"
-                      name="msiTotal"
+                      name="totalInstallments"
                       type="number"
                       min={1}
-                      defaultValue={entry.msiTotal ?? ''}
+                      defaultValue={entry.totalInstallments ?? ''}
                       placeholder="Total de meses"
                     />
 
@@ -313,13 +313,13 @@ export function StatementEntryEditModal({
 
                     <CalculatedField
                       label="Meses restantes"
-                      value={entry.remainingMsi}
+                      value={entry.remainingInstallments}
                     />
 
                     <div className="sm:col-span-2">
                       <CalculatedField
                         label="Saldo restante de la compra"
-                        value={entry.remainingMsiAmount}
+                        value={entry.remainingInstallmentsAmount}
                         prefix="$"
                       />
                     </div>

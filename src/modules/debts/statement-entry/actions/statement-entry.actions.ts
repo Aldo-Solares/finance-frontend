@@ -36,7 +36,7 @@ export async function createStatementEntryAction(
 ): Promise<ActionState<StatementEntry>> {
   const parsed = CreateStatementEntryRequestSchema.safeParse({
     statementId: normalizeRequiredNumber(formData.get('statementId')),
-    conceptId: normalizeRequiredNumber(formData.get('conceptId')),
+    categoryId: normalizeRequiredNumber(formData.get('categoryId')),
     debtor: formData.get('debtor'),
     description: normalizeNullableString(formData.get('description')),
     merchant: normalizeNullableString(formData.get('merchant')),
@@ -45,8 +45,8 @@ export async function createStatementEntryAction(
     date: normalizeNullableString(formData.get('date')),
     amount: normalizeRequiredNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
-    msiCurrent: normalizeNullableNumber(formData.get('msiCurrent')),
-    msiTotal: normalizeNullableNumber(formData.get('msiTotal')),
+    installmentNumber: normalizeNullableNumber(formData.get('installmentNumber')),
+    totalInstallments: normalizeNullableNumber(formData.get('totalInstallments')),
   })
 
   if (!parsed.success) {
@@ -81,7 +81,7 @@ export async function updateStatementEntryAction(
 
   const parsed = UpdateStatementEntryRequestSchema.safeParse({
     statementId: normalizeRequiredNumber(formData.get('statementId')),
-    conceptId: normalizeRequiredNumber(formData.get('conceptId')),
+    categoryId: normalizeRequiredNumber(formData.get('categoryId')),
     debtor: formData.get('debtor'),
     description: normalizeNullableString(formData.get('description')),
     merchant: normalizeNullableString(formData.get('merchant')),
@@ -90,8 +90,8 @@ export async function updateStatementEntryAction(
     date: normalizeNullableString(formData.get('date')),
     amount: normalizeRequiredNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
-    msiCurrent: normalizeNullableNumber(formData.get('msiCurrent')),
-    msiTotal: normalizeNullableNumber(formData.get('msiTotal')),
+    installmentNumber: normalizeNullableNumber(formData.get('installmentNumber')),
+    totalInstallments: normalizeNullableNumber(formData.get('totalInstallments')),
   })
 
   if (!parsed.success) {

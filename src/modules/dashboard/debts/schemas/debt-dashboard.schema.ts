@@ -13,7 +13,7 @@ export const DebtDashboardFilterSchema = z.object({
   year: z.number().int().min(0).optional(),
   month: z.number().int().min(0).max(12).optional(),
   userCardId: z.number().int().positive().optional(),
-  conceptId: z.number().int().positive().optional(),
+  categoryId: z.number().int().positive().optional(),
   paid: z.boolean().optional(),
   status: DebtDashboardStatusSchema.optional(),
   debtor: z.string().trim().min(1).optional(),
@@ -32,8 +32,8 @@ export const DebtDashboardCardSchema = z.object({
 })
 
 export const DebtDashboardConceptSchema = z.object({
-  conceptId: z.number(),
-  conceptName: z.string(),
+  categoryId: z.number(),
+  categoryName: z.string(),
   totalExpenses: z.number(),
   totalEntries: z.number(),
   percentage: z.number(),
@@ -65,7 +65,7 @@ export const DebtDashboardSchema = z.object({
   totalEntries: z.number(),
   averageExpense: z.number(),
   cards: z.array(DebtDashboardCardSchema),
-  concepts: z.array(DebtDashboardConceptSchema),
+  categories: z.array(DebtDashboardConceptSchema),
   statements: z.array(DebtDashboardStatementSchema),
 })
 

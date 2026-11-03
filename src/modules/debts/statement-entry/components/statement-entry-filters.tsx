@@ -116,7 +116,7 @@ export function StatementEntryFilters({
       label: 'Todos',
     },
     ...concepts.map((concept) => ({
-      value: concept.conceptId,
+      value: concept.categoryId,
       label: concept.name,
     })),
   ]

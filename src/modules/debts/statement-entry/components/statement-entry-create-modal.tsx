@@ -54,14 +54,14 @@ export function StatementEntryCreateModal({
   const [date, setDate] = useState(getLocalDateInputValue())
   const [paid, setPaid] = useState(false)
   const [selectedConceptId, setSelectedConceptId] = useState(
-    String(concepts[0]?.conceptId ?? ''),
+    String(concepts[0]?.categoryId ?? ''),
   )
   const [merchant, setMerchant] = useState(defaultMerchant ?? '')
   const [msiOpen, setMsiOpen] = useState(false)
   const [paymentOpen, setPaymentOpen] = useState(false)
 
   const selectedConcept = concepts.find(
-    (concept) => String(concept.conceptId) === selectedConceptId,
+    (concept) => String(concept.categoryId) === selectedConceptId,
   )
   const entryType = resolveStatementEntryType(selectedConcept?.name, merchant)
   const isPurchase = entryType === 'PURCHASE'
@@ -147,15 +147,15 @@ export function StatementEntryCreateModal({
                   </div>
 
                   <div>
-                    <FieldLabel htmlFor="conceptId">Categoría</FieldLabel>
+                    <FieldLabel htmlFor="categoryId">Categoría</FieldLabel>
 
                     <SearchableSelectInput
-                      id="conceptId"
-                      name="conceptId"
+                      id="categoryId"
+                      name="categoryId"
                       value={selectedConceptId}
                       onChange={setSelectedConceptId}
                       options={concepts.map((concept) => ({
-                        value: concept.conceptId,
+                        value: concept.categoryId,
                         label: concept.name,
                       }))}
                       placeholder="Seleccionar categoría..."
@@ -270,22 +270,22 @@ export function StatementEntryCreateModal({
                 >
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
-                      <FieldLabel htmlFor="msiCurrent">Mes actual</FieldLabel>
+                      <FieldLabel htmlFor="installmentNumber">Mes actual</FieldLabel>
 
                       <NumberInput
-                        id="msiCurrent"
-                        name="msiCurrent"
+                        id="installmentNumber"
+                        name="installmentNumber"
                         min={1}
                         placeholder="Mes actual"
                       />
                     </div>
 
                     <div>
-                      <FieldLabel htmlFor="msiTotal">Total de meses</FieldLabel>
+                      <FieldLabel htmlFor="totalInstallments">Total de meses</FieldLabel>
 
                       <NumberInput
-                        id="msiTotal"
-                        name="msiTotal"
+                        id="totalInstallments"
+                        name="totalInstallments"
                         min={1}
                         placeholder="Total de meses"
                       />

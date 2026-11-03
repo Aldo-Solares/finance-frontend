@@ -119,14 +119,14 @@ export function DebtDashboardFilters({
     searchParams.has('year') ||
     searchParams.has('month') ||
     searchParams.has('userCardId') ||
-    searchParams.has('conceptId') ||
+    searchParams.has('categoryId') ||
     searchParams.has('paid') ||
     searchParams.has('status') ||
     searchParams.has('debtor')
 
   const advancedFilterCount = [
     'userCardId',
-    'conceptId',
+    'categoryId',
     'paid',
     'status',
     'debtor',
@@ -171,7 +171,7 @@ export function DebtDashboardFilters({
       label: 'Todos',
     },
     ...concepts.map((concept) => ({
-      value: concept.conceptId,
+      value: concept.categoryId,
       label: concept.name,
     })),
   ]
@@ -274,8 +274,8 @@ export function DebtDashboardFilters({
                 id="dashboard-concept"
                 name="dashboard-concept"
                 options={conceptOptions}
-                value={searchParams.get('conceptId') ?? ''}
-                onChange={(value) => updateFilter('conceptId', value)}
+                value={searchParams.get('categoryId') ?? ''}
+                onChange={(value) => updateFilter('categoryId', value)}
               />
             </FilterField>
 

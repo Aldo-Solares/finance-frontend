@@ -13,6 +13,7 @@ import type { Trade } from '@/modules/trading/trade/schemas/trade.schema'
 import type { UserTradingAccount } from '@/modules/trading/user-trading-account/schemas/user-trading-account.schema'
 import { DateInput } from '@/shared/inputs/date-input'
 import { NumberInput } from '@/shared/inputs/number-input'
+import { MoneyInput } from '@/shared/inputs/money-input'
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 
 type TradeEditModalProps = {
@@ -271,7 +272,7 @@ export function TradeEditModal({
                 Precio de compra
               </label>
 
-              <NumberInput
+              <MoneyInput
                 id="trade-edit-price"
                 name="purchasePrice"
                 min={0.00000001}
@@ -293,7 +294,7 @@ export function TradeEditModal({
                 Comisión
               </label>
 
-              <NumberInput
+              <MoneyInput
                 id="trade-edit-commission"
                 name="purchaseCommission"
                 min={0}

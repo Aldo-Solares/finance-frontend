@@ -171,16 +171,8 @@ export function StatementFilters({
       label: 'Todos',
     },
     {
-      value: 'UPCOMING',
-      label: 'Próximo',
-    },
-    {
-      value: 'ACTIVE',
-      label: 'Activo',
-    },
-    {
       value: 'PAYMENT_PENDING',
-      label: 'Pendiente de pago',
+      label: 'Pago pendiente',
     },
     {
       value: 'CLOSED',

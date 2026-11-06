@@ -7,7 +7,6 @@ import {
   CandlestickChart,
   CreditCard,
   Settings,
-  TrendingUp,
 } from 'lucide-react'
 
 const navigationItems = [
@@ -22,12 +21,6 @@ const navigationItems = [
     description: 'Administra tus tarjetas y la información asociada a ellas.',
     href: '/debts/card',
     icon: CreditCard,
-  },
-  {
-    title: 'Inversiones',
-    description: 'Accede al espacio destinado a tus inversiones.',
-    href: '/investments/investment-snapshot',
-    icon: TrendingUp,
   },
   {
     title: 'Trading',
@@ -60,7 +53,7 @@ export function LoggedNavigation() {
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {navigationItems.map((item) => {
           const Icon = item.icon
 

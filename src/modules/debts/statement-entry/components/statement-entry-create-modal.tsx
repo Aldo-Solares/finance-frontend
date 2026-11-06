@@ -14,7 +14,9 @@ import {
   ReceiptText,
   X,
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { useActionState, useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
 import { useFormStatus } from 'react-dom'
 
 import type { ActionState } from '@/core/utils/action-state'
@@ -22,7 +24,8 @@ import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import { createStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
 import { resolveStatementEntryType } from '@/modules/debts/statement-entry/constants/statement-entry.constants'
 import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
-import { DateInput } from '@/shared/inputs/date-input'
+import { DateInput, getLocalDateInputValue } from '@/shared/inputs/date-input'
+import { MoneyInput } from '@/shared/inputs/money-input'
 import { NumberInput } from '@/shared/inputs/number-input'
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 import { TextInput } from '@/shared/inputs/text-input'
@@ -46,365 +49,236 @@ export function StatementEntryCreateModal({
   concepts,
   onClose,
 }: StatementEntryCreateModalProps) {
-  const [state, action] = useActionState(
-    createStatementEntryAction,
-    initialState,
-  )
-
+  const [state, action] = useActionState(createStatementEntryAction, initialState)
   const [date, setDate] = useState(getLocalDateInputValue())
+  const [amount, setAmount] = useState('')
   const [paid, setPaid] = useState(false)
-  const [selectedConceptId, setSelectedConceptId] = useState(
+  const [categoryId, setCategoryId] = useState(
     String(concepts[0]?.categoryId ?? ''),
   )
   const [merchant, setMerchant] = useState(defaultMerchant ?? '')
+  const [monthlyPaymentNumber, setMonthlyPaymentNumber] = useState('')
+  const [totalMonthlyPayments, setTotalMonthlyPayments] = useState('')
   const [msiOpen, setMsiOpen] = useState(false)
   const [paymentOpen, setPaymentOpen] = useState(false)
 
   const selectedConcept = concepts.find(
-    (concept) => String(concept.categoryId) === selectedConceptId,
+    (concept) => String(concept.categoryId) === categoryId,
   )
   const entryType = resolveStatementEntryType(selectedConcept?.name, merchant)
   const isPurchase = entryType === 'PURCHASE'
+  const isMsi = Boolean(monthlyPaymentNumber || totalMonthlyPayments)
 
   useEffect(() => {
-    if (state.success) {
-      onClose()
+    if (!isPurchase) {
+      setMonthlyPaymentNumber('')
+      setTotalMonthlyPayments('')
+      setMsiOpen(false)
     }
+  }, [isPurchase])
+
+  useEffect(() => {
+    if (state.success) onClose()
   }, [state.success, onClose])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 select-scrollbar overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4 select-scrollbar">
       <button
         type="button"
         onClick={onClose}
-        aria-label="Cerrar modal"
+        aria-label="Cerrar formulario"
         className="absolute inset-0 cursor-default bg-foreground/60 backdrop-blur-sm"
       />
 
-      <div className="relative z-10 flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-[2rem] border border-border bg-background shadow-2xl">
-        <div className="flex shrink-0 items-start justify-between border-b border-border px-6 py-5 sm:px-7">
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-entry-title"
+        className="relative z-10 flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-[2rem] border border-border bg-background shadow-2xl"
+      >
+        <header className="flex shrink-0 items-start justify-between gap-4 border-b border-border px-6 py-5 sm:px-7">
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                 <Plus className="h-4 w-4" />
               </div>
-
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-text-muted">
                   Nuevo movimiento
                 </p>
-
-                <h2 className="mt-0.5 text-xl font-semibold tracking-tight text-foreground">
+                <h2 id="create-entry-title" className="mt-0.5 text-xl font-semibold tracking-tight text-foreground">
                   Registrar movimiento
                 </h2>
               </div>
             </div>
-
             <p className="mt-3 text-sm text-text-muted">
               Registra una compra o cargo dentro de este estado de cuenta.
             </p>
           </div>
-
           <button
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
-            className="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl text-text-muted transition hover:bg-surface hover:text-foreground"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text-muted transition hover:bg-surface hover:text-foreground"
           >
             <X className="h-4 w-4" />
           </button>
-        </div>
+        </header>
 
-        <form
-          noValidate
-          action={action}
-          className="flex min-h-0 flex-1 flex-col"
-        >
+        <form action={action} className="flex min-h-0 flex-1 flex-col">
           <input type="hidden" name="statementId" value={statementId} />
-
           <input type="hidden" name="paid" value={paid ? 'true' : 'false'} />
 
-          <div className="min-h-0 flex-1 overflow-y-auto">
-            <div className="space-y-4 bg-surface/50 p-5 sm:p-7">
-              <FormSection
-                icon={ReceiptText}
-                title="Información del movimiento"
-                description="Los datos principales de este cargo."
-              >
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div>
-                    <FieldLabel htmlFor="entryType">Tipo</FieldLabel>
-                    <input type="hidden" name="entryType" value={entryType} />
-                    <div
-                      id="entryType"
-                      className="flex h-11 items-center rounded-xl border border-border bg-surface px-4 text-sm text-foreground"
-                    >
-                      {entryType === 'PURCHASE' ? 'Compra' : 'Recurrente'}
-                    </div>
-                    <p className="mt-1.5 text-xs text-text-muted">
-                      Se determina por la categoría y el comercio.
-                    </p>
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-surface/40 p-5 sm:p-7">
+            <FormSection
+              icon={ReceiptText}
+              title="Información del movimiento"
+              description="Los datos principales de este cargo."
+            >
+              <div className="grid gap-4 sm:grid-cols-3">
+                <Field label="Tipo" htmlFor="entryType">
+                  <div id="entryType" className={readOnlyClassName}>
+                    {isPurchase ? 'Compra' : 'Recurrente'}
                   </div>
-
-                  <div>
-                    <FieldLabel htmlFor="categoryId">Categoría</FieldLabel>
-
-                    <SearchableSelectInput
-                      id="categoryId"
-                      name="categoryId"
-                      value={selectedConceptId}
-                      onChange={setSelectedConceptId}
-                      options={concepts.map((concept) => ({
-                        value: concept.categoryId,
-                        label: concept.name,
-                      }))}
-                      placeholder="Seleccionar categoría..."
-                      searchPlaceholder="Buscar categoría..."
-                      emptyMessage="No se encontraron categorías."
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <FieldLabel htmlFor="debtor">Deudor</FieldLabel>
-
-                    <TextInput
-                      id="debtor"
-                      name="debtor"
-                      defaultValue=""
-                      placeholder="Deudor"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <FieldLabel htmlFor="description">
-                    Descripción del gasto
-                  </FieldLabel>
-
-                  <TextInput
-                    id="description"
-                    name="description"
-                    placeholder="Descripción del gasto"
+                </Field>
+                <Field label="Categoría" htmlFor="categoryId">
+                  <SearchableSelectInput
+                    id="categoryId"
+                    name="categoryId"
+                    value={categoryId}
+                    onChange={setCategoryId}
+                    options={concepts.map((concept) => ({
+                      value: concept.categoryId,
+                      label: concept.name,
+                    }))}
+                    placeholder="Seleccionar categoría..."
+                    searchPlaceholder="Buscar categoría..."
+                    emptyMessage="No se encontraron categorías."
+                    required
                   />
-                </div>
+                </Field>
+                <Field label="Deudor" htmlFor="debtor">
+                  <TextInput id="debtor" name="debtor" placeholder="Deudor" required />
+                </Field>
+              </div>
 
-                <div>
-                  <FieldLabel htmlFor="merchant">Comercio</FieldLabel>
+              <Field label="Descripción del gasto" htmlFor="description">
+                <TextInput id="description" name="description" placeholder="Descripción del gasto" />
+              </Field>
 
-                  <TextInput
-                    id="merchant"
-                    name="merchant"
-                    value={merchant}
-                    onChange={setMerchant}
-                    placeholder="Comercio"
-                    description={
-                      defaultMerchant
-                        ? `Sugerido por la tarjeta: ${defaultMerchant}. Puedes cambiarlo para este movimiento.`
-                        : undefined
-                    }
+              <Field label="Comercio" htmlFor="merchant">
+                <TextInput
+                  id="merchant"
+                  name="merchant"
+                  value={merchant}
+                  onChange={setMerchant}
+                  placeholder="Comercio"
+                  description={defaultMerchant ? `Sugerido por la tarjeta: ${defaultMerchant}. Puedes cambiarlo para este movimiento.` : undefined}
+                />
+              </Field>
+
+              <Field label="Notas" htmlFor="notes">
+                <TextInput id="notes" name="notes" placeholder="Notas" />
+              </Field>
+            </FormSection>
+
+            <FormSection
+              icon={CalendarDays}
+              title={isPurchase ? 'Compra' : 'Cargo recurrente'}
+              description={isPurchase
+                ? 'Indica cuándo se realizó la compra y cuánto corresponde a este movimiento.'
+                : 'Indica cuándo se realizó el cargo y su importe.'}
+            >
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label={isPurchase ? 'Fecha de compra' : 'Fecha del cargo'} htmlFor="date">
+                  <DateInput id="date" name="date" value={date} onChange={setDate} />
+                  <p className="mt-1.5 text-xs text-text-muted">Se utiliza la fecha de hoy por defecto.</p>
+                </Field>
+                <Field label={isMsi ? 'Importe de esta mensualidad' : 'Importe'} htmlFor="amount">
+                  <MoneyInput
+                    id="amount"
+                    name="amount"
+                    min={0.01}
+                    step="0.01"
+                    value={amount}
+                    onChange={setAmount}
+                    placeholder="0.00"
+                    required
                   />
-                </div>
+                </Field>
+              </div>
+            </FormSection>
 
-                <div>
-                  <FieldLabel htmlFor="notes">Notas</FieldLabel>
-
-                  <TextInput id="notes" name="notes" placeholder="Notas" />
-                </div>
-              </FormSection>
-
-              <FormSection
-                icon={CalendarDays}
-                title={isPurchase ? 'Compra' : 'Cargo recurrente'}
-                description={
-                  isPurchase
-                    ? 'Indica cuándo se realizó la compra y cuánto corresponde a este movimiento.'
-                    : 'Indica cuándo se realizó el cargo y su importe.'
-                }
+            {isPurchase && (
+              <CollapsibleSection
+                icon={CreditCard}
+                title="Meses sin intereses"
+                description="Solo abre esta sección si la compra fue a MSI."
+                open={msiOpen}
+                active={isMsi}
+                status={isMsi ? `${monthlyPaymentNumber || '—'} de ${totalMonthlyPayments || '—'} mensualidades` : 'Opcional'}
+                onToggle={() => setMsiOpen((current) => !current)}
               >
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <FieldLabel htmlFor="date">
-                      {isPurchase ? 'Fecha de compra' : 'Fecha del cargo'}
-                    </FieldLabel>
-
-                    <DateInput
-                      id="date"
-                      name="date"
-                      value={date}
-                      onChange={setDate}
+                  <Field label="Mensualidad actual" htmlFor="monthlyPaymentNumber">
+                    <NumberInput
+                      id="monthlyPaymentNumber"
+                      name="monthlyPaymentNumber"
+                      min={1}
+                      step={1}
+                      value={monthlyPaymentNumber}
+                      onChange={setMonthlyPaymentNumber}
+                      placeholder="Mensualidad actual"
                     />
-
-                    <p className="mt-1.5 text-xs text-text-muted">
-                      Se utiliza la fecha de hoy por defecto.
+                  </Field>
+                  <Field label="Total de mensualidades" htmlFor="totalMonthlyPayments">
+                    <NumberInput
+                      id="totalMonthlyPayments"
+                      name="totalMonthlyPayments"
+                      min={1}
+                      step={1}
+                      value={totalMonthlyPayments}
+                      onChange={setTotalMonthlyPayments}
+                      placeholder="Total de mensualidades"
+                    />
+                  </Field>
+                  <div className="rounded-xl border border-dashed border-border bg-surface px-4 py-3 sm:col-span-2">
+                    <p className="text-xs leading-5 text-text-muted">
+                      El importe es la mensualidad que aparece en este estado de cuenta. La fecha de compra se conserva para todas las mensualidades.
                     </p>
                   </div>
-
-                  <div>
-                    <FieldLabel htmlFor="amount">
-                      Importe
-                    </FieldLabel>
-
-                    <NumberInput
-                      id="amount"
-                      name="amount"
-                      min={0}
-                      step="0.01"
-                      placeholder="0.00"
-                      prefix="$"
-                      required
-                    />
-                  </div>
+                  {monthlyPaymentNumber && totalMonthlyPayments && Number(monthlyPaymentNumber) > Number(totalMonthlyPayments) && (
+                    <p className="text-xs text-red-500 sm:col-span-2">La mensualidad actual no puede superar el total.</p>
+                  )}
                 </div>
-              </FormSection>
-
-              {isPurchase && (
-                <CollapsibleSection
-                  icon={CreditCard}
-                  title="Meses sin intereses"
-                  description="Solo necesitas abrir esta sección si la compra fue a MSI."
-                  open={msiOpen}
-                  onToggle={() => setMsiOpen((current) => !current)}
-                  active={msiOpen}
-                >
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div>
-                      <FieldLabel htmlFor="installmentNumber">Mes actual</FieldLabel>
-
-                      <NumberInput
-                        id="installmentNumber"
-                        name="installmentNumber"
-                        min={1}
-                        placeholder="Mes actual"
-                      />
-                    </div>
-
-                    <div>
-                      <FieldLabel htmlFor="totalInstallments">Total de meses</FieldLabel>
-
-                      <NumberInput
-                        id="totalInstallments"
-                        name="totalInstallments"
-                        min={1}
-                        placeholder="Total de meses"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-2 rounded-xl border border-dashed border-border bg-surface px-4 py-3">
-                      <p className="mt-1 text-xs leading-5 text-text-muted">
-                        El total de la compra, los meses restantes y el saldo
-                        restante serán calculados por el sistema a partir de la
-                        información MSI.
-                      </p>
-                    </div>
-                  </div>
-                </CollapsibleSection>
-              )}
-
-              <CollapsibleSection
-                icon={CircleDollarSign}
-                title="Estado del pago"
-                description="Indica si ya cubriste este movimiento."
-                open={paymentOpen}
-                onToggle={() => setPaymentOpen((current) => !current)}
-                active={paid}
-              >
-                <button
-                  type="button"
-                  onClick={() => setPaid((current) => !current)}
-                  className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-xl border border-border bg-background px-4 py-3.5 text-left transition hover:border-primary/20 hover:bg-surface"
-                >
-                  <div className="flex min-w-0 items-center gap-3">
-                    <div
-                      className={[
-                        'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition',
-                        paid
-                          ? 'bg-primary-soft text-primary'
-                          : 'bg-surface text-text-muted',
-                      ].join(' ')}
-                    >
-                      <Check className="h-4 w-4" />
-                    </div>
-
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-foreground">
-                          {paid ? 'Movimiento pagado' : 'Pago pendiente'}
-                        </p>
-
-                        <span
-                          className={[
-                            'rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
-                            paid
-                              ? 'bg-primary-soft text-primary'
-                              : 'bg-surface text-text-muted',
-                          ].join(' ')}
-                        >
-                          {paid ? 'Pagado' : 'Pendiente'}
-                        </span>
-                      </div>
-
-                      <p className="mt-1 text-xs text-text-muted">
-                        {paid
-                          ? 'Este movimiento ya fue cubierto.'
-                          : 'Todavía tienes este importe pendiente de pago.'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div
-                    className={[
-                      'relative h-6 w-11 shrink-0 rounded-full transition-colors',
-                      paid ? 'bg-primary' : 'bg-surface',
-                    ].join(' ')}
-                  >
-                    <div
-                      className={[
-                        'absolute top-1 h-4 w-4 rounded-full bg-background shadow-sm transition-transform',
-                        paid ? 'translate-x-6' : 'translate-x-1',
-                      ].join(' ')}
-                    />
-                  </div>
-                </button>
               </CollapsibleSection>
+            )}
 
-              {!state.success && state.message && (
-                <div className="rounded-xl border border-primary bg-primary-soft px-4 py-3 text-sm text-primary">
-                  {state.message}
-                </div>
-              )}
-            </div>
+            <CollapsibleSection
+              icon={CircleDollarSign}
+              title="Estado del pago"
+              description="Indica si ya cubriste este movimiento."
+              open={paymentOpen}
+              active={paid}
+              status={paid ? 'Pagado' : 'Pago pendiente'}
+              onToggle={() => setPaymentOpen((current) => !current)}
+            >
+              <PaidStateButton paid={paid} onToggle={() => setPaid((current) => !current)} />
+            </CollapsibleSection>
+
+            {state.message && !state.success && <ErrorMessage message={state.message} />}
           </div>
 
-          <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border bg-background px-6 py-4 sm:px-7">
-            <p className="hidden text-xs text-text-muted sm:block">
-              Los campos obligatorios deben completarse.
-            </p>
-
-            <div className="ml-auto flex items-center gap-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="cursor-pointer rounded-xl px-4 py-2.5 text-sm font-medium text-text-muted transition hover:bg-surface hover:text-foreground"
-              >
-                Cancelar
-              </button>
-
-              <SaveButton />
-            </div>
-          </div>
+          <footer className="flex shrink-0 items-center justify-end gap-2 border-t border-border bg-background px-5 py-4 sm:px-6">
+            <button type="button" onClick={onClose} className="rounded-xl px-4 py-2.5 text-sm font-medium text-text-muted transition hover:bg-surface hover:text-foreground">
+              Cancelar
+            </button>
+            <SubmitButton />
+          </footer>
         </form>
-      </div>
+      </section>
     </div>
   )
-}
-
-type FormSectionProps = {
-  icon: typeof ReceiptText
-  title: string
-  description: string
-  children: React.ReactNode
 }
 
 function FormSection({
@@ -412,36 +286,26 @@ function FormSection({
   title,
   description,
   children,
-}: FormSectionProps) {
-  return (
-    <section className="rounded-[1.5rem] border border-border bg-background p-5 shadow-sm sm:p-6">
-      <div className="mb-5 flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface text-foreground">
-          <Icon className="h-4 w-4" />
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-
-          <p className="mt-1 text-xs leading-5 text-text-muted">
-            {description}
-          </p>
-        </div>
-      </div>
-
-      <div className="space-y-4">{children}</div>
-    </section>
-  )
-}
-
-type CollapsibleSectionProps = {
-  icon: typeof CreditCard
+}: {
+  icon: LucideIcon
   title: string
   description: string
-  open: boolean
-  onToggle: () => void
-  active: boolean
-  children: React.ReactNode
+  children: ReactNode
+}) {
+  return (
+    <section className="space-y-4 rounded-[1.5rem] border border-border bg-background p-5 shadow-sm sm:p-6">
+      <div className="flex items-start gap-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary-soft text-primary">
+          <Icon className="h-4 w-4" />
+        </div>
+        <div>
+          <h3 className="text-sm font-semibold text-foreground">{title}</h3>
+          <p className="mt-1 text-xs leading-5 text-text-muted">{description}</p>
+        </div>
+      </div>
+      {children}
+    </section>
+  )
 }
 
 function CollapsibleSection({
@@ -449,107 +313,95 @@ function CollapsibleSection({
   title,
   description,
   open,
-  onToggle,
   active,
+  status,
+  onToggle,
   children,
-}: CollapsibleSectionProps) {
+}: {
+  icon: LucideIcon
+  title: string
+  description: string
+  open: boolean
+  active: boolean
+  status: string
+  onToggle: () => void
+  children: ReactNode
+}) {
+  const Chevron = open ? ChevronUp : ChevronDown
   return (
-    <section className="overflow-hidden rounded-[1.5rem] border border-border bg-background shadow-sm">
-      <button
-        type="button"
-        onClick={onToggle}
-        className="flex w-full cursor-pointer items-center gap-3 p-5 text-left transition hover:bg-surface sm:p-6"
-      >
-        <div
-          className={[
-            'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl',
-            active
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-surface text-foreground',
-          ].join(' ')}
-        >
+    <section className={`overflow-hidden rounded-[1.5rem] border bg-background shadow-sm ${active ? 'border-primary/30' : 'border-border'}`}>
+      <button type="button" aria-expanded={open} onClick={onToggle} className="flex w-full items-center gap-3 px-5 py-4 text-left transition hover:bg-surface/60 sm:px-6">
+        <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${active ? 'bg-primary-soft text-primary' : 'bg-surface text-text-muted'}`}>
           <Icon className="h-4 w-4" />
         </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-
-            {active && (
-              <span className="rounded-full bg-primary-soft px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary">
-                Activo
-              </span>
-            )}
-          </div>
-
-          <p className="mt-1 text-xs leading-5 text-text-muted">
-            {description}
-          </p>
-        </div>
-
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-text-muted">
-          {open ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )}
-        </div>
+        <span className="min-w-0 flex-1">
+          <span className="flex flex-wrap items-center gap-2 text-sm font-semibold text-foreground">
+            {title}
+            <span className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${active ? 'bg-primary-soft text-primary' : 'bg-surface text-text-muted'}`}>
+              {status}
+            </span>
+          </span>
+          <span className="mt-1 block text-xs leading-5 text-text-muted">{description}</span>
+        </span>
+        <Chevron className="h-4 w-4 shrink-0 text-text-muted" />
       </button>
-
-      {open && (
-        <div className="border-t border-border bg-surface/40 p-5 sm:p-6">
-          {children}
-        </div>
-      )}
+      <div hidden={!open} className="border-t border-border bg-surface/40 p-5 sm:px-6">
+        {children}
+      </div>
     </section>
   )
 }
 
-function FieldLabel({
+function Field({
+  label,
   htmlFor,
   children,
 }: {
+  label: string
   htmlFor: string
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
-    <label
-      htmlFor={htmlFor}
-      className="mb-2 block text-xs font-medium text-text-muted"
-    >
+    <div>
+      <label htmlFor={htmlFor} className="mb-2 block text-xs font-medium text-text-muted">
+        {label}
+      </label>
       {children}
-    </label>
+    </div>
   )
 }
 
-function SaveButton() {
-  const { pending } = useFormStatus()
-
+function PaidStateButton({ paid, onToggle }: { paid: boolean; onToggle: () => void }) {
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="flex min-w-40 cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
-    >
-      {pending ? (
-        <LoaderCircle className="h-4 w-4 animate-spin" />
-      ) : (
-        <Plus className="h-4 w-4" />
-      )}
-
-      {pending ? 'Guardando...' : 'Crear movimiento'}
+    <button type="button" role="switch" aria-checked={paid} onClick={onToggle} className="flex w-full items-center justify-between gap-4 rounded-xl border border-border bg-background px-4 py-3 text-left transition hover:border-primary/30 hover:bg-primary-soft/30">
+      <span className="flex items-center gap-3">
+        <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${paid ? 'bg-primary-soft text-primary' : 'bg-surface text-text-muted'}`}>
+          <Check className="h-4 w-4" />
+        </span>
+        <span>
+          <span className="block text-sm font-semibold text-foreground">{paid ? 'Movimiento pagado' : 'Pago pendiente'}</span>
+          <span className="mt-1 block text-xs text-text-muted">{paid ? 'Este importe ya fue cubierto.' : 'Marca como pagado si ya lo cubriste.'}</span>
+        </span>
+      </span>
+      <span className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${paid ? 'bg-primary' : 'bg-surface'}`}>
+        <span className={`absolute top-1 h-4 w-4 rounded-full bg-background shadow-sm transition-transform ${paid ? 'translate-x-6' : 'translate-x-1'}`} />
+      </span>
     </button>
   )
 }
 
-function getLocalDateInputValue() {
-  const now = new Date()
-
-  const year = now.getFullYear()
-
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-
-  const day = String(now.getDate()).padStart(2, '0')
-
-  return `${year}-${month}-${day}`
+function SubmitButton() {
+  const { pending } = useFormStatus()
+  return (
+    <button type="submit" disabled={pending} className="flex min-w-40 items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60">
+      {pending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+      {pending ? 'Guardando…' : 'Crear movimiento'}
+    </button>
+  )
 }
+
+function ErrorMessage({ message }: { message: string }) {
+  return <p role="alert" className="rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-sm text-red-600">{message}</p>
+}
+
+const readOnlyClassName = 'flex h-11 items-center rounded-xl border border-border bg-surface px-4 text-sm text-foreground'

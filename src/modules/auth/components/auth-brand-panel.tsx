@@ -15,7 +15,7 @@ const contentByPath = {
     title: 'Entiende mejor',
     highlight: 'tu dinero.',
     description:
-      'Consulta tus deudas, inversiones y movimientos con una visión más clara de tus finanzas.',
+      'Consulta tus tarjetas, deudas y movimientos con una visión más clara de tus finanzas.',
     eyebrow: 'TODO BAJO CONTROL',
   },
 
@@ -23,7 +23,7 @@ const contentByPath = {
     title: 'Empieza a construir',
     highlight: 'tu espacio financiero.',
     description:
-      'Crea tu cuenta y reúne deudas, inversiones y movimientos en un mismo lugar.',
+      'Crea tu cuenta y reúne tarjetas, deudas y movimientos en un mismo lugar.',
     eyebrow: 'UN SOLO LUGAR',
   },
 

@@ -12,6 +12,7 @@ import type { TradeSale } from '@/modules/trading/trade-sale/schemas/trade-sale.
 import type { Trade } from '@/modules/trading/trade/schemas/trade.schema'
 import { DateInput } from '@/shared/inputs/date-input'
 import { NumberInput } from '@/shared/inputs/number-input'
+import { MoneyInput } from '@/shared/inputs/money-input'
 
 type TradeSaleEditModalProps = {
   trade: Trade
@@ -194,7 +195,7 @@ export function TradeSaleEditModal({
               Precio de venta
             </label>
 
-            <NumberInput
+            <MoneyInput
               id="trade-sale-edit-price"
               name="salePrice"
               min={0.00000001}
@@ -215,7 +216,7 @@ export function TradeSaleEditModal({
                 Comisión
               </label>
 
-              <NumberInput
+              <MoneyInput
                 id="trade-sale-edit-commission"
                 name="commission"
                 min={0}

@@ -41,12 +41,11 @@ export async function createStatementEntryAction(
     description: normalizeNullableString(formData.get('description')),
     merchant: normalizeNullableString(formData.get('merchant')),
     notes: normalizeNullableString(formData.get('notes')),
-    entryType: formData.get('entryType'),
     date: normalizeNullableString(formData.get('date')),
     amount: normalizeRequiredNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
-    installmentNumber: normalizeNullableNumber(formData.get('installmentNumber')),
-    totalInstallments: normalizeNullableNumber(formData.get('totalInstallments')),
+    monthlyPaymentNumber: normalizeNullableNumber(formData.get('monthlyPaymentNumber')),
+    totalMonthlyPayments: normalizeNullableNumber(formData.get('totalMonthlyPayments')),
   })
 
   if (!parsed.success) {
@@ -86,12 +85,11 @@ export async function updateStatementEntryAction(
     description: normalizeNullableString(formData.get('description')),
     merchant: normalizeNullableString(formData.get('merchant')),
     notes: normalizeNullableString(formData.get('notes')),
-    entryType: formData.get('entryType'),
     date: normalizeNullableString(formData.get('date')),
     amount: normalizeRequiredNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
-    installmentNumber: normalizeNullableNumber(formData.get('installmentNumber')),
-    totalInstallments: normalizeNullableNumber(formData.get('totalInstallments')),
+    monthlyPaymentNumber: normalizeNullableNumber(formData.get('monthlyPaymentNumber')),
+    totalMonthlyPayments: normalizeNullableNumber(formData.get('totalMonthlyPayments')),
   })
 
   if (!parsed.success) {

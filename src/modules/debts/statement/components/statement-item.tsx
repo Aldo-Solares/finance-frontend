@@ -5,10 +5,7 @@
 import { Pencil, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-import {
-  STATEMENT_STATUS,
-  STATEMENT_STATUS_LABELS,
-} from '@/modules/debts/statement/constants/statement.constants'
+import { STATEMENT_STATUS_LABELS } from '@/modules/debts/statement/constants/statement.constants'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import { DateDisplay } from '@/shared/display/date-display'
 
@@ -111,10 +108,6 @@ export function StatementItem({
             >
               {STATEMENT_STATUS_LABELS[statement.status]}
             </p>
-
-            <p className="mt-0.5 text-xs text-text-muted">
-              {statement.paid ? 'Pago registrado' : 'Pago pendiente'}
-            </p>
           </div>
         </div>
       </td>
@@ -152,32 +145,20 @@ export function StatementItem({
 
 function getStatusDotClass(status: Statement['status']): string {
   switch (status) {
-    case STATEMENT_STATUS.UPCOMING:
+    case 'CLOSED':
       return 'bg-primary'
 
-    case STATEMENT_STATUS.ACTIVE:
-      return 'bg-primary'
-
-    case STATEMENT_STATUS.PAYMENT_PENDING:
-      return 'bg-primary'
-
-    case STATEMENT_STATUS.CLOSED:
+    default:
       return 'bg-surface'
   }
 }
 
 function getStatusTextClass(status: Statement['status']): string {
   switch (status) {
-    case STATEMENT_STATUS.UPCOMING:
+    case 'CLOSED':
       return 'text-primary'
 
-    case STATEMENT_STATUS.ACTIVE:
-      return 'text-primary'
-
-    case STATEMENT_STATUS.PAYMENT_PENDING:
-      return 'text-primary'
-
-    case STATEMENT_STATUS.CLOSED:
+    default:
       return 'text-text-muted'
   }
 }

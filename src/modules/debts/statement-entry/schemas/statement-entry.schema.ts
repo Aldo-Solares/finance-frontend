@@ -9,23 +9,39 @@ import { requiredNumber, requiredString } from '@/core/utils/zod-helpers'
 // ===================
 
 const nullableDateSchema = z.string().nullable()
-const nullablePositiveNumberSchema = z.number().positive().nullable()
-const nullableNonNegativeNumberSchema = z.number().nonnegative().nullable()
 const nullablePositiveIntegerSchema = z.number().int().positive().nullable()
-const nullableNonNegativeIntegerSchema = z
-  .number()
-  .int()
-  .nonnegative()
-  .nullable()
 const requestNullablePositiveIntegerSchema = z
   .number({ error: 'Los meses sin intereses deben ser un número válido' })
   .int('Los meses sin intereses deben ser un número entero')
   .positive('Los meses sin intereses deben ser mayores que cero')
   .nullable()
-const requestEntryTypeSchema = z.enum(['PURCHASE', 'RECURRING'], {
-  error: 'El tipo de movimiento no es válido',
-})
 
+function getMsiValidationIssue(value: {
+  monthlyPaymentNumber: number | null
+  totalMonthlyPayments: number | null
+}) {
+  const { monthlyPaymentNumber, totalMonthlyPayments } = value
+
+  if ((monthlyPaymentNumber === null) !== (totalMonthlyPayments === null)) {
+    return {
+      path: 'totalMonthlyPayments' as const,
+      message: 'Indica la mensualidad actual y el total de mensualidades',
+    }
+  }
+
+  if (
+    monthlyPaymentNumber !== null &&
+    totalMonthlyPayments !== null &&
+    monthlyPaymentNumber > totalMonthlyPayments
+  ) {
+    return {
+      path: 'monthlyPaymentNumber' as const,
+      message: 'La mensualidad actual no puede superar el total',
+    }
+  }
+
+  return null
+}
 // ===================
 // ENTRY TYPE
 // ===================
@@ -51,11 +67,9 @@ export const StatementEntrySchema = z.object({
   date: nullableDateSchema,
   amount: z.number().positive(),
   paid: z.boolean(),
-  installmentNumber: nullablePositiveIntegerSchema,
-  totalInstallments: nullablePositiveIntegerSchema,
-  purchaseAmount: nullablePositiveNumberSchema,
-  remainingInstallments: nullableNonNegativeIntegerSchema,
-  remainingInstallmentsAmount: nullableNonNegativeNumberSchema,
+  msiPurchaseId: z.number().int().nullable(),
+  monthlyPaymentNumber: nullablePositiveIntegerSchema,
+  totalMonthlyPayments: nullablePositiveIntegerSchema,
 })
 
 // ===================
@@ -79,13 +93,21 @@ export const CreateStatementEntryRequestSchema = z.object({
   description: z.string().trim().nullable(),
   merchant: z.string().trim().nullable(),
   notes: z.string().nullable(),
-  entryType: requestEntryTypeSchema,
   date: nullableDateSchema,
   amount: requiredNumber('El importe es obligatorio', 'El importe debe ser válido')
     .positive('El importe debe ser mayor que cero'),
   paid: z.boolean(),
-  installmentNumber: requestNullablePositiveIntegerSchema,
-  totalInstallments: requestNullablePositiveIntegerSchema,
+  monthlyPaymentNumber: requestNullablePositiveIntegerSchema,
+  totalMonthlyPayments: requestNullablePositiveIntegerSchema,
+}).superRefine((value, context) => {
+  const issue = getMsiValidationIssue(value)
+  if (issue) {
+    context.addIssue({
+      code: 'custom',
+      path: [issue.path],
+      message: issue.message,
+    })
+  }
 })
 
 // ===================
@@ -109,13 +131,21 @@ export const UpdateStatementEntryRequestSchema = z.object({
   description: z.string().trim().nullable(),
   merchant: z.string().trim().nullable(),
   notes: z.string().nullable(),
-  entryType: requestEntryTypeSchema,
   date: nullableDateSchema,
   amount: requiredNumber('El importe es obligatorio', 'El importe debe ser válido')
     .positive('El importe debe ser mayor que cero'),
   paid: z.boolean(),
-  installmentNumber: requestNullablePositiveIntegerSchema,
-  totalInstallments: requestNullablePositiveIntegerSchema,
+  monthlyPaymentNumber: requestNullablePositiveIntegerSchema,
+  totalMonthlyPayments: requestNullablePositiveIntegerSchema,
+}).superRefine((value, context) => {
+  const issue = getMsiValidationIssue(value)
+  if (issue) {
+    context.addIssue({
+      code: 'custom',
+      path: [issue.path],
+      message: issue.message,
+    })
+  }
 })
 
 // ===================

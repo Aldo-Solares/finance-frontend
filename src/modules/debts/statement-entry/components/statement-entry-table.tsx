@@ -49,7 +49,7 @@ export function StatementEntryTable({
     <div className="overflow-hidden rounded-[1.6rem] border border-border bg-background">
       <DataTableViewport
         ariaLabel="Movimientos del estado de cuenta"
-        minWidthClassName="min-w-[1280px]"
+        minWidthClassName="min-w-[1120px]"
       >
         <thead>
           <tr>
@@ -79,8 +79,6 @@ export function StatementEntryTable({
             <DataTableHeaderCell>MSI</DataTableHeaderCell>
 
             <DataTableHeaderCell align="right">Importe</DataTableHeaderCell>
-
-            <DataTableHeaderCell align="right">Saldo MSI</DataTableHeaderCell>
 
             <DataTableHeaderCell>Pago</DataTableHeaderCell>
 

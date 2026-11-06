@@ -4,6 +4,7 @@ import {
   ArrowRight,
   BarChart3,
   CreditCard,
+  FileText,
   TrendingUp,
   Wallet,
 } from 'lucide-react'
@@ -93,12 +94,12 @@ export function NotLoggedHeroVisual() {
 
                   <div className="flex items-center gap-3 py-4">
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-foreground text-background">
-                      <BarChart3 className="h-4 w-4" />
+                      <FileText className="h-4 w-4" />
                     </div>
 
                     <div className="flex-1">
                       <p className="text-sm font-medium text-foreground">
-                        Inversiones
+                        Estados de cuenta
                       </p>
 
                       <div className="mt-1.5 h-2 w-24 rounded-full bg-surface" />

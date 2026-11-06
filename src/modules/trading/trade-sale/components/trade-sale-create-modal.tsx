@@ -14,6 +14,7 @@ import {
   getLocalDateInputValue,
 } from '@/shared/inputs/date-input'
 import { NumberInput } from '@/shared/inputs/number-input'
+import { MoneyInput } from '@/shared/inputs/money-input'
 
 type TradeSaleCreateModalProps = {
   trade: Trade
@@ -190,7 +191,7 @@ export function TradeSaleCreateModal({
               Precio de venta
             </label>
 
-            <NumberInput
+            <MoneyInput
               id="trade-sale-create-price"
               name="salePrice"
               min={0.00000001}
@@ -211,7 +212,7 @@ export function TradeSaleCreateModal({
                 Comisión
               </label>
 
-              <NumberInput
+              <MoneyInput
                 id="trade-sale-create-commission"
                 name="commission"
                 min={0}

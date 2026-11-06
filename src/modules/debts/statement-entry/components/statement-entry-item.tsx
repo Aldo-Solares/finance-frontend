@@ -38,7 +38,7 @@ export function StatementEntryItem({
 }: StatementEntryItemProps) {
   const isPurchase = entry.entryType === 'PURCHASE'
 
-  const hasMsi = entry.installmentNumber !== null && entry.totalInstallments !== null
+  const hasMsi = entry.msiPurchaseId !== null
 
   return (
     <tr className="odd:bg-background even:bg-surface/30 transition-colors hover:bg-primary-soft/40">
@@ -100,15 +100,9 @@ export function StatementEntryItem({
         {hasMsi ? (
           <div>
             <p className="text-sm font-medium text-primary">
-              {entry.installmentNumber}/{entry.totalInstallments}
+              {entry.monthlyPaymentNumber}/{entry.totalMonthlyPayments}
             </p>
 
-            {entry.remainingInstallments !== null && (
-              <p className="mt-0.5 text-xs text-text-muted">
-                {entry.remainingInstallments}{' '}
-                {entry.remainingInstallments === 1 ? 'restante' : 'restantes'}
-              </p>
-            )}
           </div>
         ) : (
           <span className="text-sm text-text-muted">—</span>
@@ -120,21 +114,6 @@ export function StatementEntryItem({
           {formatMoney(entry.amount)}
         </p>
 
-        {entry.purchaseAmount !== null && (
-          <p className="mt-0.5 text-xs text-text-muted">
-            Total {formatMoney(entry.purchaseAmount)}
-          </p>
-        )}
-      </td>
-
-      <td className="px-4 py-3 text-right tabular-nums">
-        {entry.remainingInstallmentsAmount !== null ? (
-          <p className="text-sm text-text-muted">
-            {formatMoney(entry.remainingInstallmentsAmount)}
-          </p>
-        ) : (
-          <span className="text-sm text-text-muted">—</span>
-        )}
       </td>
 
       <td className="px-4 py-3">

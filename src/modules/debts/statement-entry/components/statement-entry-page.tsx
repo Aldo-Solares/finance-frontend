@@ -165,25 +165,17 @@ export function StatementEntryPage({
     return filteredEntries.slice(start, start + PAGE_SIZE)
   }, [filteredEntries, currentPage])
 
-  const selectedPendingCount = useMemo(
-    () =>
-      entries.filter(
-        (entry) => !entry.paid && selectedEntryIds.has(entry.entryId),
-      ).length,
-    [entries, selectedEntryIds],
-  )
-
-  useEffect(() => {
+  const validSelectedEntryIds = useMemo(() => {
     const unpaidIds = new Set(
       entries.filter((entry) => !entry.paid).map((entry) => entry.entryId),
     )
-    setSelectedEntryIds((current) => {
-      const next = new Set(
-        [...current].filter((entryId) => unpaidIds.has(entryId)),
-      )
-      return next.size === current.size ? current : next
-    })
-  }, [entries])
+
+    return new Set(
+      [...selectedEntryIds].filter((entryId) => unpaidIds.has(entryId)),
+    )
+  }, [entries, selectedEntryIds])
+
+  const selectedPendingCount = validSelectedEntryIds.size
 
   const hasActiveFilters =
     conceptFilter !== 'ALL' ||
@@ -269,7 +261,7 @@ export function StatementEntryPage({
     if (markingPaidEntryId !== null || isPayingSelected) return
 
     const entryIds = entries
-      .filter((entry) => !entry.paid && selectedEntryIds.has(entry.entryId))
+      .filter((entry) => validSelectedEntryIds.has(entry.entryId))
       .map((entry) => entry.entryId)
     if (entryIds.length === 0) return
 
@@ -417,8 +409,8 @@ export function StatementEntryPage({
             </p>
 
             <p className="mt-1 text-xs text-primary/70">
-              El catálogo debe contener categorías antes de
-              registrar movimientos.
+              El catálogo debe contener categorías antes de registrar
+              movimientos.
             </p>
           </div>
         )}
@@ -504,7 +496,7 @@ export function StatementEntryPage({
             <>
               <StatementEntryTable
                 entries={paginatedEntries}
-                selectedEntryIds={selectedEntryIds}
+                selectedEntryIds={validSelectedEntryIds}
                 onEdit={setSelectedEntry}
                 onDelete={setDeleteEntry}
                 onToggleSelection={handleToggleSelection}
@@ -560,13 +552,7 @@ export function StatementEntryPage({
 }
 
 function hasMsi(entry: StatementEntry): boolean {
-  return (
-    entry.installmentNumber !== null ||
-    entry.totalInstallments !== null ||
-    entry.purchaseAmount !== null ||
-    entry.remainingInstallments !== null ||
-    entry.remainingInstallmentsAmount !== null
-  )
+  return entry.monthlyPaymentNumber !== null || entry.msiPurchaseId !== null
 }
 
 type SummaryCardProps = {

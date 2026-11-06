@@ -18,9 +18,8 @@ export function NotLoggedHeroInfo() {
       </h1>
 
       <p className="mt-8 max-w-xl text-base leading-7 text-text-muted sm:text-lg sm:leading-8">
-        Isha reúne tus tarjetas, estados de cuenta, deudas, inversiones y
-        movimientos en un solo lugar para que tengas una visión clara de tus
-        finanzas.
+        Isha reúne tus tarjetas, estados de cuenta, deudas y movimientos en
+        un solo lugar para que tengas una visión clara de tus finanzas.
       </p>
 
       <div className="mt-9 flex flex-wrap items-center gap-3">

@@ -12,7 +12,6 @@ import {
   ImageIcon,
   ListTree,
   Settings2,
-  TrendingUp,
   WalletCards,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -174,18 +173,6 @@ export function AppNav({ user }: AppNavProps) {
           </div>
         )}
       </div>
-
-      {/* ===================
-          INVESTMENTS
-          =================== */}
-
-      <Link
-        href="/investments/investment-snapshot"
-        className={getLinkClassName('/investments/investment-snapshot')}
-      >
-        <TrendingUp className="h-4 w-4" />
-        Inversiones
-      </Link>
 
       {/* ===================
           TRADING

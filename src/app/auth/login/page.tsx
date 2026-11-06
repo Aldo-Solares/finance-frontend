@@ -11,7 +11,7 @@ export default function Page() {
       <AuthHero
         title="Tu dinero,"
         highlight="bajo control."
-        description="Inicia sesión para consultar tus deudas, inversiones y movimientos desde un solo lugar."
+        description="Inicia sesión para consultar tus tarjetas, deudas y movimientos desde un solo lugar."
       />
 
       <LoginForm />

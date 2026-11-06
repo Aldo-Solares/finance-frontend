@@ -18,7 +18,7 @@ type DebtDashboardStatementsProps = {
 const statusLabels: Record<DebtDashboardStatus, string> = {
   UPCOMING: 'Próximo',
   ACTIVE: 'Activo',
-  PAYMENT_PENDING: 'Pendiente de pago',
+  PAYMENT_PENDING: 'Pago pendiente',
   CLOSED: 'Cerrado',
 }
 
@@ -40,13 +40,13 @@ function formatDate(value: string | null) {
 }
 
 function getStatusClassName(statement: DebtDashboardStatement) {
-  return statement.paid || statement.status !== 'UPCOMING'
+  return statement.status === 'CLOSED'
     ? 'border-primary/30 bg-primary-soft/50 text-primary'
     : 'border-border bg-surface text-text-muted'
 }
 
 function getStatusIcon(statement: DebtDashboardStatement) {
-  return statement.paid ? CircleCheck : Clock3
+  return statement.status === 'CLOSED' ? CircleCheck : Clock3
 }
 
 export function DebtDashboardStatements({
@@ -127,7 +127,7 @@ export function DebtDashboardStatements({
                     ].join(' ')}
                   >
                     <StatusIcon className="h-3 w-3" />
-                    {statement.paid ? 'Pagado' : statusLabels[statement.status]}
+                    {statusLabels[statement.status]}
                   </span>
                 </div>
 

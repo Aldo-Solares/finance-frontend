@@ -1,47 +1,41 @@
-'use client';
+// @/modules/trading/trade/components/trade-item.tsx
+'use client'
 
-import type { ReactNode } from 'react';
+import type { ReactNode } from 'react'
 import {
   CalendarDays,
   CheckCircle2,
   CircleDollarSign,
-  Pencil,
   ReceiptText,
-  Trash2,
   TrendingDown,
-} from 'lucide-react';
+} from 'lucide-react'
 
-import type { TradeSale } from '@/modules/trading/trade-sale/schemas/trade-sale.schema';
-import type { Trade } from '@/modules/trading/trade/schemas/trade.schema';
-import { formatDisplayDate } from '@/shared/utils/date-format';
+import type { TradeSale } from '@/modules/trading/trade-sale/schemas/trade-sale.schema'
+import type { Trade } from '@/modules/trading/trade/schemas/trade.schema'
+import { formatDisplayDate } from '@/shared/utils/date-format'
+import { RecordActionsComponent } from '@/shared/components/record-actions.component'
 
 type TradeItemProps = {
-  trade: Trade;
-  onEdit: (trade: Trade) => void;
-  onDelete: (trade: Trade) => void;
-  onSell: (trade: Trade) => void;
-  onEditSale: (
-    trade: Trade,
-    sale: TradeSale,
-  ) => void;
-  onDeleteSale: (
-    trade: Trade,
-    sale: TradeSale,
-  ) => void;
-};
+  trade: Trade
+  onEdit: (trade: Trade) => void
+  onDelete: (trade: Trade) => void
+  onSell: (trade: Trade) => void
+  onEditSale: (trade: Trade, sale: TradeSale) => void
+  onDeleteSale: (trade: Trade, sale: TradeSale) => void
+}
 
 const statusLabel = {
   OPEN: 'Abierta',
   PARTIALLY_SOLD: 'Venta parcial',
   CLOSED: 'Cerrada',
-} as const;
+} as const
 
 const statusClassName = {
   OPEN: 'border-primary/25 bg-primary-soft text-primary dark:border-primary/40 dark:bg-primary-soft dark:text-primary',
   PARTIALLY_SOLD:
     'border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-200',
   CLOSED: 'border-border bg-surface text-text-muted',
-} as const;
+} as const
 
 function formatMoney(value: number, currency: string) {
   return new Intl.NumberFormat('es-MX', {
@@ -49,21 +43,21 @@ function formatMoney(value: number, currency: string) {
     currency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(value);
+  }).format(value)
 }
 
 function formatQuantity(value: number) {
   return new Intl.NumberFormat('es-MX', {
     maximumFractionDigits: 8,
-  }).format(value);
+  }).format(value)
 }
 
 function formatShares(value: number) {
-  return formatQuantity(value) + ' ' + (value === 1 ? 'acción' : 'acciones');
+  return formatQuantity(value) + ' ' + (value === 1 ? 'acción' : 'acciones')
 }
 
 function formatDate(value: string) {
-  return formatDisplayDate(value);
+  return formatDisplayDate(value)
 }
 
 export function TradeItem({
@@ -74,10 +68,8 @@ export function TradeItem({
   onEditSale,
   onDeleteSale,
 }: TradeItemProps) {
-  const canSell =
-    trade.status !== 'CLOSED' &&
-    trade.remainingQuantity > 0;
-  const hasSales = trade.sales.length > 0;
+  const canSell = trade.status !== 'CLOSED' && trade.remainingQuantity > 0
+  const hasSales = trade.sales.length > 0
 
   return (
     <article className="min-w-0 overflow-hidden rounded-2xl border-2 border-border bg-background shadow-md transition-shadow duration-200 hover:shadow-lg">
@@ -94,7 +86,10 @@ export function TradeItem({
               </h3>
 
               <span
-                className={'inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold ' + statusClassName[trade.status]}
+                className={
+                  'inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold ' +
+                  statusClassName[trade.status]
+                }
               >
                 {statusLabel[trade.status]}
               </span>
@@ -126,25 +121,13 @@ export function TradeItem({
             </button>
           )}
 
-          <button
-            type="button"
-            onClick={() => onEdit(trade)}
-            className="flex size-9 items-center justify-center rounded-lg border border-border text-text-muted transition hover:bg-background hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
-            aria-label="Editar compra"
-            title="Editar compra"
-          >
-            <Pencil className="size-4" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onDelete(trade)}
-            className="flex size-9 items-center justify-center rounded-lg border border-border text-text-muted transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/30 dark:hover:border-rose-900 dark:hover:bg-rose-950/30 dark:hover:text-rose-300"
-            aria-label="Eliminar compra"
-            title="Eliminar compra"
-          >
-            <Trash2 className="size-4" />
-          </button>
+          <RecordActionsComponent
+            editLabel={`Editar compra ${trade.instrumentSymbol}`}
+            deleteLabel={`Eliminar compra ${trade.instrumentSymbol}`}
+            onEdit={() => onEdit(trade)}
+            onDelete={() => onDelete(trade)}
+            className="border-l border-border pl-2"
+          />
         </div>
       </header>
 
@@ -166,17 +149,11 @@ export function TradeItem({
             <div className="mt-4 space-y-2 border-t border-border pt-3">
               <MetricRow
                 label="Valor de compra"
-                value={formatMoney(
-                  trade.purchaseGrossAmount,
-                  trade.currency,
-                )}
+                value={formatMoney(trade.purchaseGrossAmount, trade.currency)}
               />
               <MetricRow
                 label="Total pagado"
-                value={formatMoney(
-                  trade.purchaseTotalCost,
-                  trade.currency,
-                )}
+                value={formatMoney(trade.purchaseTotalCost, trade.currency)}
                 strong
               />
             </div>
@@ -215,17 +192,11 @@ export function TradeItem({
             <div className="mt-4 space-y-2 border-t border-border pt-3">
               <MetricRow
                 label="Venta bruta"
-                value={formatMoney(
-                  trade.totalSaleAmount,
-                  trade.currency,
-                )}
+                value={formatMoney(trade.totalSaleAmount, trade.currency)}
               />
               <MetricRow
                 label="Comisiones"
-                value={formatMoney(
-                  trade.totalSaleCommissions,
-                  trade.currency,
-                )}
+                value={formatMoney(trade.totalSaleCommissions, trade.currency)}
               />
               <MetricRow
                 label="Por vender"
@@ -271,10 +242,7 @@ export function TradeItem({
             <div className="mt-4 space-y-2 border-t border-border pt-3">
               <MetricRow
                 label="Costo restante"
-                value={formatMoney(
-                  trade.remainingCost,
-                  trade.currency,
-                )}
+                value={formatMoney(trade.remainingCost, trade.currency)}
                 strong
               />
               {trade.status === 'CLOSED' && (
@@ -301,7 +269,8 @@ export function TradeItem({
             </div>
 
             <span className="rounded-full bg-background px-2.5 py-1 text-xs font-medium text-text-muted ring-1 ring-border">
-              {trade.sales.length} {trade.sales.length === 1 ? 'venta' : 'ventas'}
+              {trade.sales.length}{' '}
+              {trade.sales.length === 1 ? 'venta' : 'ventas'}
             </span>
           </div>
 
@@ -328,8 +297,10 @@ export function TradeItem({
                           Venta {index + 1}
                         </p>
                         <p className="mt-0.5 text-xs text-text-muted">
-                          {formatDate(sale.saleDate)} · {formatShares(sale.quantity)} ·{' '}
-                          {formatMoney(sale.salePrice, trade.currency)} por acción
+                          {formatDate(sale.saleDate)} ·{' '}
+                          {formatShares(sale.quantity)} ·{' '}
+                          {formatMoney(sale.salePrice, trade.currency)} por
+                          acción
                         </p>
                       </div>
                     </div>
@@ -379,15 +350,10 @@ export function TradeItem({
                 </button>
 
                 <div className="flex shrink-0 items-center border-l border-border bg-surface px-2 sm:px-3">
-                  <button
-                    type="button"
-                    onClick={() => onDeleteSale(trade, sale)}
-                    aria-label={'Eliminar venta ' + (index + 1)}
-                    title="Eliminar venta"
-                    className="flex size-10 items-center justify-center rounded-xl border border-border bg-background text-text-muted transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/30 dark:hover:border-rose-900 dark:hover:bg-rose-950/30 dark:hover:text-rose-300"
-                  >
-                    <Trash2 className="size-4" />
-                  </button>
+                  <RecordActionsComponent
+                    deleteLabel={`Eliminar venta ${index + 1}`}
+                    onDelete={() => onDeleteSale(trade, sale)}
+                  />
                 </div>
               </div>
             ))}
@@ -395,14 +361,14 @@ export function TradeItem({
         </section>
       )}
     </article>
-  );
+  )
 }
 
 type SectionLabelProps = {
-  children: ReactNode;
-  icon: ReactNode;
-  accent?: 'default' | 'sale';
-};
+  children: ReactNode
+  icon: ReactNode
+  accent?: 'default' | 'sale'
+}
 
 function SectionLabel({
   children,
@@ -413,28 +379,22 @@ function SectionLabel({
     <div
       className={[
         'flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em]',
-        accent === 'sale'
-          ? 'text-primary'
-          : 'text-text-muted',
+        accent === 'sale' ? 'text-primary' : 'text-text-muted',
       ].join(' ')}
     >
       {icon}
       <span>{children}</span>
     </div>
-  );
+  )
 }
 
 type MetricRowProps = {
-  label: string;
-  value: string;
-  strong?: boolean;
-};
+  label: string
+  value: string
+  strong?: boolean
+}
 
-function MetricRow({
-  label,
-  value,
-  strong = false,
-}: MetricRowProps) {
+function MetricRow({ label, value, strong = false }: MetricRowProps) {
   return (
     <div className="flex min-w-0 items-baseline justify-between gap-2">
       <span className="min-w-0 text-[11px] text-text-muted">{label}</span>
@@ -447,14 +407,14 @@ function MetricRow({
         {value}
       </span>
     </div>
-  );
+  )
 }
 
 type SaleMetricProps = {
-  label: string;
-  value: string;
-  valueClassName?: string;
-};
+  label: string
+  value: string
+  valueClassName?: string
+}
 
 function SaleMetric({
   label,
@@ -475,16 +435,16 @@ function SaleMetric({
         {value}
       </p>
     </div>
-  );
+  )
 }
 
 type CommissionComparisonProps = {
-  actual: number;
-  expected: number;
-  rate: number;
-  valid: boolean;
-  currency: string;
-};
+  actual: number
+  expected: number
+  rate: number
+  valid: boolean
+  currency: string
+}
 
 function CommissionComparison({
   actual,
@@ -526,5 +486,5 @@ function CommissionComparison({
         </div>
       </div>
     </div>
-  );
+  )
 }

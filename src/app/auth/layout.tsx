@@ -1,3 +1,4 @@
+// @/app/auth/layout.tsx
 // /app/auth/layout.tsx
 
 'use client'

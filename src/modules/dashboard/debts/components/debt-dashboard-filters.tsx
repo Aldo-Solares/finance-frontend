@@ -197,6 +197,14 @@ export function DebtDashboardFilters({
       label: 'Todos',
     },
     {
+      value: 'UPCOMING',
+      label: 'Próximo',
+    },
+    {
+      value: 'ACTIVE',
+      label: 'Activo',
+    },
+    {
       value: 'PAYMENT_PENDING',
       label: 'Pago pendiente',
     },
@@ -218,7 +226,7 @@ export function DebtDashboardFilters({
   ]
 
   return (
-    <div className="relative z-20 overflow-visible">
+    <div className="relative z-20 overflow-visible [&>section]:rounded-3xl [&>section]:shadow-sm [&>section]:shadow-black/[0.025]">
       <FilterBar
         title="Filtros del dashboard"
         description="Elige el periodo del resumen; puedes afinarlo con filtros adicionales."

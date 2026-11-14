@@ -3,9 +3,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
 
-import { AUTH_TOKEN_COOKIE } from '@/core/constants/auth.constants'
+import { setAuthTokenCookie } from '@/core/auth/auth-token-cookie'
 import {
   actionError,
   type ActionState,
@@ -53,14 +52,7 @@ export async function updateCurrentUserAction(
     // UPDATE JWT
     // ===================
 
-    const cookieStore = await cookies()
-
-    cookieStore.set(AUTH_TOKEN_COOKIE, result.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-    })
+    await setAuthTokenCookie(result.token)
 
     // ===================
     // REVALIDATE

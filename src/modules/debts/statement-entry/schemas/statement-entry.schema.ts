@@ -46,10 +46,6 @@ function getMsiValidationIssue(value: {
 // ENTRY TYPE
 // ===================
 
-export const StatementEntryTypeSchema = z.enum(['PURCHASE', 'RECURRING'])
-
-export type StatementEntryType = z.infer<typeof StatementEntryTypeSchema>
-
 // ===================
 // STATEMENT ENTRY
 // ===================
@@ -63,7 +59,7 @@ export const StatementEntrySchema = z.object({
   description: z.string().nullable(),
   merchant: z.string().nullable(),
   notes: z.string().nullable(),
-  entryType: StatementEntryTypeSchema,
+  isRecurring: z.boolean(),
   date: nullableDateSchema,
   amount: z.number().positive(),
   paid: z.boolean(),
@@ -97,6 +93,7 @@ export const CreateStatementEntryRequestSchema = z.object({
   amount: requiredNumber('El importe es obligatorio', 'El importe debe ser válido')
     .positive('El importe debe ser mayor que cero'),
   paid: z.boolean(),
+  isRecurring: z.boolean(),
   monthlyPaymentNumber: requestNullablePositiveIntegerSchema,
   totalMonthlyPayments: requestNullablePositiveIntegerSchema,
 }).superRefine((value, context) => {
@@ -135,6 +132,7 @@ export const UpdateStatementEntryRequestSchema = z.object({
   amount: requiredNumber('El importe es obligatorio', 'El importe debe ser válido')
     .positive('El importe debe ser mayor que cero'),
   paid: z.boolean(),
+  isRecurring: z.boolean(),
   monthlyPaymentNumber: requestNullablePositiveIntegerSchema,
   totalMonthlyPayments: requestNullablePositiveIntegerSchema,
 }).superRefine((value, context) => {

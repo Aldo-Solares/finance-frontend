@@ -17,7 +17,7 @@ export function DebtDashboardHighlights({
   const topConcept = dashboard.categories[0]
 
   return (
-    <section className="rounded-2xl border border-border bg-background p-5 sm:p-6">
+    <section className="rounded-3xl border border-border/70 bg-background p-5 shadow-sm shadow-black/[0.025] sm:p-6">
       <DebtDashboardPanelHeader
         eyebrow="Lectura rápida"
         title="Lo que más pesa en tus gastos"
@@ -55,7 +55,7 @@ type HighlightCardProps = {
 
 function HighlightCard({ icon: Icon, label, name, amount, detail }: HighlightCardProps) {
   return (
-    <article className="rounded-xl border border-border bg-surface/40 p-4">
+    <article className="rounded-2xl border border-border/70 bg-surface/45 p-4 transition-colors hover:border-primary/20 hover:bg-primary-soft/20">
       <div className="flex items-start gap-3">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-background text-text-muted">
           <Icon className="h-4 w-4" aria-hidden="true" />

@@ -2,10 +2,6 @@
 
 import { z } from 'zod'
 
-import {
-  PROFILE_IMAGE_ALLOWED_TYPES,
-  PROFILE_IMAGE_MAX_SIZE,
-} from '@/modules/user/constants/profile-image.constants'
 import { requiredString } from '@/core/utils/zod-helpers'
 
 // ===================
@@ -15,20 +11,18 @@ import { requiredString } from '@/core/utils/zod-helpers'
 export const ProfileImageSchema = z.object({
   profileImageId: z.number(),
   name: z.string(),
-  imageUrl: z.string(),
+  fileName: z.string(),
+  imagePath: z.string(),
 })
 
-export const ProfileImageFileSchema = z
-  .instanceof(File, { error: 'La imagen es obligatoria' })
-  .refine((file) => file.size > 0, 'La imagen es obligatoria')
-  .refine(
-    (file) =>
-      PROFILE_IMAGE_ALLOWED_TYPES.some((allowedType) => allowedType === file.type),
-    'El formato debe ser PNG, JPG, JPEG o WebP',
-  )
-  .refine(
-    (file) => file.size <= PROFILE_IMAGE_MAX_SIZE,
-    'La imagen no puede superar los 5 MB',
+export const ProfileImageFileNameSchema = z
+  .string()
+  .trim()
+  .min(1, 'El nombre del archivo es obligatorio')
+  .max(255, 'El nombre del archivo es demasiado largo')
+  .regex(
+    /^[\p{L}\p{N}][\p{L}\p{N} ._-]*\.png$/u,
+    'El archivo debe ser PNG y estar dentro de public/images/profile-images',
   )
 
 export const CreateProfileImageRequestSchema = z.object({
@@ -36,7 +30,7 @@ export const CreateProfileImageRequestSchema = z.object({
     100,
     'El nombre de la imagen no puede superar los 100 caracteres',
   ),
-  file: ProfileImageFileSchema,
+  fileName: ProfileImageFileNameSchema,
 })
 
 // ===================
@@ -48,6 +42,7 @@ export const UpdateProfileImageRequestSchema = z.object({
     100,
     'El nombre no puede superar los 100 caracteres',
   ),
+  fileName: ProfileImageFileNameSchema,
 })
 
 // ===================

@@ -21,8 +21,8 @@ import type { TradeSale } from '@/modules/trading/trade-sale/schemas/trade-sale.
 import type { Trade } from '@/modules/trading/trade/schemas/trade.schema'
 import type { UserTradingAccount } from '@/modules/trading/user-trading-account/schemas/user-trading-account.schema'
 
-import { HeroComponent } from '@/shared/hero/hero-component'
-import { DeleteModal } from '@/shared/modal/delete-modal'
+import { HeroComponent } from '@/shared/components/hero-component'
+import { DeleteModal } from '@/shared/modals/delete-modal'
 
 type TradePageProps = {
   trades: Trade[]
@@ -97,12 +97,16 @@ export function TradePage({
           eyebrow="Trading"
           title="Operaciones"
           description="Gestiona tus posiciones activas y consulta las cerradas desde el historial."
-          action={
+          rightContent={
             canCreate
               ? {
-                  label: 'Nueva compra',
-                  icon: Plus,
-                  onClick: handleCreate,
+                  type: 'actions',
+                  items: [{
+                    label: 'Nueva compra',
+                    icon: Plus,
+                    variant: 'primary',
+                    onClick: handleCreate,
+                  }],
                 }
               : undefined
           }
@@ -245,7 +249,6 @@ function TradeSection({
   )
 }
 
-
 function TradeArchiveSection({
   trades,
   onEdit,
@@ -274,7 +277,10 @@ function TradeArchiveSection({
             <span className="rounded-full bg-background px-2.5 py-1 text-xs font-medium text-text-muted ring-1 ring-border">
               {trades.length}
             </span>
-            <ChevronDown className="size-4 text-text-muted transition-transform group-open:rotate-180" aria-hidden="true" />
+            <ChevronDown
+              className="size-4 text-text-muted transition-transform group-open:rotate-180"
+              aria-hidden="true"
+            />
           </div>
         </summary>
         <div className="pt-4">

@@ -1,10 +1,11 @@
+// @/modules/debts/concept/components/concept-grid.tsx
 'use client'
-
-import { Tag } from 'lucide-react'
 
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import { AdminCatalogGrid } from '@/shared/admin/admin-catalog-grid'
 import { AdminCatalogItem } from '@/shared/admin/admin-catalog-item'
+
+import { getCategoryIcon } from './category-icon'
 
 type ConceptGridProps = {
   concepts: Concept[]
@@ -18,7 +19,8 @@ export function ConceptGrid({ concepts, onEdit, onDelete }: ConceptGridProps) {
       {concepts.map((concept) => (
         <AdminCatalogItem
           key={concept.categoryId}
-          icon={Tag}
+          icon={getCategoryIcon(concept.name)}
+          iconClassName="text-primary"
           title={concept.name}
           subtitle={`Categoría #${concept.categoryId}`}
           editLabel={`Editar ${concept.name}`}

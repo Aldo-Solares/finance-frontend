@@ -1,4 +1,4 @@
-/* @/modules/main/notlogged/components/notlogged-hero.tsx */
+// @/modules/main/notlogged/components/notlogged-hero.tsx
 
 import { NotLoggedHeroInfo } from '@/modules/main/notlogged/components/NotLoggedHeroInfo'
 import { NotLoggedHeroVisual } from '@/modules/main/notlogged/components/NotLoggedHeroVisual'

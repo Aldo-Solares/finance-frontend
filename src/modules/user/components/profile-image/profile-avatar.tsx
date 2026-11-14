@@ -3,6 +3,7 @@
 'use client'
 
 import Image from 'next/image'
+import { useState } from 'react'
 
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 import type { UserSettings } from '@/modules/user/schemas/user-settings.schema'
@@ -44,6 +45,8 @@ export function ProfileAvatar({
   fallback,
 }: ProfileAvatarProps) {
   const backgroundClass = PROFILE_IMAGE_BACKGROUND_CLASSES[background]
+  const [imageFailed, setImageFailed] = useState(false)
+  const showImage = profileImage !== null && !imageFailed
 
   return (
     <div
@@ -51,17 +54,18 @@ export function ProfileAvatar({
         'relative shrink-0 overflow-hidden',
         sizeClasses[size],
         shapeClasses[shape],
-        profileImage ? backgroundClass : 'border border-border bg-surface',
+        showImage ? backgroundClass : 'border border-border bg-surface',
       ].join(' ')}
     >
-      {profileImage ? (
+      {showImage && profileImage ? (
         <Image
-          src={profileImage.imageUrl}
+          src={profileImage.imagePath}
           alt={profileImage.name}
           fill
           unoptimized
           sizes={imageSizes[size]}
           className="object-contain"
+          onError={() => setImageFailed(true)}
         />
       ) : (
         <span className="flex h-full w-full items-center justify-center text-sm font-semibold text-text-muted">

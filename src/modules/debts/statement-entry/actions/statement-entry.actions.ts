@@ -17,8 +17,9 @@ import {
 import {
   createStatementEntry,
   deleteStatementEntry,
-  paySelectedStatementEntries,
+  markStatementEntryPaid,
   updateStatementEntry,
+  updateStatementEntryNotes,
 } from '@/modules/debts/statement-entry/services/statement-entry.service'
 import {
   normalizeNullableNumber,
@@ -44,6 +45,7 @@ export async function createStatementEntryAction(
     date: normalizeNullableString(formData.get('date')),
     amount: normalizeRequiredNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
+    isRecurring: formData.get('isRecurring') === 'true',
     monthlyPaymentNumber: normalizeNullableNumber(formData.get('monthlyPaymentNumber')),
     totalMonthlyPayments: normalizeNullableNumber(formData.get('totalMonthlyPayments')),
   })
@@ -88,6 +90,7 @@ export async function updateStatementEntryAction(
     date: normalizeNullableString(formData.get('date')),
     amount: normalizeRequiredNumber(formData.get('amount')),
     paid: formData.get('paid') === 'true',
+    isRecurring: formData.get('isRecurring') === 'true',
     monthlyPaymentNumber: normalizeNullableNumber(formData.get('monthlyPaymentNumber')),
     totalMonthlyPayments: normalizeNullableNumber(formData.get('totalMonthlyPayments')),
   })
@@ -108,6 +111,28 @@ export async function updateStatementEntryAction(
   }, 'No fue posible actualizar el movimiento')
 }
 
+export async function updateStatementEntryNotesAction(
+  _previousState: ActionState<StatementEntry>,
+  formData: FormData,
+): Promise<ActionState<StatementEntry>> {
+  const entryId = Number(formData.get('entryId'))
+
+  if (!Number.isInteger(entryId) || entryId <= 0) {
+    return actionError('El movimiento no es válido')
+  }
+
+  return withActionState(async () => {
+    const entry = await updateStatementEntryNotes(
+      entryId,
+      normalizeNullableString(formData.get('notes')),
+    )
+
+    revalidatePath('/debts/statement')
+
+    return entry
+  }, 'No fue posible actualizar las notas del movimiento')
+}
+
 // @/modules/debts/statement/actions/statement.actions.ts
 
 // ===================
@@ -121,28 +146,23 @@ export async function deleteStatementEntryAction(entryId: number) {
 }
 
 // ===================
-// PAY SELECTED
+// MARK AS PAID
 // ===================
 
-export async function paySelectedStatementEntriesAction(
-  entryIds: number[],
+export async function markStatementEntryPaidAction(
+  entryId: number,
 ): Promise<{ success: boolean; message: string }> {
-  const uniqueEntryIds = [...new Set(entryIds)]
-
-  if (uniqueEntryIds.length === 0) {
-    return { success: false, message: 'Selecciona al menos un movimiento.' }
+  if (!Number.isInteger(entryId) || entryId <= 0) {
+    return { success: false, message: 'El movimiento no es válido.' }
   }
 
   try {
-    const updatedEntries = await paySelectedStatementEntries(uniqueEntryIds)
+    await markStatementEntryPaid(entryId)
     revalidatePath('/debts/statement')
 
     return {
       success: true,
-      message:
-        updatedEntries.length === 1
-          ? '1 movimiento marcado como pagado.'
-          : `${updatedEntries.length} movimientos marcados como pagados.`,
+      message: 'Movimiento marcado como pagado.',
     }
   } catch (error) {
     return {
@@ -150,7 +170,7 @@ export async function paySelectedStatementEntriesAction(
       message:
         error instanceof Error
           ? error.message
-          : 'No fue posible marcar los movimientos como pagados.',
+          : 'No fue posible marcar el movimiento como pagado.',
     }
   }
 }

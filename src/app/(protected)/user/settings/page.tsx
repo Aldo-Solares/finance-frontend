@@ -2,7 +2,7 @@
 
 import { UserSettings } from '@/modules/user/components/user-settings'
 import { getCurrentUserSettings } from '@/modules/user/services/user-settings.service'
-import { HeroComponent } from '@/shared/hero/hero-component'
+import { HeroComponent } from '@/shared/components/hero-component'
 
 export default async function Page() {
   const userSettings = await getCurrentUserSettings()

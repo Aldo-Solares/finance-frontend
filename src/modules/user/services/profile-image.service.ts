@@ -49,16 +49,11 @@ export async function getAllProfileImages(): Promise<ProfileImage[]> {
 
 export async function createProfileImage(
   name: string,
-  file: File,
+  fileName: string,
 ): Promise<ProfileImage> {
-  const formData = new FormData()
-
-  formData.append('name', name)
-  formData.append('file', file)
-
   const response = await fetchServer('/profile-images', {
     method: 'POST',
-    body: formData,
+    body: JSON.stringify({ name, fileName }),
   })
 
   return parseApiResponse(

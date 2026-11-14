@@ -25,7 +25,7 @@ type AppNavProps = {
   user: User
 }
 
-type OpenMenu = 'debts' | 'trading' | 'admin' | null
+type OpenMenu = 'accounts' | 'admin' | null
 
 export function AppNav({ user }: AppNavProps) {
   const pathname = usePathname()
@@ -41,17 +41,20 @@ export function AppNav({ user }: AppNavProps) {
   const isActive = (route: string) =>
     pathname === route || pathname.startsWith(`${route}/`)
 
-  const debtsActive = isActive('/debts')
-  const tradingActive = isActive('/trading')
+  const accountsActive = isActive('/debts/card') || isActive('/trading/account')
   const adminActive = isActive('/admin')
 
   // ===================
   // CLASSES
   // ===================
 
+  const navItemTypography = 'font-sans text-[15px] font-medium leading-5'
+  const navLabelClassName = navItemTypography
+
   const getLinkClassName = (route: string) =>
     [
-      'flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium',
+      'flex h-9 items-center gap-1.5 rounded-lg px-2.5',
+      navItemTypography,
       'transition-all duration-200',
       isActive(route)
         ? 'bg-primary/[0.12] text-primary'
@@ -60,8 +63,9 @@ export function AppNav({ user }: AppNavProps) {
 
   const getDropdownButtonClassName = (active: boolean, opened: boolean) =>
     [
-      'flex h-10 cursor-pointer items-center gap-2 rounded-xl px-3',
-      'text-sm font-medium transition-all duration-200',
+      'flex h-9 cursor-pointer items-center gap-1.5 rounded-lg px-2.5',
+      navItemTypography,
+      'transition-all duration-200',
       active || opened
         ? 'bg-primary/[0.12] text-primary'
         : 'text-white/60 hover:bg-white/[0.05] hover:text-white',
@@ -69,7 +73,7 @@ export function AppNav({ user }: AppNavProps) {
 
   const getDropdownLinkClassName = (route: string) =>
     [
-      'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm',
+      'flex items-center gap-3 rounded-lg px-3 py-2 text-[13px]',
       'transition-all duration-200',
       isActive(route)
         ? 'bg-primary/[0.12] font-medium text-primary'
@@ -109,13 +113,13 @@ export function AppNav({ user }: AppNavProps) {
   }, [])
 
   return (
-    <nav ref={navigationRef} className="hidden items-center gap-1 md:flex">
+    <nav ref={navigationRef} className="hidden items-center gap-1 lg:flex">
       {/* ===================
           HOME
           =================== */}
 
       <Link href="/main" className={getLinkClassName('/main')}>
-        Inicio
+        <span className={navLabelClassName}>Inicio</span>
       </Link>
 
       {/* ===================
@@ -124,35 +128,58 @@ export function AppNav({ user }: AppNavProps) {
 
       <Link href="/dashboard" className={getLinkClassName('/dashboard')}>
         <ChartPie className="h-4 w-4" />
-        Dashboard
+        <span className={navLabelClassName}>Dashboard</span>
       </Link>
 
       {/* ===================
-          DEBTS
+          ESTADOS DE CUENTA
+          =================== */}
+      <Link
+        href="/debts/statement"
+        className={getLinkClassName('/debts/statement')}
+      >
+        <FileText className="h-4 w-4" />
+        <span className={navLabelClassName}>Estados de cuenta</span>
+      </Link>
+
+      {/* ===================
+          TRADING
+          =================== */}
+
+      <Link
+        href="/trading/trade"
+        className={getLinkClassName('/trading/trade')}
+      >
+        <ChartCandlestick className="h-4 w-4" />
+        <span className={navLabelClassName}>Trading</span>
+      </Link>
+
+      {/* ===================
+          ACCOUNTS
           =================== */}
 
       <div className="relative">
         <button
           type="button"
-          onClick={() => toggleMenu('debts')}
-          aria-expanded={openMenu === 'debts'}
+          onClick={() => toggleMenu('accounts')}
+          aria-expanded={openMenu === 'accounts'}
           className={getDropdownButtonClassName(
-            debtsActive,
-            openMenu === 'debts',
+            accountsActive,
+            openMenu === 'accounts',
           )}
         >
-          <CreditCard className="h-4 w-4" />
-          Tarjetas
+          <WalletCards className="h-4 w-4" />
+          <span className={navLabelClassName}>Cuentas</span>
           <ChevronDown
             className={[
               'h-4 w-4 text-white/40 transition-transform duration-200',
-              openMenu === 'debts' ? 'rotate-180' : '',
+              openMenu === 'accounts' ? 'rotate-180' : '',
             ].join(' ')}
           />
         </button>
 
-        {openMenu === 'debts' && (
-          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/10 bg-[#111111] p-2 text-white shadow-xl shadow-black/30">
+        {openMenu === 'accounts' && (
+          <div className="absolute left-0 top-[calc(100%+0.5rem)] w-60 overflow-hidden rounded-xl border border-white/[0.08] bg-[#111111] p-1.5 text-white shadow-lg shadow-black/25">
             <Link
               href="/debts/card"
               onClick={closeMenu}
@@ -161,61 +188,13 @@ export function AppNav({ user }: AppNavProps) {
               <CreditCard className="h-4 w-4" />
               Mis tarjetas
             </Link>
-
-            <Link
-              href="/debts/statement"
-              onClick={closeMenu}
-              className={getDropdownLinkClassName('/debts/statement')}
-            >
-              <FileText className="h-4 w-4" />
-              Estados de cuenta
-            </Link>
-          </div>
-        )}
-      </div>
-
-      {/* ===================
-          TRADING
-          =================== */}
-
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => toggleMenu('trading')}
-          aria-expanded={openMenu === 'trading'}
-          className={getDropdownButtonClassName(
-            tradingActive,
-            openMenu === 'trading',
-          )}
-        >
-          <ChartCandlestick className="h-4 w-4" />
-          Trading
-          <ChevronDown
-            className={[
-              'h-4 w-4 text-white/40 transition-transform duration-200',
-              openMenu === 'trading' ? 'rotate-180' : '',
-            ].join(' ')}
-          />
-        </button>
-
-        {openMenu === 'trading' && (
-          <div className="absolute left-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/10 bg-[#111111] p-2 text-white shadow-xl shadow-black/30">
             <Link
               href="/trading/account"
               onClick={closeMenu}
               className={getDropdownLinkClassName('/trading/account')}
             >
               <WalletCards className="h-4 w-4" />
-              Mis cuentas
-            </Link>
-
-            <Link
-              href="/trading/trade"
-              onClick={closeMenu}
-              className={getDropdownLinkClassName('/trading/trade')}
-            >
-              <ChartCandlestick className="h-4 w-4" />
-              Operaciones
+              Mis cuentas de trading
             </Link>
           </div>
         )}
@@ -237,7 +216,7 @@ export function AppNav({ user }: AppNavProps) {
             )}
           >
             <Settings2 className="h-4 w-4" />
-            Administración
+            <span className={navLabelClassName}>Administración</span>
             <ChevronDown
               className={[
                 'h-4 w-4 text-white/40 transition-transform duration-200',
@@ -247,7 +226,7 @@ export function AppNav({ user }: AppNavProps) {
           </button>
 
           {openMenu === 'admin' && (
-            <div className="absolute right-0 top-[calc(100%+0.75rem)] w-64 overflow-hidden rounded-2xl border border-white/10 bg-[#111111] p-2 text-white shadow-xl shadow-black/30">
+            <div className="absolute right-0 top-[calc(100%+0.5rem)] w-60 overflow-hidden rounded-xl border border-white/[0.08] bg-[#111111] p-1.5 text-white shadow-lg shadow-black/25">
               <Link
                 href="/admin/card"
                 onClick={closeMenu}

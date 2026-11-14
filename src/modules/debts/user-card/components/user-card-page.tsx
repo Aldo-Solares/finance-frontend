@@ -2,16 +2,17 @@
 
 'use client'
 
-import { CreditCard, Plus } from 'lucide-react'
+import { CalendarClock, CreditCard, Plus, Wallet } from 'lucide-react'
 import { useState } from 'react'
 
 import { deleteUserCardAction } from '@/modules/debts/user-card/actions/user-card.action'
 
 import type { Card } from '@/modules/debts/card/schemas/card.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
+import type { DebtDashboardStatement } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
 
-import { HeroComponent } from '@/shared/hero/hero-component'
-import { DeleteModal } from '@/shared/modal/delete-modal'
+import { HeroComponent } from '@/shared/components/hero-component'
+import { DeleteModal } from '@/shared/modals/delete-modal'
 
 import { UserCardAddModal } from './user-card-add-modal'
 import { UserCardItem } from './user-card-item'
@@ -19,18 +20,36 @@ import { UserCardItem } from './user-card-item'
 type UserCardPageProps = {
   userCards: UserCard[]
   cards: Card[]
+  latestStatements: DebtDashboardStatement[]
 }
 
-export function UserCardPage({ userCards, cards }: UserCardPageProps) {
+export function UserCardPage({
+  userCards,
+  cards,
+  latestStatements,
+}: UserCardPageProps) {
   const [addCardModalOpen, setAddCardModalOpen] = useState(false)
 
   const [deleteCard, setDeleteCard] = useState<UserCard | null>(null)
 
   const assignedCardIds = new Set(userCards.map((userCard) => userCard.cardId))
+  const cardById = new Map(cards.map((card) => [card.cardId, card]))
 
   const availableCards = cards.filter(
     (card) => !assignedCardIds.has(card.cardId),
   )
+  const statementsByUserCard = new Map(
+    latestStatements.map((statement) => [statement.userCardId, statement]),
+  )
+  const pendingTotal = latestStatements.reduce(
+    (total, statement) => total + statement.totalPending,
+    0,
+  )
+  const nextPayment = latestStatements
+    .filter((statement) => !statement.paid && statement.paymentDate)
+    .sort((left, right) =>
+      (left.paymentDate ?? '').localeCompare(right.paymentDate ?? ''),
+    )[0]
 
   const handleAddCard = () => {
     setAddCardModalOpen(true)
@@ -48,15 +67,33 @@ export function UserCardPage({ userCards, cards }: UserCardPageProps) {
 
   return (
     <>
-      <section className="w-full space-y-6 sm:space-y-8">
+      <section className="w-full space-y-7 sm:space-y-9">
         <HeroComponent
           eyebrow="Tarjetas"
-          title="Mis tarjetas"
-          description="Administra las tarjetas asociadas a tu cuenta."
-          action={{
-            label: 'Agregar tarjeta',
-            icon: Plus,
-            onClick: handleAddCard,
+          title="Tu cartera"
+          description="Consulta el último periodo y accede al historial completo de cada tarjeta."
+          rightContent={{
+            type: 'actions',
+            info: userCards.length > 0 ? [
+              {
+                icon: Wallet,
+                label: 'Pendiente en últimos estados',
+                value: formatMoney(pendingTotal),
+              },
+              {
+                icon: CalendarClock,
+                label: 'Próxima fecha límite',
+                value: nextPayment
+                  ? `${nextPayment.cardName} · ${formatDate(nextPayment.paymentDate)}`
+                  : 'Sin pagos pendientes',
+              },
+            ] : [],
+            items: [{
+              label: 'Agregar tarjeta',
+              icon: Plus,
+              variant: 'primary',
+              onClick: handleAddCard,
+            }],
           }}
         />
 
@@ -88,11 +125,11 @@ export function UserCardPage({ userCards, cards }: UserCardPageProps) {
             <div className="flex items-end justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-text-muted">
-                  Colección
+                  Cartera
                 </p>
 
                 <h2 className="mt-1 text-lg font-semibold tracking-tight text-foreground">
-                  Tarjetas asociadas
+                  Elige una tarjeta
                 </h2>
               </div>
 
@@ -102,11 +139,15 @@ export function UserCardPage({ userCards, cards }: UserCardPageProps) {
               </span>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="space-y-3">
               {userCards.map((userCard) => (
                 <UserCardItem
                   key={userCard.userCardId}
                   userCard={userCard}
+                  imagePath={cardById.get(userCard.cardId)?.imagePath}
+                  latestStatement={
+                    statementsByUserCard.get(userCard.userCardId) ?? null
+                  }
                   onDelete={handleDelete}
                 />
               ))}
@@ -132,4 +173,20 @@ export function UserCardPage({ userCards, cards }: UserCardPageProps) {
       )}
     </>
   )
+}
+
+function formatMoney(value: number) {
+  return new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+    maximumFractionDigits: 2,
+  }).format(value)
+}
+
+function formatDate(value: string | null) {
+  if (!value) return 'Sin fecha'
+  return new Intl.DateTimeFormat('es-MX', {
+    day: 'numeric',
+    month: 'short',
+  }).format(new Date(`${value}T12:00:00`))
 }

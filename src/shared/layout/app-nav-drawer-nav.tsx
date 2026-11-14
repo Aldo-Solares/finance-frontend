@@ -36,8 +36,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
   const isActive = (route: string) =>
     pathname === route || pathname.startsWith(`${route}/`)
 
-  const debtsActive = isActive('/debts')
-  const tradingActive = isActive('/trading')
+  const accountsActive = isActive('/debts/card') || isActive('/trading/account')
   const adminActive = isActive('/admin')
 
   // ===================
@@ -46,7 +45,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
 
   const getLinkClassName = (route: string) =>
     [
-      'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium',
+      'flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium',
       'transition-all duration-200',
       isActive(route)
         ? 'bg-primary/[0.12] text-primary'
@@ -55,14 +54,14 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
 
   const getSectionClassName = (active: boolean) =>
     [
-      'flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium',
+      'flex items-center gap-2 rounded-lg px-3 pt-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em]',
       'transition-colors',
-      active ? 'bg-primary/[0.12] text-primary' : 'text-white/60',
+      active ? 'text-primary' : 'text-white/35',
     ].join(' ')
 
   const getSubLinkClassName = (route: string) =>
     [
-      'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium',
+      'flex items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium',
       'transition-all duration-200',
       isActive(route)
         ? 'bg-primary/[0.12] text-primary'
@@ -70,7 +69,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
     ].join(' ')
 
   return (
-    <nav className="mt-8 space-y-1">
+    <nav className="mt-5 space-y-0.5">
       {/* ===================
           MAIN
           =================== */}
@@ -98,16 +97,16 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
       </Link>
 
       {/* ===================
-          DEBTS
+          ACCOUNTS
           =================== */}
 
       <div className="pt-1">
-        <div className={getSectionClassName(debtsActive)}>
-          <CreditCard className="h-4 w-4 shrink-0" />
-          Tarjetas
+        <div className={getSectionClassName(accountsActive)}>
+          <WalletCards className="h-4 w-4 shrink-0" />
+          Cuentas
         </div>
 
-        <div className="ml-5 mt-2 space-y-1 border-l border-white/10 pl-4">
+        <div className="ml-3 mt-1 space-y-0.5 border-l border-white/10 pl-3">
           <Link
             href="/debts/card"
             onClick={onClose}
@@ -116,14 +115,13 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
             <CreditCard className="h-4 w-4 shrink-0" />
             Mis tarjetas
           </Link>
-
           <Link
-            href="/debts/statement"
+            href="/trading/account"
             onClick={onClose}
-            className={getSubLinkClassName('/debts/statement')}
+            className={getSubLinkClassName('/trading/account')}
           >
-            <FileText className="h-4 w-4 shrink-0" />
-            Estados de cuenta
+            <WalletCards className="h-4 w-4 shrink-0" />
+            Mis cuentas de trading
           </Link>
         </div>
       </div>
@@ -132,32 +130,23 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
           TRADING
           =================== */}
 
-      <div className="pt-1">
-        <div className={getSectionClassName(tradingActive)}>
-          <ChartNoAxesCombined className="h-4 w-4 shrink-0" />
-          Trading
-        </div>
+      <Link
+        href="/trading/trade"
+        onClick={onClose}
+        className={getLinkClassName('/trading/trade')}
+      >
+        <ChartCandlestick className="h-4 w-4 shrink-0" />
+        Trading
+      </Link>
 
-        <div className="ml-5 mt-2 space-y-1 border-l border-white/10 pl-4">
-          <Link
-            href="/trading/account"
-            onClick={onClose}
-            className={getSubLinkClassName('/trading/account')}
-          >
-            <WalletCards className="h-4 w-4 shrink-0" />
-            Mis cuentas
-          </Link>
-
-          <Link
-            href="/trading/trade"
-            onClick={onClose}
-            className={getSubLinkClassName('/trading/trade')}
-          >
-            <ChartCandlestick className="h-4 w-4 shrink-0" />
-            Operaciones
-          </Link>
-        </div>
-      </div>
+      <Link
+        href="/debts/statement"
+        onClick={onClose}
+        className={getLinkClassName('/debts/statement')}
+      >
+        <FileText className="h-4 w-4 shrink-0" />
+        Estados de cuenta
+      </Link>
 
       {/* ===================
           ADMINISTRATION
@@ -170,7 +159,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
             Administración
           </div>
 
-          <div className="ml-5 mt-2 space-y-1 border-l border-white/10 pl-4">
+          <div className="ml-3 mt-1 space-y-0.5 border-l border-white/10 pl-3">
             <Link
               href="/admin/card"
               onClick={onClose}
@@ -223,7 +212,7 @@ export function AppNavDrawerNav({ user, onClose }: AppNavDrawerNavProps) {
           SETTINGS
           =================== */}
 
-      <div className="my-4 h-px bg-white/10" />
+      <div className="my-3 h-px bg-white/10" />
 
       <Link
         href="/user/settings"

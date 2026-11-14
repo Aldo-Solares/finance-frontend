@@ -1,3 +1,4 @@
+// @/modules/user/components/profile-image/profile-image-catalog-table.tsx
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 import { AdminCatalogGrid } from '@/shared/admin/admin-catalog-grid'
 import { AdminCatalogItem } from '@/shared/admin/admin-catalog-item'
@@ -20,7 +21,7 @@ export function ProfileImageCatalogTable({
           key={profileImage.profileImageId}
           title={profileImage.name}
           subtitle="Imagen de perfil"
-          image={{ src: profileImage.imageUrl, alt: profileImage.name }}
+          image={{ src: profileImage.imagePath, alt: profileImage.name }}
           editLabel={`Editar ${profileImage.name}`}
           deleteLabel={`Eliminar ${profileImage.name}`}
           onEdit={() => onEdit(profileImage)}

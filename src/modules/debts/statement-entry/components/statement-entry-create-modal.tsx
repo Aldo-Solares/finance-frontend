@@ -4,10 +4,8 @@
 
 import {
   CalendarDays,
-  Check,
   ChevronDown,
   ChevronUp,
-  CircleDollarSign,
   CreditCard,
   LoaderCircle,
   Plus,
@@ -22,13 +20,14 @@ import { useFormStatus } from 'react-dom'
 import type { ActionState } from '@/core/utils/action-state'
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
 import { createStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
-import { resolveStatementEntryType } from '@/modules/debts/statement-entry/constants/statement-entry.constants'
 import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 import { DateInput, getLocalDateInputValue } from '@/shared/inputs/date-input'
 import { MoneyInput } from '@/shared/inputs/money-input'
 import { NumberInput } from '@/shared/inputs/number-input'
 import { SearchableSelectInput } from '@/shared/inputs/searchable-select-input'
 import { TextInput } from '@/shared/inputs/text-input'
+
+import { PaidStateToggle } from './paid-state-toggle'
 
 type StatementEntryCreateModalProps = {
   statementId: number
@@ -53,6 +52,7 @@ export function StatementEntryCreateModal({
   const [date, setDate] = useState(getLocalDateInputValue())
   const [amount, setAmount] = useState('')
   const [paid, setPaid] = useState(false)
+  const [isRecurring, setIsRecurring] = useState(false)
   const [categoryId, setCategoryId] = useState(
     String(concepts[0]?.categoryId ?? ''),
   )
@@ -60,22 +60,20 @@ export function StatementEntryCreateModal({
   const [monthlyPaymentNumber, setMonthlyPaymentNumber] = useState('')
   const [totalMonthlyPayments, setTotalMonthlyPayments] = useState('')
   const [msiOpen, setMsiOpen] = useState(false)
-  const [paymentOpen, setPaymentOpen] = useState(false)
 
-  const selectedConcept = concepts.find(
-    (concept) => String(concept.categoryId) === categoryId,
-  )
-  const entryType = resolveStatementEntryType(selectedConcept?.name, merchant)
-  const isPurchase = entryType === 'PURCHASE'
   const isMsi = Boolean(monthlyPaymentNumber || totalMonthlyPayments)
 
-  useEffect(() => {
-    if (!isPurchase) {
-      setMonthlyPaymentNumber('')
-      setTotalMonthlyPayments('')
-      setMsiOpen(false)
-    }
-  }, [isPurchase])
+  const clearMsi = () => {
+    setMonthlyPaymentNumber('')
+    setTotalMonthlyPayments('')
+    setMsiOpen(false)
+  }
+
+  const handleRecurringToggle = () => {
+    const nextValue = !isRecurring
+    setIsRecurring(nextValue)
+    if (nextValue) clearMsi()
+  }
 
   useEffect(() => {
     if (state.success) onClose()
@@ -96,7 +94,7 @@ export function StatementEntryCreateModal({
         aria-labelledby="create-entry-title"
         className="relative z-10 flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-[2rem] border border-border bg-background shadow-2xl"
       >
-        <header className="flex shrink-0 items-start justify-between gap-4 border-b border-border px-6 py-5 sm:px-7">
+        <header className="flex shrink-0 items-center justify-between gap-4 border-b border-border px-6 py-5 sm:px-7">
           <div className="min-w-0">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground">
@@ -112,22 +110,30 @@ export function StatementEntryCreateModal({
               </div>
             </div>
             <p className="mt-3 text-sm text-text-muted">
-              Registra una compra o cargo dentro de este estado de cuenta.
+              Registra un movimiento dentro de este estado de cuenta.
             </p>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Cerrar"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text-muted transition hover:bg-surface hover:text-foreground"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            <PaidStateToggle
+              compact
+              paid={paid}
+              onToggle={() => setPaid((current) => !current)}
+            />
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Cerrar"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text-muted transition hover:bg-surface hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </header>
 
         <form action={action} className="flex min-h-0 flex-1 flex-col">
           <input type="hidden" name="statementId" value={statementId} />
           <input type="hidden" name="paid" value={paid ? 'true' : 'false'} />
+          <input type="hidden" name="isRecurring" value={isRecurring ? 'true' : 'false'} />
 
           <div className="min-h-0 flex-1 space-y-4 overflow-y-auto bg-surface/40 p-5 sm:p-7">
             <FormSection
@@ -135,12 +141,7 @@ export function StatementEntryCreateModal({
               title="Información del movimiento"
               description="Los datos principales de este cargo."
             >
-              <div className="grid gap-4 sm:grid-cols-3">
-                <Field label="Tipo" htmlFor="entryType">
-                  <div id="entryType" className={readOnlyClassName}>
-                    {isPurchase ? 'Compra' : 'Recurrente'}
-                  </div>
-                </Field>
+              <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Categoría" htmlFor="categoryId">
                   <SearchableSelectInput
                     id="categoryId"
@@ -180,17 +181,32 @@ export function StatementEntryCreateModal({
               <Field label="Notas" htmlFor="notes">
                 <TextInput id="notes" name="notes" placeholder="Notas" />
               </Field>
+
+              <div className="flex items-center justify-between gap-4 rounded-xl border border-border bg-surface/50 px-4 py-3">
+                <span className="min-w-0">
+                  <span className="block text-sm font-medium text-foreground">Movimiento recurrente</span>
+                  <span className="mt-0.5 block text-xs text-text-muted">
+                    {isRecurring ? 'Se repite de forma periódica.' : 'Actívalo si este cargo se repite.'}
+                  </span>
+                </span>
+                <span className="flex shrink-0 items-center gap-2.5">
+                  <span className={`text-xs font-medium ${isRecurring ? 'text-primary' : 'text-text-muted'}`}>
+                    {isRecurring ? 'Sí' : 'No'}
+                  </span>
+                  <button type="button" role="switch" aria-checked={isRecurring} aria-label={isRecurring ? 'Marcar como no recurrente' : 'Marcar como recurrente'} onClick={handleRecurringToggle} className={`relative h-6 w-11 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${isRecurring ? 'bg-primary' : 'bg-border'}`}>
+                    <span className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-background shadow-sm transition-transform ${isRecurring ? 'translate-x-5' : 'translate-x-0'}`} />
+                  </button>
+                </span>
+              </div>
             </FormSection>
 
             <FormSection
               icon={CalendarDays}
-              title={isPurchase ? 'Compra' : 'Cargo recurrente'}
-              description={isPurchase
-                ? 'Indica cuándo se realizó la compra y cuánto corresponde a este movimiento.'
-                : 'Indica cuándo se realizó el cargo y su importe.'}
+              title="Fecha e importe"
+              description="Indica cuándo ocurrió el movimiento y cuánto fue."
             >
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label={isPurchase ? 'Fecha de compra' : 'Fecha del cargo'} htmlFor="date">
+                <Field label="Fecha" htmlFor="date">
                   <DateInput id="date" name="date" value={date} onChange={setDate} />
                   <p className="mt-1.5 text-xs text-text-muted">Se utiliza la fecha de hoy por defecto.</p>
                 </Field>
@@ -209,7 +225,7 @@ export function StatementEntryCreateModal({
               </div>
             </FormSection>
 
-            {isPurchase && (
+            {!isRecurring && (
               <CollapsibleSection
                 icon={CreditCard}
                 title="Meses sin intereses"
@@ -253,18 +269,6 @@ export function StatementEntryCreateModal({
                 </div>
               </CollapsibleSection>
             )}
-
-            <CollapsibleSection
-              icon={CircleDollarSign}
-              title="Estado del pago"
-              description="Indica si ya cubriste este movimiento."
-              open={paymentOpen}
-              active={paid}
-              status={paid ? 'Pagado' : 'Pago pendiente'}
-              onToggle={() => setPaymentOpen((current) => !current)}
-            >
-              <PaidStateButton paid={paid} onToggle={() => setPaid((current) => !current)} />
-            </CollapsibleSection>
 
             {state.message && !state.success && <ErrorMessage message={state.message} />}
           </div>
@@ -371,25 +375,6 @@ function Field({
   )
 }
 
-function PaidStateButton({ paid, onToggle }: { paid: boolean; onToggle: () => void }) {
-  return (
-    <button type="button" role="switch" aria-checked={paid} onClick={onToggle} className="flex w-full items-center justify-between gap-4 rounded-xl border border-border bg-background px-4 py-3 text-left transition hover:border-primary/30 hover:bg-primary-soft/30">
-      <span className="flex items-center gap-3">
-        <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${paid ? 'bg-primary-soft text-primary' : 'bg-surface text-text-muted'}`}>
-          <Check className="h-4 w-4" />
-        </span>
-        <span>
-          <span className="block text-sm font-semibold text-foreground">{paid ? 'Movimiento pagado' : 'Pago pendiente'}</span>
-          <span className="mt-1 block text-xs text-text-muted">{paid ? 'Este importe ya fue cubierto.' : 'Marca como pagado si ya lo cubriste.'}</span>
-        </span>
-      </span>
-      <span className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${paid ? 'bg-primary' : 'bg-surface'}`}>
-        <span className={`absolute top-1 h-4 w-4 rounded-full bg-background shadow-sm transition-transform ${paid ? 'translate-x-6' : 'translate-x-1'}`} />
-      </span>
-    </button>
-  )
-}
-
 function SubmitButton() {
   const { pending } = useFormStatus()
   return (
@@ -404,4 +389,3 @@ function ErrorMessage({ message }: { message: string }) {
   return <p role="alert" className="rounded-xl border border-red-500/20 bg-red-500/5 px-4 py-3 text-sm text-red-600">{message}</p>
 }
 
-const readOnlyClassName = 'flex h-11 items-center rounded-xl border border-border bg-surface px-4 text-sm text-foreground'

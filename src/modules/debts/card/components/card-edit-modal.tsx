@@ -107,6 +107,30 @@ export function CardEditModal({ card, onClose }: CardEditModalProps) {
 
             <div>
               <label
+                htmlFor="imagePath"
+                className="mb-2 block text-xs font-medium text-text-muted"
+              >
+                Ruta de la imagen
+              </label>
+
+              <input
+                id="imagePath"
+                name="imagePath"
+                type="text"
+                defaultValue={card.imagePath ?? ''}
+                maxLength={255}
+                placeholder="/images/cards/nu-mastercard-gold.png"
+                className="h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none placeholder:text-text-muted focus:border-primary"
+              />
+
+              <p className="mt-2 text-xs leading-5 text-text-muted">
+                Opcional. Usa una ruta PNG dentro de
+                frontend/public/images/cards.
+              </p>
+            </div>
+
+            <div>
+              <label
                 htmlFor="defaultMerchant"
                 className="mb-2 block text-xs font-medium text-text-muted"
               >

@@ -2,37 +2,46 @@
 
 'use client'
 
-import { Check, Download, Plus } from 'lucide-react'
+import {
+  ArrowLeft,
+  Clock3,
+  Download,
+  ListChecks,
+  Plus,
+  Wallet,
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
-import { paySelectedStatementEntriesAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
-import { deleteStatementEntryAction } from '@/modules/debts/statement-entry/actions/statement-entry.actions'
+import {
+  deleteStatementEntryAction,
+  markStatementEntryPaidAction,
+} from '@/modules/debts/statement-entry/actions/statement-entry.actions'
 
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
-import type {
-  StatementEntry,
-  StatementEntryType,
-} from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
+import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 
-import { DateDisplay } from '@/shared/display/date-display'
+import { CardArtwork } from '@/modules/debts/card/components/card-artwork'
+import { DateDisplayComponent } from '@/shared/components/date-display.component'
+import { HeroComponent } from '@/shared/components/hero-component'
 import { Pagination } from '@/shared/filters/pagination'
-import { DeleteModal } from '@/shared/modal/delete-modal'
+import { DeleteModal } from '@/shared/modals/delete-modal'
 
 import { StatementEntryCreateModal } from './statement-entry-create-modal'
-import {
+import { StatementEntryMetricCard } from './statement-entry-metric-card'
+import type {
   DateSort,
   MsiFilter,
   PaymentFilter,
-  StatementEntryFilters,
-} from './statement-entry-filters'
+  RecurringFilter,
+} from './statement-entry-table'
 import { StatementEntryEditModal } from './statement-entry-edit-modal'
 import { StatementEntryTable } from './statement-entry-table'
-import { StatementHero } from './statement-hero'
 
 type StatementEntryPageProps = {
   statement: Statement
+  cardImagePath?: string | null
   entries: StatementEntry[]
   concepts: Concept[]
   canExport: boolean
@@ -42,16 +51,13 @@ const PAGE_SIZE = 10
 
 export function StatementEntryPage({
   statement,
+  cardImagePath,
   entries,
   concepts,
   canExport,
 }: StatementEntryPageProps) {
   const router = useRouter()
   const [createOpen, setCreateOpen] = useState(false)
-  const [selectedEntryIds, setSelectedEntryIds] = useState<Set<number>>(
-    () => new Set(),
-  )
-  const [isPayingSelected, setIsPayingSelected] = useState(false)
   const [markingPaidEntryId, setMarkingPaidEntryId] = useState<number | null>(
     null,
   )
@@ -63,7 +69,6 @@ export function StatementEntryPage({
   const [selectedEntry, setSelectedEntry] = useState<StatementEntry | null>(
     null,
   )
-
   const [deleteEntry, setDeleteEntry] = useState<StatementEntry | null>(null)
 
   const [conceptFilter, setConceptFilter] = useState('ALL')
@@ -72,29 +77,13 @@ export function StatementEntryPage({
 
   const [paymentFilter, setPaymentFilter] = useState<PaymentFilter>('ALL')
 
-  const [entryTypeFilter, setEntryTypeFilter] = useState<
-    StatementEntryType | 'ALL'
-  >('ALL')
+  const [recurringFilter, setRecurringFilter] = useState<RecurringFilter>('ALL')
 
   const [msiFilter, setMsiFilter] = useState<MsiFilter>('ALL')
 
   const [dateSort, setDateSort] = useState<DateSort>('NEWEST')
 
   const [currentPage, setCurrentPage] = useState(1)
-
-  const total = useMemo(
-    () => entries.reduce((current, entry) => current + entry.amount, 0),
-    [entries],
-  )
-
-  const pendingTotal = useMemo(
-    () =>
-      entries.reduce(
-        (current, entry) => current + (!entry.paid ? entry.amount : 0),
-        0,
-      ),
-    [entries],
-  )
 
   const debtors = useMemo(
     () =>
@@ -126,7 +115,11 @@ export function StatementEntryPage({
           return false
         }
 
-        if (entryTypeFilter !== 'ALL' && entry.entryType !== entryTypeFilter) {
+        if (recurringFilter === 'RECURRING' && !entry.isRecurring) {
+          return false
+        }
+
+        if (recurringFilter === 'NON_RECURRING' && entry.isRecurring) {
           return false
         }
 
@@ -152,10 +145,24 @@ export function StatementEntryPage({
     conceptFilter,
     debtorFilter,
     paymentFilter,
-    entryTypeFilter,
+    recurringFilter,
     msiFilter,
     dateSort,
   ])
+
+  const total = useMemo(
+    () => filteredEntries.reduce((current, entry) => current + entry.amount, 0),
+    [filteredEntries],
+  )
+
+  const pendingTotal = useMemo(
+    () =>
+      filteredEntries.reduce(
+        (current, entry) => current + (!entry.paid ? entry.amount : 0),
+        0,
+      ),
+    [filteredEntries],
+  )
 
   const totalPages = Math.max(1, Math.ceil(filteredEntries.length / PAGE_SIZE))
 
@@ -165,23 +172,11 @@ export function StatementEntryPage({
     return filteredEntries.slice(start, start + PAGE_SIZE)
   }, [filteredEntries, currentPage])
 
-  const validSelectedEntryIds = useMemo(() => {
-    const unpaidIds = new Set(
-      entries.filter((entry) => !entry.paid).map((entry) => entry.entryId),
-    )
-
-    return new Set(
-      [...selectedEntryIds].filter((entryId) => unpaidIds.has(entryId)),
-    )
-  }, [entries, selectedEntryIds])
-
-  const selectedPendingCount = validSelectedEntryIds.size
-
   const hasActiveFilters =
     conceptFilter !== 'ALL' ||
     debtorFilter !== 'ALL' ||
     paymentFilter !== 'ALL' ||
-    entryTypeFilter !== 'ALL' ||
+    recurringFilter !== 'ALL' ||
     msiFilter !== 'ALL' ||
     dateSort !== 'NEWEST'
 
@@ -189,7 +184,7 @@ export function StatementEntryPage({
     setConceptFilter('ALL')
     setDebtorFilter('ALL')
     setPaymentFilter('ALL')
-    setEntryTypeFilter('ALL')
+    setRecurringFilter('ALL')
     setMsiFilter('ALL')
     setDateSort('NEWEST')
     setCurrentPage(1)
@@ -210,11 +205,6 @@ export function StatementEntryPage({
     setCurrentPage(1)
   }
 
-  const handleEntryTypeChange = (value: StatementEntryType | 'ALL') => {
-    setEntryTypeFilter(value)
-    setCurrentPage(1)
-  }
-
   const handleMsiChange = (value: MsiFilter) => {
     setMsiFilter(value)
     setCurrentPage(1)
@@ -231,76 +221,15 @@ export function StatementEntryPage({
     await deleteStatementEntryAction(deleteEntry.entryId)
   }
 
-  const handleToggleSelection = (entryId: number) => {
-    const entry = entries.find((current) => current.entryId === entryId)
-    if (!entry || entry.paid) return
-
-    setSelectedEntryIds((current) => {
-      const next = new Set(current)
-      if (next.has(entryId)) next.delete(entryId)
-      else next.add(entryId)
-      return next
-    })
-  }
-
-  const handleTogglePageSelection = (entryIds: number[]) => {
-    if (entryIds.length === 0) return
-
-    setSelectedEntryIds((current) => {
-      const next = new Set(current)
-      const shouldSelect = !entryIds.every((entryId) => next.has(entryId))
-      for (const entryId of entryIds) {
-        if (shouldSelect) next.add(entryId)
-        else next.delete(entryId)
-      }
-      return next
-    })
-  }
-
-  const handlePaySelected = async () => {
-    if (markingPaidEntryId !== null || isPayingSelected) return
-
-    const entryIds = entries
-      .filter((entry) => validSelectedEntryIds.has(entry.entryId))
-      .map((entry) => entry.entryId)
-    if (entryIds.length === 0) return
-
-    setIsPayingSelected(true)
-    setPaymentFeedback(null)
-    try {
-      const result = await paySelectedStatementEntriesAction(entryIds)
-      setPaymentFeedback(result)
-      if (result.success) {
-        setSelectedEntryIds(new Set())
-        router.refresh()
-      }
-    } catch (error) {
-      setPaymentFeedback({
-        success: false,
-        message:
-          error instanceof Error
-            ? error.message
-            : 'No fue posible completar el pago.',
-      })
-    } finally {
-      setIsPayingSelected(false)
-    }
-  }
-
   const handleMarkEntryPaid = async (entryId: number) => {
-    if (markingPaidEntryId !== null || isPayingSelected) return
+    if (markingPaidEntryId !== null) return
 
     setMarkingPaidEntryId(entryId)
     setPaymentFeedback(null)
     try {
-      const result = await paySelectedStatementEntriesAction([entryId])
+      const result = await markStatementEntryPaidAction(entryId)
       setPaymentFeedback(result)
       if (result.success) {
-        setSelectedEntryIds((current) => {
-          const next = new Set(current)
-          next.delete(entryId)
-          return next
-        })
         router.refresh()
       }
     } catch (error) {
@@ -318,87 +247,106 @@ export function StatementEntryPage({
 
   return (
     <>
-      <section className="w-full space-y-8">
-        <div className="space-y-6">
-          <StatementHero
+      <section className="w-full space-y-6 sm:space-y-8">
+        <div className="space-y-4">
+          <HeroComponent
             eyebrow={`${statement.bank} · ${statement.cardName}`}
-            title={`${statement.month}/${statement.year}`}
-            action={
-              concepts.length > 0 || canExport ? (
-                <div className="flex items-center gap-2">
-                  {canExport && (
-                    <a
-                      href={`/api/statements/${statement.statementId}/export`}
-                      aria-label="Descargar resumen anual en Excel"
-                      title="Descargar resumen anual en Excel"
-                      className={[
-                        'inline-flex h-10 items-center gap-2 rounded-xl',
-                        'border border-white/10 bg-white/[0.08] px-3.5',
-                        'text-xs font-semibold text-white transition-all duration-200',
-                        'hover:bg-white/[0.14]',
-                        'focus-visible:outline-none focus-visible:ring-2',
-                        'focus-visible:ring-primary/50',
-                      ].join(' ')}
-                    >
-                      <Download className="h-4 w-4" />
-                      <span className="hidden sm:inline">Descargar anual</span>
-                    </a>
-                  )}
+            title={`Estado de cuenta · ${statement.month}/${statement.year}`}
+            visual={
+              <CardArtwork
+                bank={statement.bank}
+                cardName={statement.cardName}
+                imagePath={cardImagePath}
+                className="!w-16"
+              />
+            }
+            rightContent={{
+              type: 'actions',
+              items: [
+                {
+                  label: 'Historial',
+                  icon: ArrowLeft,
+                  href: `/debts/statement?userCardId=${statement.userCardId}`,
+                },
+                ...(canExport
+                  ? [
+                      {
+                        label: 'Descargar anual',
+                        icon: Download,
+                        href: `/api/statements/${statement.statementId}/export`,
+                      },
+                    ]
+                  : []),
+                ...(concepts.length > 0
+                  ? [
+                      {
+                        label: 'Nuevo movimiento',
+                        icon: Plus,
+                        variant: 'primary' as const,
+                        onClick: () => setCreateOpen(true),
+                      },
+                    ]
+                  : []),
+              ],
+            }}
+            footer={
+              <div
+                className="
+      flex flex-wrap items-center gap-x-5 gap-y-2
+      rounded-xl border border-border
+      bg-background px-4 py-3 text-xs
+    "
+              >
+                <span className="text-text-muted">
+                  Periodo
+                  <strong className="font-medium text-foreground">
+                    <DateDisplayComponent value={statement.periodStart} />
+                  </strong>
+                  <span className="mx-1">–</span>
+                  <strong className="font-medium text-foreground">
+                    <DateDisplayComponent value={statement.periodEnd} />
+                  </strong>
+                </span>
 
-                  {concepts.length > 0 && (
-                    <button
-                      type="button"
-                      onClick={() => setCreateOpen(true)}
-                      className={[
-                        'inline-flex h-10 cursor-pointer items-center gap-2 rounded-xl',
-                        'bg-white px-4 text-xs font-semibold text-[#111111]',
-                        'transition-all duration-200',
-                        'hover:bg-white/90',
-                        'focus-visible:outline-none focus-visible:ring-2',
-                        'focus-visible:ring-primary/50',
-                      ].join(' ')}
-                    >
-                      <Plus className="h-4 w-4" />
-                      Nuevo movimiento
-                    </button>
-                  )}
-                </div>
-              ) : undefined
+                <span className="hidden h-4 w-px bg-border sm:block" />
+
+                <span className="text-text-muted">
+                  Fecha de pago{' '}
+                  <strong className="ml-1 font-medium text-foreground">
+                    <DateDisplayComponent value={statement.paymentDate} />
+                  </strong>
+                </span>
+
+                <span className="hidden h-4 w-px bg-border sm:block" />
+
+                <span
+                  className="
+        rounded-full bg-surface px-2.5 py-1
+        font-medium text-text-muted
+      "
+                >
+                  {formatStatementStatus(statement.status)}
+                </span>
+              </div>
             }
           />
-
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <InfoCard
-              label="Inicio del periodo"
-              value={<DateDisplay value={statement.periodStart} />}
-            />
-
-            <InfoCard
-              label="Fecha de corte"
-              value={<DateDisplay value={statement.periodEnd} />}
-            />
-
-            <InfoCard
-              label="Fecha límite"
-              value={<DateDisplay value={statement.paymentDate} />}
-              highlight
-            />
-
-            <InfoCard
-              label="Estado"
-              value={formatStatementStatus(statement.status)}
-            />
-          </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3">
-          <SummaryCard label="Movimientos" value={String(entries.length)} />
-
-          <SummaryCard label="Total del periodo" value={formatMoney(total)} />
-
-          <SummaryCard
-            label="Pendiente de pago"
+        <div className="grid gap-3 sm:grid-cols-3">
+          <StatementEntryMetricCard
+            icon={Wallet}
+            label="Total"
+            value={formatMoney(total)}
+          />
+          <StatementEntryMetricCard
+            icon={Clock3}
+            label="Pendiente"
             value={formatMoney(pendingTotal)}
+          />
+          <StatementEntryMetricCard
+            icon={ListChecks}
+            label="Movimientos"
+            value={String(filteredEntries.length)}
           />
         </div>
 
@@ -415,71 +363,17 @@ export function StatementEntryPage({
           </div>
         )}
 
-        {entries.length > 0 && (
-          <StatementEntryFilters
-            concepts={concepts}
-            debtors={debtors}
-            conceptFilter={conceptFilter}
-            debtorFilter={debtorFilter}
-            paymentFilter={paymentFilter}
-            entryTypeFilter={entryTypeFilter}
-            msiFilter={msiFilter}
-            dateSort={dateSort}
-            hasActiveFilters={hasActiveFilters}
-            onConceptChange={handleConceptChange}
-            onDebtorChange={handleDebtorChange}
-            onPaymentChange={handlePaymentChange}
-            onEntryTypeChange={handleEntryTypeChange}
-            onMsiChange={handleMsiChange}
-            onDateSortChange={handleDateSortChange}
-            onReset={resetFilters}
-          />
-        )}
-
-        {(selectedPendingCount > 0 || paymentFeedback) && (
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border bg-background px-4 py-3">
-            {paymentFeedback ? (
-              <p
-                role={paymentFeedback.success ? 'status' : 'alert'}
-                className={[
-                  'text-xs',
-                  paymentFeedback.success ? 'text-primary' : 'text-red-500',
-                ].join(' ')}
-              >
-                {paymentFeedback.message}
-              </p>
-            ) : (
-              <p className="text-xs text-text-muted">
-                {selectedPendingCount} movimientos seleccionados
-              </p>
-            )}
-
-            {selectedPendingCount > 0 && (
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handlePaySelected}
-                  disabled={isPayingSelected || markingPaidEntryId !== null}
-                  className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-xs font-semibold text-primary-foreground transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  <Check className="h-4 w-4" />
-                  {isPayingSelected ? 'Pagando...' : 'Pagar seleccionados'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedEntryIds(new Set())}
-                  disabled={isPayingSelected || markingPaidEntryId !== null}
-                  className="h-10 rounded-xl border border-border px-3 text-xs font-medium text-text-muted transition hover:bg-surface disabled:opacity-60"
-                >
-                  Limpiar
-                </button>
-              </div>
-            )}
-          </div>
+        {paymentFeedback && (
+          <p
+            role={paymentFeedback.success ? 'status' : 'alert'}
+            className={`rounded-xl border px-4 py-3 text-xs ${paymentFeedback.success ? 'border-primary/15 bg-primary-soft/50 text-primary' : 'border-red-500/20 bg-red-500/5 text-red-600'}`}
+          >
+            {paymentFeedback.message}
+          </p>
         )}
 
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <p className="text-sm font-semibold text-foreground">
                 Movimientos
@@ -490,26 +384,52 @@ export function StatementEntryPage({
                 {filteredEntries.length === 1 ? 'resultado' : 'resultados'}
               </p>
             </div>
+            <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="rounded-lg border border-border bg-background px-3 py-2 text-xs font-medium text-text-muted transition hover:bg-surface hover:text-foreground"
+                >
+                  Limpiar filtros
+                </button>
+              )}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
+            </div>
           </div>
 
           {paginatedEntries.length > 0 ? (
             <>
               <StatementEntryTable
                 entries={paginatedEntries}
-                selectedEntryIds={validSelectedEntryIds}
-                onEdit={setSelectedEntry}
+                filteredCount={filteredEntries.length}
+                totalAmount={total}
+                pendingAmount={pendingTotal}
+                concepts={concepts}
+                debtors={debtors}
+                conceptFilter={conceptFilter}
+                debtorFilter={debtorFilter}
+                paymentFilter={paymentFilter}
+                recurringFilter={recurringFilter}
+                msiFilter={msiFilter}
+                dateSort={dateSort}
+                onConceptChange={handleConceptChange}
+                onDebtorChange={handleDebtorChange}
+                onPaymentChange={handlePaymentChange}
+                onRecurringChange={(value) => {
+                  setRecurringFilter(value)
+                  setCurrentPage(1)
+                }}
+                onMsiChange={handleMsiChange}
+                onDateSortChange={handleDateSortChange}
+                onSelect={setSelectedEntry}
                 onDelete={setDeleteEntry}
-                onToggleSelection={handleToggleSelection}
-                onTogglePageSelection={handleTogglePageSelection}
                 onMarkPaid={handleMarkEntryPaid}
                 markingPaidEntryId={markingPaidEntryId}
-                isPayingSelected={isPayingSelected}
-              />
-
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
               />
             </>
           ) : (
@@ -536,6 +456,10 @@ export function StatementEntryPage({
           defaultMerchant={statement.defaultMerchant}
           concepts={concepts}
           onClose={() => setSelectedEntry(null)}
+          onDelete={(entry) => {
+            setSelectedEntry(null)
+            setDeleteEntry(entry)
+          }}
         />
       )}
 
@@ -552,23 +476,9 @@ export function StatementEntryPage({
 }
 
 function hasMsi(entry: StatementEntry): boolean {
-  return entry.monthlyPaymentNumber !== null || entry.msiPurchaseId !== null
-}
-
-type SummaryCardProps = {
-  label: string
-  value: string
-}
-
-function SummaryCard({ label, value }: SummaryCardProps) {
   return (
-    <div className="rounded-[1.5rem] border border-border bg-background p-5">
-      <p className="text-xs font-medium text-text-muted">{label}</p>
-
-      <p className="mt-2 text-xl font-semibold tracking-tight text-foreground">
-        {value}
-      </p>
-    </div>
+    !entry.isRecurring &&
+    (entry.monthlyPaymentNumber !== null || entry.msiPurchaseId !== null)
   )
 }
 
@@ -577,36 +487,6 @@ function formatMoney(value: number): string {
     style: 'currency',
     currency: 'MXN',
   }).format(value)
-}
-
-type InfoCardProps = {
-  label: string
-  value: React.ReactNode
-  highlight?: boolean
-}
-
-function InfoCard({ label, value, highlight = false }: InfoCardProps) {
-  return (
-    <div
-      className={[
-        'rounded-[1.5rem] border p-5',
-        highlight
-          ? 'border-primary bg-primary-soft'
-          : 'border-border bg-background',
-      ].join(' ')}
-    >
-      <p className="text-xs font-medium text-text-muted">{label}</p>
-
-      <div
-        className={[
-          'mt-2 text-sm font-semibold',
-          highlight ? 'text-primary' : 'text-foreground',
-        ].join(' ')}
-      >
-        {value}
-      </div>
-    </div>
-  )
 }
 
 function formatStatementStatus(status: Statement['status']): string {

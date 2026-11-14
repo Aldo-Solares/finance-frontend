@@ -1,3 +1,4 @@
+// @/modules/user/components/profile-image/profile-image-catalog-page.tsx
 'use client'
 
 import { ImagePlus, Layers3 } from 'lucide-react'
@@ -20,13 +21,13 @@ export function ProfileImageCatalogPage({
   return (
     <AdminCatalogPage
       title="Catálogo de imágenes"
-      description="Administra las imágenes disponibles para los perfiles de usuario."
-      createLabel="Nueva imagen"
+      description="Registra las imágenes PNG que están en frontend/public/images/profile-images."
+      createLabel="Registrar PNG"
       items={profileImages}
       metrics={[{ icon: Layers3, label: 'Total', value: profileImages.length }]}
       emptyIcon={ImagePlus}
       emptyTitle="El catálogo está vacío"
-      emptyDescription="Crea la primera imagen para comenzar a construir el catálogo de imágenes de perfil."
+      emptyDescription="Agrega archivos PNG al directorio público y regístralos aquí para el catálogo de perfiles."
       deleteTitle="Eliminar imagen"
       getDeleteDescription={() =>
         '¿Seguro que deseas eliminar esta imagen del catálogo?'

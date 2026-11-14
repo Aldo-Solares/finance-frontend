@@ -1,3 +1,4 @@
+// @/modules/trading/instrument/components/instrument-list.tsx
 import { ChartCandlestick } from 'lucide-react'
 
 import type { Currency } from '@/modules/catalogs/currency/schemas/currency.schema'

@@ -12,7 +12,7 @@ import Link from 'next/link'
 import type { ProfileImage } from '@/modules/user/schemas/profile-image.schema'
 import type { User } from '@/modules/user/schemas/user.schema'
 import type { UserSettings } from '@/modules/user/schemas/user-settings.schema'
-import { HeroComponent } from '@/shared/hero/hero-component'
+import { HeroComponent } from '@/shared/components/hero-component'
 
 import { UserAccountCard } from './user-account-card'
 

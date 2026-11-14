@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { ArrowUpRight, CreditCard } from 'lucide-react'
 
+import { CardArtwork } from '@/modules/debts/card/components/card-artwork'
+import type { Card } from '@/modules/debts/card/schemas/card.schema'
 import { DebtDashboardPanelHeader } from '@/modules/dashboard/debts/components/debt-dashboard-panel-header'
 import type { DebtDashboardCard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
 import {
@@ -12,11 +14,16 @@ import {
 
 type DebtDashboardCardBreakdownProps = {
   cards: DebtDashboardCard[]
+  catalogCards: Card[]
 }
 
 export function DebtDashboardCardBreakdown({
   cards,
+  catalogCards,
 }: DebtDashboardCardBreakdownProps) {
+  const imageByCardId = new Map(
+    catalogCards.map((card) => [card.cardId, card.imagePath]),
+  )
   const total = cards.reduce(
     (sum, card) => sum + Math.max(card.totalExpenses, 0),
     0,
@@ -25,20 +32,30 @@ export function DebtDashboardCardBreakdown({
     .map((card, index) => ({ card, index }))
     .filter(({ card }) => card.totalExpenses > 0)
 
-  let angle = 0
-  const segments = chartCards.map(({ card, index }) => {
-    const share = total > 0 ? (card.totalExpenses / total) * 100 : 0
-    const start = angle
-    angle += share * 3.6
+  const { segments } = chartCards.reduce<{
+    segments: string[]
+    angle: number
+  }>(
+    (result, { card, index }) => {
+      const share = total > 0 ? (card.totalExpenses / total) * 100 : 0
+      const nextAngle = result.angle + share * 3.6
 
-    return `${debtDashboardChartColors[index % debtDashboardChartColors.length]} ${start}deg ${angle}deg`
-  })
+      return {
+        segments: [
+          ...result.segments,
+          `${debtDashboardChartColors[index % debtDashboardChartColors.length]} ${result.angle}deg ${nextAngle}deg`,
+        ],
+        angle: nextAngle,
+      }
+    },
+    { segments: [], angle: 0 },
+  )
   const chartBackground = segments.length
     ? `conic-gradient(${segments.join(', ')})`
     : 'var(--border)'
 
   return (
-    <section className="rounded-2xl border border-border bg-background p-5 sm:p-6">
+    <section className="rounded-3xl border border-border/70 bg-background p-5 shadow-sm shadow-black/[0.025] sm:p-6">
       <DebtDashboardPanelHeader
         eyebrow="Distribución"
         title="Gastos por tarjeta"
@@ -84,18 +101,19 @@ export function DebtDashboardCardBreakdown({
                 <li key={card.userCardId}>
                   <Link
                     href={`/debts/statement?userCardId=${card.userCardId}`}
-                    className="group grid grid-cols-[minmax(0,1fr)_auto_1rem] items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-surface"
+                    className="group grid grid-cols-[minmax(0,1fr)_auto_1rem] items-center gap-3 rounded-xl px-2.5 py-2.5 transition-colors hover:bg-primary-soft/35"
                   >
                     <span className="flex min-w-0 items-center gap-3">
                       <span
-                        className="h-3 w-3 shrink-0 rounded-full"
-                        style={{
-                          backgroundColor:
-                            debtDashboardChartColors[
-                              index % debtDashboardChartColors.length
-                            ],
-                        }}
+                        className="h-2.5 w-2.5 shrink-0 rounded-full"
+                        style={{ backgroundColor: debtDashboardChartColors[index % debtDashboardChartColors.length] }}
                         aria-hidden="true"
+                      />
+                      <CardArtwork
+                        bank={card.bank}
+                        cardName={card.cardName}
+                        imagePath={imageByCardId.get(card.cardId)}
+                        className="!w-14 rounded-md shadow-none sm:!w-16"
                       />
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-medium text-foreground group-hover:text-primary">

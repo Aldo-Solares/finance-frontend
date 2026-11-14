@@ -2,7 +2,6 @@
 
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronDown, LogOut, Menu, Settings, UserRound } from 'lucide-react'
@@ -43,18 +42,27 @@ export function AppHeader({ user }: AppHeaderProps) {
 
   return (
     <>
-      <header className="relative z-40 shrink-0 border-b border-white/10 bg-[#111111] text-white">
-        <div className="flex h-20 w-full items-center px-6 lg:px-10">
+      <header className="relative z-40 shrink-0 border-b border-white/[0.07] bg-[#111111] text-white">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <span
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--primary) 16%, transparent), transparent 68%)',
+            }}
+          />
+        </div>
+        <div className="relative z-10 flex h-18 w-full items-center px-6 lg:px-10">
           <div className="flex min-w-0 flex-1 items-center">
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
               aria-label="Abrir navegación"
               className={[
-                'mr-5 flex h-11 w-11 shrink-0 items-center justify-center',
-                'rounded-xl border border-white/10 bg-white/[0.04]',
+                'mr-4 flex h-9 w-9 shrink-0 items-center justify-center',
+                'rounded-lg border border-white/[0.08] bg-white/[0.035]',
                 'text-white/60 transition-all duration-200',
-                'hover:border-primary/40 hover:bg-primary/[0.08]',
+                'hover:border-primary/30 hover:bg-primary/[0.08]',
                 'hover:text-primary',
                 'focus-visible:outline-none focus-visible:ring-2',
                 'focus-visible:ring-primary/40',
@@ -62,22 +70,6 @@ export function AppHeader({ user }: AppHeaderProps) {
             >
               <Menu className="h-5 w-5" />
             </button>
-
-            <Link
-              href="/main"
-              aria-label="Isha"
-              className="flex h-11 items-center"
-            >
-              <Image
-                src="/icons/app/IshaS.svg"
-                alt="Isha"
-                width={34}
-                height={34}
-                className="h-8 w-8 object-contain"
-              />
-            </Link>
-
-            <div className="mx-6 hidden h-8 w-px bg-white/10 md:block" />
 
             <AppNav user={user} />
           </div>
@@ -90,10 +82,10 @@ export function AppHeader({ user }: AppHeaderProps) {
               aria-expanded={userMenuOpen}
               aria-haspopup="menu"
               className={[
-                'flex h-11 w-11 items-center justify-center rounded-full',
+                'flex h-10 w-10 items-center justify-center rounded-full',
                 'border border-transparent',
                 'transition-all duration-200',
-                'hover:border-primary/30 hover:bg-white/[0.05]',
+                'hover:border-primary/25 hover:bg-white/[0.05]',
                 'focus-visible:outline-none focus-visible:ring-2',
                 'focus-visible:ring-primary/40',
               ].join(' ')}
@@ -112,7 +104,7 @@ export function AppHeader({ user }: AppHeaderProps) {
                 className={[
                   'absolute right-0 top-[calc(100%+0.75rem)] z-50 w-72',
                   'overflow-hidden rounded-2xl',
-                  'border border-white/10 bg-[#111111]',
+                  'border border-white/[0.08] bg-[#111111]',
                   'p-2 text-white',
                   'shadow-2xl shadow-black/30',
                 ].join(' ')}

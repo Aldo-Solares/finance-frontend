@@ -2,6 +2,7 @@
 
 import { ReceiptText } from 'lucide-react'
 
+import { CategoryIconView } from '@/modules/debts/concept/components/category-icon'
 import { DebtDashboardPanelHeader } from '@/modules/dashboard/debts/components/debt-dashboard-panel-header'
 import type { DebtDashboardConcept } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
 import { formatDashboardMoney } from '@/modules/dashboard/debts/utils/debt-dashboard-formatters'
@@ -14,7 +15,7 @@ export function DebtDashboardConceptBreakdown({
   concepts,
 }: DebtDashboardConceptBreakdownProps) {
   return (
-    <section className="rounded-2xl border border-border bg-background p-5 sm:p-6">
+    <section className="rounded-3xl border border-border/70 bg-background p-5 shadow-sm shadow-black/[0.025] sm:p-6">
       <DebtDashboardPanelHeader
         eyebrow="Distribución"
         title="Gastos por categoría"
@@ -33,14 +34,19 @@ export function DebtDashboardConceptBreakdown({
           {concepts.map((concept) => (
             <div key={concept.categoryId}>
               <div className="flex items-center justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-medium text-foreground">
-                    {concept.categoryName}
-                  </p>
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-soft/70 text-primary">
+                    <CategoryIconView categoryName={concept.categoryName} className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-foreground">
+                      {concept.categoryName}
+                    </p>
 
-                  <p className="mt-0.5 text-[11px] text-text-muted">
-                    {concept.totalEntries} movimientos
-                  </p>
+                    <p className="mt-0.5 text-[11px] text-text-muted">
+                      {concept.totalEntries} movimientos
+                    </p>
+                  </div>
                 </div>
 
                 <div className="shrink-0 text-right">
@@ -56,7 +62,7 @@ export function DebtDashboardConceptBreakdown({
 
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface">
                 <div
-                  className="h-full rounded-full bg-primary transition-all duration-300"
+                  className="h-full rounded-full bg-gradient-to-r from-primary/70 to-primary transition-all duration-300"
                   style={{
                     width: `${Math.min(Math.max(concept.percentage, 0), 100)}%`,
                   }}

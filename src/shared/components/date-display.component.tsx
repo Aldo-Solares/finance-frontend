@@ -1,30 +1,30 @@
-// @/shared/display/date-display.tsx
+// @/shared/components/date-display.component.tsx
 
 import { CalendarDays } from 'lucide-react'
 import { formatDisplayDate } from '@/shared/utils/date-format'
 
-type DateDisplayProps = {
+type DateDisplayComponentProps = {
   value: string | null
   showIcon?: boolean
   className?: string
 }
 
-export function DateDisplay({
+export function DateDisplayComponent({
   value,
   showIcon = false,
   className = '',
-}: DateDisplayProps) {
+}: DateDisplayComponentProps) {
   if (!value) {
     return (
       <span
         className={[
-          'inline-flex items-center gap-2 text-sm text-text-muted',
+          'inline-flex items-center gap-2 text- text-text-muted',
           className,
         ].join(' ')}
       >
         {showIcon && (
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface text-text-muted">
-            <CalendarDays className="h-3.5 w-3.5" />
+            <CalendarDays className="h-2.5 w-3.5" />
           </span>
         )}
 
@@ -38,7 +38,7 @@ export function DateDisplay({
   return (
     <span
       className={[
-        'inline-flex items-center gap-2 text-sm font-medium text-foreground',
+        'inline-flex items-center gap-2 text-xs font-medium text-foreground',
         className,
       ].join(' ')}
     >
@@ -52,4 +52,3 @@ export function DateDisplay({
     </span>
   )
 }
-

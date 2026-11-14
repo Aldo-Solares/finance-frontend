@@ -1,3 +1,4 @@
+// @/modules/trading/instrument/components/instrument-page.tsx
 'use client'
 
 import { ChartCandlestick, Coins } from 'lucide-react'

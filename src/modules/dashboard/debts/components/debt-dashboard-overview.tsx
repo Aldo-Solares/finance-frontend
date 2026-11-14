@@ -4,13 +4,15 @@ import { DebtDashboardCardBreakdown } from '@/modules/dashboard/debts/components
 import { DebtDashboardHighlights } from '@/modules/dashboard/debts/components/debt-dashboard-highlights'
 import { DebtDashboardSummary } from '@/modules/dashboard/debts/components/debt-dashboard-summary'
 import type { DebtDashboard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
+import type { Card } from '@/modules/debts/card/schemas/card.schema'
 import { getDashboardPeriodLabel } from '@/modules/dashboard/debts/utils/debt-dashboard-formatters'
 
 type DebtDashboardOverviewProps = {
   dashboard: DebtDashboard
+  cards: Card[]
 }
 
-export function DebtDashboardOverview({ dashboard }: DebtDashboardOverviewProps) {
+export function DebtDashboardOverview({ dashboard, cards }: DebtDashboardOverviewProps) {
   const periodLabel = getDashboardPeriodLabel(dashboard.year, dashboard.month)
 
   return (
@@ -32,7 +34,7 @@ export function DebtDashboardOverview({ dashboard }: DebtDashboardOverviewProps)
       <DebtDashboardSummary dashboard={dashboard} />
 
       <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(20rem,0.9fr)]">
-        <DebtDashboardCardBreakdown cards={dashboard.cards} />
+        <DebtDashboardCardBreakdown cards={dashboard.cards} catalogCards={cards} />
         <DebtDashboardHighlights dashboard={dashboard} />
       </div>
     </section>

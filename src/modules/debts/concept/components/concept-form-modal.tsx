@@ -2,9 +2,9 @@
 
 'use client'
 
-import { useActionState, useEffect } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { LoaderCircle, Plus, Save, Tag, X } from 'lucide-react'
+import { LoaderCircle, Plus, Save, X } from 'lucide-react'
 
 import type { ActionState } from '@/core/utils/action-state'
 import {
@@ -12,6 +12,8 @@ import {
   updateConceptAction,
 } from '@/modules/debts/concept/actions/concept.actions'
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
+
+import { CategoryIconView } from './category-icon'
 
 type ConceptFormModalProps = {
   concept: Concept | null
@@ -26,6 +28,7 @@ const initialState: ActionState<Concept> = {
 
 export function ConceptFormModal({ concept, onClose }: ConceptFormModalProps) {
   const editing = concept !== null
+  const [name, setName] = useState(concept?.name ?? '')
 
   const [createState, createAction] = useActionState(
     createConceptAction,
@@ -94,14 +97,18 @@ export function ConceptFormModal({ concept, onClose }: ConceptFormModalProps) {
             </label>
 
             <div className="relative">
-              <Tag className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+              <CategoryIconView
+                categoryName={name}
+                className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-primary"
+              />
 
               <input
                 id="name"
                 name="name"
                 type="text"
                 maxLength={100}
-                defaultValue={concept?.name ?? ''}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
                 placeholder="Nombre"
                 className="h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-4 text-sm text-foreground outline-none transition-colors placeholder:text-text-muted focus:border-primary focus:bg-background"
               />

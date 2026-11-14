@@ -1,4 +1,4 @@
-// @/modules/main/logged/components/logged-navigation.tsx
+// @/modules/main/logged/logged-navigation.tsx
 
 import Link from 'next/link'
 

@@ -1,4 +1,4 @@
-// @/app/(protected)/admin/account/page.tsx
+// @/app/(protected)/(admin)/admin/account/page.tsx
 
 import { getCurrencies } from '@/modules/catalogs/currency/services/currency.service'
 import { getTradingAccounts } from '@/modules/trading/trading-account/services/trading-account.service'

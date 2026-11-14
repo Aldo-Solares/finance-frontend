@@ -1,3 +1,4 @@
+// @/modules/debts/card/components/card-catalog-page.tsx
 'use client'
 
 import { CreditCard } from 'lucide-react'

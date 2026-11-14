@@ -1,17 +1,20 @@
 // @/modules/debts/statement/components/statement-item.tsx
-
 'use client'
 
-import { Pencil, Trash2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { useState } from 'react'
 
+import { CardArtwork } from '@/modules/debts/card/components/card-artwork'
 import { STATEMENT_STATUS_LABELS } from '@/modules/debts/statement/constants/statement.constants'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
-import { DateDisplay } from '@/shared/display/date-display'
+import { DateDisplayComponent } from '@/shared/components/date-display.component'
+import { RecordActionsComponent } from '@/shared/components/record-actions.component'
+
+import { StatementNotesModal } from './statement-notes-modal'
 
 type StatementItemProps = {
   statement: Statement
-  separated?: boolean
+  imagePath?: string | null
   onEdit: (statement: Statement) => void
   onDelete: (statement: Statement) => void
 }
@@ -33,132 +36,91 @@ const MONTH_NAMES = [
 
 export function StatementItem({
   statement,
-  separated = false,
+  imagePath,
   onEdit,
   onDelete,
 }: StatementItemProps) {
-  const router = useRouter()
-
+  const [notesOpen, setNotesOpen] = useState(false)
   const monthName = MONTH_NAMES[statement.month - 1] ?? String(statement.month)
-
-  const handleRowClick = () => {
-    router.push(`/debts/statement/${statement.statementId}`)
-  }
+  const statusTone = statement.paid
+    ? 'bg-primary-soft text-primary'
+    : statement.status === 'PAYMENT_PENDING'
+      ? 'bg-primary-soft text-primary'
+      : statement.status === 'UPCOMING'
+        ? 'bg-primary-soft/50 text-primary'
+        : 'bg-surface text-text-muted'
+  const cardTone = statement.paid
+    ? 'bg-background'
+    : statement.status === 'PAYMENT_PENDING'
+      ? 'border-primary/15 bg-primary-soft/50'
+      : statement.status === 'UPCOMING'
+        ? 'border-primary/10 bg-primary-soft/25'
+        : 'bg-background'
 
   return (
-    <tr
-      onClick={handleRowClick}
-      className={[
-        'group cursor-pointer odd:bg-background even:bg-surface/30 transition-colors hover:bg-primary-soft/40',
-      ].join(' ')}
+    <article
+      className={`group flex items-center gap-2 rounded-2xl border border-border ${cardTone} p-3 transition hover:border-primary/20 hover:shadow-sm sm:gap-4 sm:p-4`}
     >
-      <td className={['px-4 py-3.5 sm:px-6', separated ? 'border-t border-border' : ''].join(' ')}>
-        <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-foreground">
-            {monthName} {statement.year}
-          </p>
+      <Link
+        href={`/debts/statement/${statement.statementId}`}
+        className="flex min-w-0 flex-1 items-center gap-3 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/50 sm:gap-4"
+      >
+        <CardArtwork
+          bank={statement.bank}
+          cardName={statement.cardName}
+          imagePath={imagePath}
+          className="!w-20 sm:!w-24"
+        />
 
-          <p className="mt-0.5 truncate text-xs text-text-muted">
-            {statement.bank} · {statement.cardName}
-          </p>
-        </div>
-      </td>
-
-      <td className={['px-4 py-3.5', separated ? 'border-t border-border' : ''].join(' ')}>
-        <div className="flex items-center gap-3 tabular-nums">
-          <div>
-            <p className="text-xs font-medium text-text-muted">
-              Inicio del periodo
-            </p>
-
-            <DateDisplay value={statement.periodStart} />
-          </div>
-
-          <span className="text-text-muted">→</span>
-
-          <div>
-            <p className="text-xs font-medium text-text-muted">
-              Fecha de corte
-            </p>
-
-            <DateDisplay value={statement.periodEnd} />
-          </div>
-        </div>
-      </td>
-
-      <td className={['px-4 py-3.5 tabular-nums', separated ? 'border-t border-border' : ''].join(' ')}>
-        <DateDisplay value={statement.paymentDate} showIcon />
-      </td>
-
-      <td className={['px-4 py-3.5', separated ? 'border-t border-border' : ''].join(' ')}>
-        <div className="flex items-center gap-2">
-          <span
-            className={[
-              'h-2 w-2 shrink-0 rounded-full',
-              getStatusDotClass(statement.status),
-            ].join(' ')}
-          />
-
-          <div>
-            <p
-              className={[
-                'text-sm font-medium',
-                getStatusTextClass(statement.status),
-              ].join(' ')}
+        <span className="min-w-0 flex-1">
+          <span className="flex flex-wrap items-center gap-2">
+            <span className="text-sm font-semibold text-foreground">
+              {monthName} {statement.year}
+            </span>
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${statusTone}`}
             >
-              {STATEMENT_STATUS_LABELS[statement.status]}
-            </p>
-          </div>
-        </div>
-      </td>
+              {statement.paid
+                ? 'Pagado'
+                : STATEMENT_STATUS_LABELS[statement.status]}
+            </span>
+          </span>
+          <span className="mt-1 block text-xs text-text-muted">
+            Periodo <DateDisplayComponent value={statement.periodStart} />
+            <span className="mx-1.5">–</span>
+            <DateDisplayComponent value={statement.periodEnd} />
+          </span>
+        </span>
+      </Link>
 
-      <td className={['px-4 py-3.5 sm:px-6', separated ? 'border-t border-border' : ''].join(' ')}>
-        <div className="flex items-center justify-end gap-1">
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation()
-              onEdit(statement)
-            }}
-            aria-label={`Editar estado de cuenta de ${monthName} ${statement.year}`}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-text-muted transition hover:bg-surface hover:text-foreground"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
+      <span className="hidden shrink-0 px-1 text-right sm:block">
+        <span className="block text-[10px] uppercase tracking-wide text-text-muted">
+          Fecha de pago
+        </span>
+        <span className="mt-1 block text-xs font-medium tabular-nums text-foreground">
+          <DateDisplayComponent value={statement.paymentDate} />
+        </span>
+      </span>
 
-          <button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation()
-              onDelete(statement)
-            }}
-            aria-label={`Eliminar estado de cuenta de ${monthName} ${statement.year}`}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-text-muted transition hover:bg-primary-soft hover:text-primary"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
-      </td>
-    </tr>
+      <div className="border-l border-border pl-1 sm:pl-2">
+        <RecordActionsComponent
+          notesLabel={`Editar notas del estado de cuenta de ${monthName} ${statement.year}`}
+          notesDisabled={false}
+          onNotes={() => setNotesOpen(true)}
+          editLabel={`Editar estado de cuenta de ${monthName} ${statement.year}`}
+          deleteLabel={`Eliminar estado de cuenta de ${monthName} ${statement.year}`}
+          onEdit={() => onEdit(statement)}
+          onDelete={() => onDelete(statement)}
+        />
+      </div>
+
+      {notesOpen && (
+        <StatementNotesModal
+          statement={statement}
+          subtitle={`${monthName} ${statement.year} · ${statement.cardName}`}
+          onClose={() => setNotesOpen(false)}
+        />
+      )}
+    </article>
   )
-}
-
-function getStatusDotClass(status: Statement['status']): string {
-  switch (status) {
-    case 'CLOSED':
-      return 'bg-primary'
-
-    default:
-      return 'bg-surface'
-  }
-}
-
-function getStatusTextClass(status: Statement['status']): string {
-  switch (status) {
-    case 'CLOSED':
-      return 'text-primary'
-
-    default:
-      return 'text-text-muted'
-  }
 }

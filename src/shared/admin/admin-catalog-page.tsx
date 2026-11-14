@@ -1,12 +1,13 @@
+// @/shared/admin/admin-catalog-page.tsx
+
 'use client'
 
 import { Plus, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 
-import { HeroComponent } from '@/shared/hero/hero-component'
-import { DeleteModal } from '@/shared/modal/delete-modal'
-import { MetricCard } from '@/shared/metrics/metric-card'
+import { HeroComponent } from '@/shared/components/hero-component'
+import { DeleteModal } from '@/shared/modals/delete-modal'
 
 type AdminCatalogMetric = {
   icon: LucideIcon
@@ -69,27 +70,23 @@ export function AdminCatalogPage<T>({
           eyebrow="Administración"
           title={title}
           description={description}
-          action={{
-            label: createLabel,
-            icon: Plus,
-            onClick: () => setCreating(true),
+          rightContent={{
+            type: 'actions',
+            info: metrics.map((metric) => ({
+              label: metric.label,
+              value: metric.value,
+              icon: metric.icon,
+            })),
+            items: [
+              {
+                label: createLabel,
+                icon: Plus,
+                variant: 'primary',
+                onClick: () => setCreating(true),
+              },
+            ],
           }}
         />
-
-        {metrics.length > 0 && (
-          <section
-            className={`grid gap-3 ${metrics.length === 1 ? 'sm:grid-cols-1' : 'sm:grid-cols-2'}`}
-          >
-            {metrics.map((metric) => (
-              <MetricCard
-                key={metric.label}
-                icon={metric.icon}
-                label={metric.label}
-                value={metric.value}
-              />
-            ))}
-          </section>
-        )}
 
         {items.length === 0 ? (
           <AdminCatalogEmptyState

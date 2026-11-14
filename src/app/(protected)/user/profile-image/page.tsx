@@ -3,7 +3,7 @@
 import { ProfileImageSelector } from '@/modules/user/components/profile-image/profile-image-selector'
 import { getProfileImages } from '@/modules/user/services/profile-image.service'
 import { getCurrentUser } from '@/modules/user/services/user.service'
-import { HeroComponent } from '@/shared/hero/hero-component'
+import { HeroComponent } from '@/shared/components/hero-component'
 
 export default async function Page() {
   const [user, profileImages] = await Promise.all([

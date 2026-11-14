@@ -7,6 +7,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 import { AUTH_TOKEN_COOKIE } from '@/core/constants/auth.constants'
+import { setAuthTokenCookie } from '@/core/auth/auth-token-cookie'
 import {
   actionError,
   type ActionState,
@@ -56,15 +57,7 @@ export async function loginAction(
   const result = await withActionState(async () => {
     const response = await login(parsed.data)
 
-    const cookieStore = await cookies()
-
-    cookieStore.set(AUTH_TOKEN_COOKIE, response.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 30,
-    })
+    await setAuthTokenCookie(response.token)
 
     return response
   }, 'No fue posible iniciar sesión')

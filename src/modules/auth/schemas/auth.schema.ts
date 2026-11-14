@@ -1,3 +1,4 @@
+// @/modules/auth/schemas/auth.schema.ts
 import { z } from 'zod'
 
 import { requiredString } from '@/core/utils/zod-helpers'

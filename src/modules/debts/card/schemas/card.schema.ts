@@ -13,6 +13,7 @@ export const CardSchema = z.object({
   bank: z.string(),
   cardName: z.string(),
   defaultMerchant: z.string().nullable().default(null),
+  imagePath: z.string().nullable().optional().default(null),
 })
 
 // ===================
@@ -33,6 +34,12 @@ export const CreateCardRequestSchema = z.object({
     .trim()
     .max(100, 'El comercio no puede superar los 100 caracteres')
     .nullable(),
+  imagePath: z
+    .string()
+    .trim()
+    .regex(/^\/images\/cards\/[\p{L}\p{N}][\p{L}\p{N} ._-]*\.png$/u, 'Usa una ruta PNG dentro de /images/cards')
+    .max(255, 'La ruta de imagen es demasiado larga')
+    .nullable(),
 })
 
 // ===================
@@ -52,6 +59,12 @@ export const UpdateCardRequestSchema = z.object({
     .string()
     .trim()
     .max(100, 'El comercio no puede superar los 100 caracteres')
+    .nullable(),
+  imagePath: z
+    .string()
+    .trim()
+    .regex(/^\/images\/cards\/[\p{L}\p{N}][\p{L}\p{N} ._-]*\.png$/u, 'Usa una ruta PNG dentro de /images/cards')
+    .max(255, 'La ruta de imagen es demasiado larga')
     .nullable(),
 })
 

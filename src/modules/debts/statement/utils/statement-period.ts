@@ -1,3 +1,4 @@
+// @/modules/debts/statement/utils/statement-period.ts
 import { formatDisplayDate } from '@/shared/utils/date-format'
 
 export function getStatementPeriodStart(cutoffDate: string): string {

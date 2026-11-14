@@ -16,8 +16,8 @@ import { UserTradingAccountList } from '@/modules/trading/user-trading-account/c
 
 import type { UserTradingAccount } from '@/modules/trading/user-trading-account/schemas/user-trading-account.schema'
 
-import { DeleteModal } from '@/shared/modal/delete-modal'
-import { HeroComponent } from '@/shared/hero/hero-component'
+import { DeleteModal } from '@/shared/modals/delete-modal'
+import { HeroComponent } from '@/shared/components/hero-component'
 
 type UserTradingAccountPageProps = {
   userTradingAccounts: UserTradingAccount[]
@@ -67,12 +67,16 @@ export function UserTradingAccountPage({
           eyebrow="Trading"
           title="Mis cuentas"
           description="Administra las cuentas que utilizas para registrar tus operaciones."
-          action={
+          rightContent={
             canCreate
               ? {
-                  label: 'Agregar cuenta',
-                  icon: Plus,
-                  onClick: handleCreate,
+                  type: 'actions',
+                  items: [{
+                    label: 'Agregar cuenta',
+                    icon: Plus,
+                    variant: 'primary',
+                    onClick: handleCreate,
+                  }],
                 }
               : undefined
           }

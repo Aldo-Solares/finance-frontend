@@ -9,12 +9,13 @@ import { DebtDashboardSummary } from '@/modules/dashboard/debts/components/debt-
 import type { DebtDashboard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
 
 import type { Concept } from '@/modules/debts/concept/schemas/concept.schema'
+import type { Card } from '@/modules/debts/card/schemas/card.schema'
 import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
 import type { UserCard } from '@/modules/debts/user-card/schemas/user-card.schema'
 
-import { HeroComponent } from '@/shared/hero/hero-component'
 import { getDashboardPeriodLabel } from '@/modules/dashboard/debts/utils/debt-dashboard-formatters'
+import { HeroComponent } from '@/shared/components/hero-component'
 
 type DebtDashboardPageProps = {
   dashboard: DebtDashboard
@@ -22,6 +23,7 @@ type DebtDashboardPageProps = {
   concepts: Concept[]
   statements: Statement[]
   statementEntries: StatementEntry[]
+  cards: Card[]
 }
 
 export function DebtDashboardPage({
@@ -30,15 +32,21 @@ export function DebtDashboardPage({
   concepts,
   statements,
   statementEntries,
+  cards,
 }: DebtDashboardPageProps) {
   const periodLabel = getDashboardPeriodLabel(dashboard.year, dashboard.month)
 
   return (
     <div className="w-full space-y-6">
       <HeroComponent
-        eyebrow="Dashboard"
+        eyebrow="Resumen financiero"
         title="Gastos de tarjetas"
-        description={`${periodLabel} · Analiza tus gastos, pagos y distribución por tarjeta y categoría.`}
+        description="Revisa tus gastos, pagos y distribución por tarjeta y categoría."
+        rightContent={{
+          type: 'info',
+          label: 'Periodo seleccionado',
+          value: periodLabel,
+        }}
       />
 
       <DebtDashboardFilters
@@ -53,12 +61,13 @@ export function DebtDashboardPage({
       <DebtDashboardSummary dashboard={dashboard} />
 
       <div className="grid items-start gap-4 xl:grid-cols-2">
-        <DebtDashboardCardBreakdown cards={dashboard.cards} />
+        <DebtDashboardCardBreakdown cards={dashboard.cards} catalogCards={cards} />
 
         <DebtDashboardConceptBreakdown concepts={dashboard.categories} />
       </div>
 
-      <DebtDashboardStatements statements={dashboard.statements} />
+      <DebtDashboardStatements statements={dashboard.statements} cards={cards} />
+
     </div>
   )
 }

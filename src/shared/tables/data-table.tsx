@@ -1,3 +1,4 @@
+// @/shared/tables/data-table.tsx
 import type { ReactNode } from 'react'
 
 type DataTableViewportProps = {
@@ -30,12 +31,14 @@ type DataTableHeaderCellProps = {
   children: ReactNode
   align?: 'left' | 'center' | 'right'
   className?: string
+  variant?: 'default' | 'refined'
 }
 
 export function DataTableHeaderCell({
   children,
   align = 'left',
   className = '',
+  variant = 'default',
 }: DataTableHeaderCellProps) {
   const alignment = {
     left: 'text-left',
@@ -47,7 +50,10 @@ export function DataTableHeaderCell({
     <th
       scope="col"
       className={[
-        'sticky top-0 z-10 whitespace-nowrap border-b border-border bg-surface/95 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted backdrop-blur',
+        'sticky top-0 z-10 whitespace-nowrap border-b border-border backdrop-blur',
+        variant === 'refined'
+          ? 'h-14 bg-surface/80 px-4 py-3 text-xs font-semibold tracking-normal text-foreground align-middle'
+          : 'bg-surface/95 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.12em] text-text-muted',
         alignment,
         className,
       ].join(' ')}

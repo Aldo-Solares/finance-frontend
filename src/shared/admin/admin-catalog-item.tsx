@@ -1,16 +1,21 @@
+// @/shared/admin/admin-catalog-item.tsx
+
 'use client'
 
 import Image from 'next/image'
-import { Pencil, Trash2, type LucideIcon } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { RecordActionsComponent } from '@/shared/components/record-actions.component'
 
 type AdminCatalogItemProps = {
   title: string
   subtitle?: string
   icon?: LucideIcon
+  iconClassName?: string
   image?: {
     src: string
     alt: string
+    variant?: 'card' | 'square'
   }
   details?: ReactNode
   editLabel: string
@@ -23,6 +28,7 @@ export function AdminCatalogItem({
   title,
   subtitle,
   icon: Icon,
+  iconClassName = 'text-text-muted',
   image,
   details,
   editLabel,
@@ -34,18 +40,20 @@ export function AdminCatalogItem({
     <article className="min-w-0 rounded-[1.5rem] border border-border bg-background p-5 transition-all duration-300 hover:border-primary/20 hover:shadow-sm">
       <div className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-4">
-          <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-surface text-text-muted">
+          <div
+            className={`relative flex shrink-0 items-center justify-center overflow-hidden ${image ? 'bg-surface text-text-muted' : 'bg-primary-soft'} ${image?.variant === 'card' ? 'h-12 w-[4.75rem] rounded-lg' : 'h-11 w-11 rounded-2xl'}`}
+          >
             {image ? (
               <Image
                 src={image.src}
                 alt={image.alt}
                 fill
                 unoptimized
-                sizes="44px"
+                sizes={image.variant === 'card' ? '76px' : '44px'}
                 className="object-cover"
               />
             ) : (
-              Icon && <Icon className="h-4 w-4" />
+              Icon && <Icon className={`h-4 w-4 ${iconClassName}`} />
             )}
           </div>
 
@@ -61,24 +69,12 @@ export function AdminCatalogItem({
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
-          <button
-            type="button"
-            onClick={onEdit}
-            aria-label={editLabel}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-surface hover:text-foreground"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            onClick={onDelete}
-            aria-label={deleteLabel}
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-xl text-text-muted transition-colors hover:bg-primary-soft hover:text-primary"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        </div>
+        <RecordActionsComponent
+          editLabel={editLabel}
+          deleteLabel={deleteLabel}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       </div>
 
       {details && (

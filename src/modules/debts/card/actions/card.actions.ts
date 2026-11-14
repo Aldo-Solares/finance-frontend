@@ -38,6 +38,7 @@ export async function createCardAction(
     bank: normalizeRequiredString(formData.get('bank')),
     cardName: normalizeRequiredString(formData.get('cardName')),
     defaultMerchant: normalizeNullableString(formData.get('defaultMerchant')),
+    imagePath: normalizeNullableString(formData.get('imagePath')),
   })
 
   if (!parsed.success) {
@@ -74,6 +75,7 @@ export async function updateCardAction(
     bank: normalizeRequiredString(formData.get('bank')),
     cardName: normalizeRequiredString(formData.get('cardName')),
     defaultMerchant: normalizeNullableString(formData.get('defaultMerchant')),
+    imagePath: normalizeNullableString(formData.get('imagePath')),
   })
 
   if (!parsed.success) {

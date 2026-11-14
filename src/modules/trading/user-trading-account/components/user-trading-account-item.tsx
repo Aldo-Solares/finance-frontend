@@ -2,9 +2,10 @@
 
 'use client'
 
-import { Pencil, Trash2, WalletCards } from 'lucide-react'
+import { WalletCards } from 'lucide-react'
 
 import type { UserTradingAccount } from '@/modules/trading/user-trading-account/schemas/user-trading-account.schema'
+import { RecordActionsComponent } from '@/shared/components/record-actions.component'
 
 type UserTradingAccountItemProps = {
   userTradingAccount: UserTradingAccount
@@ -42,25 +43,13 @@ export function UserTradingAccountItem({
         </span>
       </div>
 
-      <div className="relative mt-5 flex gap-2 border-t border-border pt-4">
-        <button
-          type="button"
-          onClick={() => onEdit(userTradingAccount)}
-          className="flex min-w-0 flex-1 items-center justify-between rounded-xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition-all duration-200 hover:bg-primary-hover hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-        >
-          <span className="truncate">Editar cuenta</span>
-          <Pencil className="h-4 w-4 shrink-0" />
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onDelete(userTradingAccount)}
-          aria-label={`Eliminar cuenta ${userTradingAccount.name}`}
-          title="Eliminar cuenta"
-          className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-xl border border-border text-text-muted transition-all duration-200 hover:border-primary/20 hover:bg-primary-soft hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
+      <div className="relative mt-5 flex justify-end border-t border-border pt-3">
+        <RecordActionsComponent
+          editLabel={`Editar cuenta ${userTradingAccount.name}`}
+          deleteLabel={`Eliminar cuenta ${userTradingAccount.name}`}
+          onEdit={() => onEdit(userTradingAccount)}
+          onDelete={() => onDelete(userTradingAccount)}
+        />
       </div>
     </article>
   )

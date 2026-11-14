@@ -1,4 +1,4 @@
-// @/modules/user/components/profile-image-catalog-edit-modal.tsx
+// @/modules/user/components/profile-image/profile-image-catalog-edit-modal.tsx
 
 'use client'
 
@@ -50,7 +50,7 @@ export function ProfileImageCatalogEditModal({
             </h2>
 
             <p className="mt-1 text-sm text-text-muted">
-              Actualiza el nombre de la imagen del catálogo.
+              Actualiza el nombre o el archivo PNG asociado.
             </p>
           </div>
 
@@ -102,11 +102,33 @@ export function ProfileImageCatalogEditModal({
             </div>
 
             <div>
+              <label
+                htmlFor="profileImageFileName"
+                className="mb-2 block text-xs font-medium text-text-muted"
+              >
+                Nombre del archivo PNG
+              </label>
+              <input
+                id="profileImageFileName"
+                name="fileName"
+                type="text"
+                required
+                maxLength={255}
+                defaultValue={profileImage.fileName}
+                placeholder="avatar-azul.png"
+                className="h-11 w-full rounded-xl border border-border bg-surface px-4 text-sm text-foreground outline-none placeholder:text-text-muted focus:border-primary"
+              />
+              <p className="mt-2 text-xs leading-5 text-text-muted">
+                El archivo debe existir en frontend/public/images/profile-images/.
+              </p>
+            </div>
+
+            <div>
               <p className="mb-2 text-xs font-medium text-text-muted">Imagen</p>
 
               <div className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-4">
                 <Image
-                  src={profileImage.imageUrl}
+                  src={profileImage.imagePath}
                   alt={profileImage.name}
                   width={80}
                   height={80}
@@ -120,7 +142,7 @@ export function ProfileImageCatalogEditModal({
                   </p>
 
                   <p className="mt-1 text-xs leading-5 text-text-muted">
-                    La imagen no se modifica al editar el nombre.
+                    {profileImage.fileName}
                   </p>
                 </div>
               </div>

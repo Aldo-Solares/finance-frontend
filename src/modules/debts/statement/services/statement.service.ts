@@ -10,7 +10,6 @@ import {
   type CreateStatementRequest,
   type Statement,
   type StatementDateSuggestion,
-  type UpdateStatementPaidRequest,
   type UpdateStatementRequest,
 } from '@/modules/debts/statement/schemas/statement.schema'
 
@@ -105,23 +104,19 @@ export async function updateStatement(
   )
 }
 
-// ===================
-// PAID
-// ===================
-
-export async function updateStatementPaid(
+export async function updateStatementNotes(
   statementId: number,
-  request: UpdateStatementPaidRequest,
+  notes: string | null,
 ): Promise<Statement> {
-  const response = await fetchServer(`/statements/${statementId}/paid`, {
+  const response = await fetchServer(`/statements/${statementId}/notes`, {
     method: 'PATCH',
-    body: JSON.stringify(request),
+    body: JSON.stringify({ notes }),
   })
 
   return parseApiResponse(
     response,
     StatementSchema,
-    'No fue posible actualizar el pago',
+    'No fue posible actualizar las notas del estado de cuenta',
   )
 }
 

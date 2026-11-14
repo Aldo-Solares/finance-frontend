@@ -1,4 +1,4 @@
-// @/shared/pagination/pagination.tsx
+// @/shared/filters/pagination.tsx
 
 'use client'
 
@@ -23,68 +23,43 @@ export function Pagination({
   const canGoNext = currentPage < totalPages
 
   return (
-    <div className="flex items-center justify-between gap-4 border-t border-border pt-4">
-      <p className="text-xs text-text-muted">
-        Página {currentPage} de {totalPages}
-      </p>
-
-      <div className="flex items-center gap-1.5">
-        <button
-          type="button"
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={!canGoPrevious}
-          aria-label="Página anterior"
-          className={[
-            'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg',
-            'border border-border bg-background text-text-muted',
-            'transition-all duration-200',
-            'hover:border-primary/30 hover:bg-primary-soft hover:text-primary',
-            'disabled:cursor-not-allowed disabled:opacity-40',
-          ].join(' ')}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </button>
-
-        {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-          (page) => {
-            const active = page === currentPage
-
-            return (
-              <button
-                key={page}
-                type="button"
-                onClick={() => onPageChange(page)}
-                aria-current={active ? 'page' : undefined}
-                className={[
-                  'flex h-9 min-w-9 cursor-pointer items-center justify-center',
-                  'rounded-lg px-2 text-xs font-medium transition-all duration-200',
-                  active
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-text-muted hover:bg-surface hover:text-foreground',
-                ].join(' ')}
-              >
-                {page}
-              </button>
-            )
-          },
-        )}
-
-        <button
-          type="button"
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={!canGoNext}
-          aria-label="Página siguiente"
-          className={[
-            'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg',
-            'border border-border bg-background text-text-muted',
-            'transition-all duration-200',
-            'hover:border-primary/30 hover:bg-primary-soft hover:text-primary',
-            'disabled:cursor-not-allowed disabled:opacity-40',
-          ].join(' ')}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </button>
-      </div>
-    </div>
+    <nav
+      aria-label="Paginación de movimientos"
+      className="inline-flex items-center gap-1 rounded-xl border border-border bg-background p-1 shadow-sm"
+    >
+      <button
+        type="button"
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={!canGoPrevious}
+        aria-label="Página anterior"
+        className={[
+          'flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg',
+          'text-text-muted',
+          'transition-all duration-200',
+          'hover:bg-primary-soft hover:text-primary',
+          'disabled:cursor-not-allowed disabled:opacity-40',
+        ].join(' ')}
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+      <span className="min-w-[6.5rem] px-2 text-center text-[11px] font-medium tabular-nums text-text-muted">
+        Página <span className="text-foreground">{currentPage}</span> de {totalPages}
+      </span>
+      <button
+        type="button"
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={!canGoNext}
+        aria-label="Página siguiente"
+        className={[
+          'flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg',
+          'text-text-muted',
+          'transition-all duration-200',
+          'hover:bg-primary-soft hover:text-primary',
+          'disabled:cursor-not-allowed disabled:opacity-40',
+        ].join(' ')}
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
+    </nav>
   )
 }

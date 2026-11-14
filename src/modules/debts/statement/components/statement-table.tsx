@@ -1,21 +1,15 @@
 // @/modules/debts/statement/components/statement-table.tsx
-
 'use client'
 
 import { useMemo } from 'react'
 
 import type { Statement } from '@/modules/debts/statement/schemas/statement.schema'
-import {
-  DataTableHeaderCell,
-  DataTableViewport,
-} from '@/shared/tables/data-table'
 
-import { StatementEmptyState } from './statement-empty-state'
 import { StatementItem } from './statement-item'
 
 type StatementTableProps = {
   statements: Statement[]
-  hasCards: boolean
+  imagePath?: string | null
   onEdit: (statement: Statement) => void
   onDelete: (statement: Statement) => void
 }
@@ -27,7 +21,7 @@ type StatementGroup = {
 
 export function StatementTable({
   statements,
-  hasCards,
+  imagePath,
   onEdit,
   onDelete,
 }: StatementTableProps) {
@@ -35,12 +29,10 @@ export function StatementTable({
     const sorted = [...statements].sort(
       (left, right) => right.year - left.year || right.month - left.month,
     )
-
     const grouped = new Map<number, Statement[]>()
 
     for (const statement of sorted) {
       const current = grouped.get(statement.year) ?? []
-
       current.push(statement)
       grouped.set(statement.year, current)
     }
@@ -51,74 +43,34 @@ export function StatementTable({
     }))
   }, [statements])
 
-  if (statements.length === 0) {
-    return <StatementEmptyState hasCards={hasCards} />
-  }
-
   return (
     <div className="space-y-6">
       {groups.map((group) => (
-        <section
-          key={group.year}
-          className="overflow-hidden rounded-2xl border border-border bg-background"
-        >
-          <div className="flex items-center justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-xs font-semibold text-primary-foreground">
-                {String(group.year).slice(-2)}
-              </div>
-
-              <div>
-                <h2 className="text-sm font-semibold text-foreground">
-                  {group.year}
-                </h2>
-
-                <p className="mt-0.5 text-xs text-text-muted">
-                  {group.statements.length}{' '}
-                  {group.statements.length === 1
-                    ? 'estado de cuenta'
-                    : 'estados de cuenta'}
-                </p>
-              </div>
+        <section key={group.year} className="space-y-3">
+          <div className="flex items-center gap-3 px-1">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-soft text-xs font-semibold text-primary">
+              {String(group.year).slice(-2)}
+            </span>
+            <div>
+              <h2 className="text-sm font-semibold text-foreground">{group.year}</h2>
+              <p className="mt-0.5 text-[11px] text-text-muted">
+                {group.statements.length}{' '}
+                {group.statements.length === 1 ? 'periodo' : 'periodos'}
+              </p>
             </div>
           </div>
 
-          <DataTableViewport
-            ariaLabel={`Estados de cuenta del año ${group.year}`}
-            minWidthClassName="min-w-[860px]"
-          >
-            <thead>
-              <tr>
-                <DataTableHeaderCell className="sm:px-6">
-                  Periodo
-                </DataTableHeaderCell>
-
-                <DataTableHeaderCell>
-                  Fechas del periodo
-                </DataTableHeaderCell>
-
-                <DataTableHeaderCell>Pago</DataTableHeaderCell>
-
-                <DataTableHeaderCell>Estado</DataTableHeaderCell>
-
-                <DataTableHeaderCell align="right" className="sm:px-6">
-                  Acciones
-                </DataTableHeaderCell>
-              </tr>
-            </thead>
-
-            <tbody>
-              {group.statements.map((statement, index) => (
-                <StatementItem
-                  key={statement.statementId}
-                  statement={statement}
-                  separated={index > 0}
-                  onEdit={onEdit}
-                  onDelete={onDelete}
-                />
-              ))}
-            </tbody>
-          </DataTableViewport>
+          <div className="space-y-2">
+            {group.statements.map((statement) => (
+              <StatementItem
+                key={statement.statementId}
+                statement={statement}
+                imagePath={imagePath}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
+            ))}
+          </div>
         </section>
       ))}
     </div>

@@ -2,7 +2,7 @@
 
 import { UserProfileForm } from '@/modules/user/components/user-profile-form'
 import { getCurrentUser } from '@/modules/user/services/user.service'
-import { HeroComponent } from '@/shared/hero/hero-component'
+import { HeroComponent } from '@/shared/components/hero-component'
 
 export default async function Page() {
   const user = await getCurrentUser()

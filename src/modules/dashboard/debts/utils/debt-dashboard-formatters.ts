@@ -1,3 +1,4 @@
+// @/modules/dashboard/debts/utils/debt-dashboard-formatters.ts
 const monthNames: Record<number, string> = {
   1: 'Enero',
   2: 'Febrero',

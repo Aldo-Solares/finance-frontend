@@ -1,3 +1,4 @@
+// @/modules/debts/concept/components/concept-page.tsx
 'use client'
 
 import { Tags } from 'lucide-react'

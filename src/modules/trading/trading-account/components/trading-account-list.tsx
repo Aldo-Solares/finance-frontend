@@ -1,3 +1,4 @@
+// @/modules/trading/trading-account/components/trading-account-list.tsx
 import { Building2 } from 'lucide-react'
 
 import type { TradingAccount } from '@/modules/trading/trading-account/schemas/trading-account.schema'

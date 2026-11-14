@@ -1,4 +1,4 @@
-// @/app/(protected)/dashboard/debts/page.tsx
+// @/app/(protected)/dashboard/page.tsx
 
 import { DebtDashboardPage } from '@/modules/dashboard/debts/components/debt-dashboard-page'
 import {
@@ -7,6 +7,7 @@ import {
 } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
 import { getDebtDashboard } from '@/modules/dashboard/debts/services/debt-dashboard.service'
 import { findAllConcepts } from '@/modules/debts/concept/services/concept.service'
+import { findAllCards } from '@/modules/debts/card/services/card.service'
 import { findAllStatementEntries } from '@/modules/debts/statement-entry/services/statement-entry.service'
 import { findAllStatements } from '@/modules/debts/statement/services/statement.service'
 import { findAllUserCards } from '@/modules/debts/user-card/services/user-card.service'
@@ -110,12 +111,14 @@ export default async function Page({
     concepts,
     statements,
     statementEntries,
+    cards,
   ] = await Promise.all([
     getDebtDashboard(filter),
     findAllUserCards(),
     findAllConcepts(),
     findAllStatements(),
     findAllStatementEntries(),
+    findAllCards(),
   ])
 
   return (
@@ -127,6 +130,7 @@ export default async function Page({
       statementEntries={
         statementEntries
       }
+      cards={cards}
     />
   )
 }

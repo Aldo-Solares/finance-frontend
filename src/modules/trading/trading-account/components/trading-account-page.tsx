@@ -1,3 +1,4 @@
+// @/modules/trading/trading-account/components/trading-account-page.tsx
 'use client'
 
 import { WalletCards } from 'lucide-react'

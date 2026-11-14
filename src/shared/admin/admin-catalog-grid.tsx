@@ -1,3 +1,5 @@
+// @/shared/admin/admin-catalog-grid.tsx
+
 import type { ReactNode } from 'react'
 
 type AdminCatalogGridProps = {
@@ -5,5 +7,7 @@ type AdminCatalogGridProps = {
 }
 
 export function AdminCatalogGrid({ children }: AdminCatalogGridProps) {
-  return <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{children}</div>
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{children}</div>
+  )
 }

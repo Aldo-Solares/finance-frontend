@@ -1,3 +1,4 @@
+// @/shared/filters/filter-field.tsx
 import type { ReactNode } from 'react'
 
 type FilterFieldProps = {

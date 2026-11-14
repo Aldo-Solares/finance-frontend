@@ -1,185 +1,167 @@
 // @/modules/debts/statement-entry/components/statement-entry-item.tsx
-
 'use client'
 
-import {
-  Check,
-  Clock3,
-  LoaderCircle,
-  Pencil,
-  Repeat2,
-  ShoppingBag,
-  Trash2,
-} from 'lucide-react'
+import { Check, Clock3, LoaderCircle, Repeat2 } from 'lucide-react'
+import { useState } from 'react'
 
 import type { StatementEntry } from '@/modules/debts/statement-entry/schemas/statement-entry.schema'
-import { DateDisplay } from '@/shared/display/date-display'
+import { DateDisplayComponent } from '@/shared/components/date-display.component'
+
+import { CategoryIconView } from '@/modules/debts/concept/components/category-icon'
+import { RecordActionsComponent } from '@/shared/components/record-actions.component'
+import { StatementEntryNotesModal } from './statement-entry-notes-modal'
 
 type StatementEntryItemProps = {
   entry: StatementEntry
-  selected: boolean
-  onEdit: (entry: StatementEntry) => void
-  onDelete: (entry: StatementEntry) => void
-  onToggleSelection: (entryId: number) => void
+  striped?: boolean
+  onSelect: (entry: StatementEntry) => void
   onMarkPaid: (entryId: number) => void
+  onDelete: (entry: StatementEntry) => void
   isMarkingPaid: boolean
   disablePaymentActions: boolean
 }
 
 export function StatementEntryItem({
   entry,
-  selected,
-  onEdit,
-  onDelete,
-  onToggleSelection,
+  striped = false,
+  onSelect,
   onMarkPaid,
+  onDelete,
   isMarkingPaid,
   disablePaymentActions,
 }: StatementEntryItemProps) {
-  const isPurchase = entry.entryType === 'PURCHASE'
-
-  const hasMsi = entry.msiPurchaseId !== null
+  const [notesOpen, setNotesOpen] = useState(false)
+  const hasMsi = !entry.isRecurring && entry.msiPurchaseId !== null
 
   return (
-    <tr className="odd:bg-background even:bg-surface/30 transition-colors hover:bg-primary-soft/40">
-      <td className="px-3 py-3 text-center">
-        <input
-          type="checkbox"
-          checked={selected}
-          disabled={entry.paid}
-          onChange={() => onToggleSelection(entry.entryId)}
-          aria-label={`Seleccionar ${entry.categoryName}`}
-          className="h-4 w-4 cursor-pointer accent-primary disabled:cursor-not-allowed disabled:opacity-40"
-        />
-      </td>
-
-      <td className="px-4 py-3">
-        <p className="text-sm font-medium text-foreground">
-          {entry.categoryName}
-        </p>
-      </td>
-
-      <td className="px-4 py-3">
-        <p className="max-w-56 truncate text-sm text-text-muted">
-          {entry.description ?? '—'}
-        </p>
-      </td>
-
-      <td className="px-4 py-3">
-        <p className="max-w-56 truncate text-sm text-text-muted">
-          {entry.merchant ?? '—'}
-        </p>
-      </td>
-
-      <td className="px-4 py-3 text-sm text-text-muted">{entry.debtor}</td>
-
-      <td className="px-4 py-3 tabular-nums">
-        <DateDisplay value={entry.date} />
-      </td>
-
-      <td className="px-4 py-3">
-        <span
-          className={[
-            'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium',
-            isPurchase
-              ? 'bg-primary-soft text-primary'
-              : 'bg-surface text-text-muted',
-          ].join(' ')}
-        >
-          {isPurchase ? (
-            <ShoppingBag className="h-3 w-3" />
-          ) : (
-            <Repeat2 className="h-3 w-3" />
-          )}
-
-          {isPurchase ? 'Compra' : 'Recurrente'}
+    <tr
+      onClick={() => onSelect(entry)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onSelect(entry)
+        }
+      }}
+      tabIndex={0}
+      aria-label={`Editar movimiento: ${entry.description || entry.categoryName}`}
+      className={`cursor-pointer border-t border-border/60 text-center align-middle transition-colors hover:bg-primary-soft/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/40 ${striped ? 'bg-surface' : 'bg-background'}`}
+    >
+      <td className="max-w-[190px] px-4 py-3 text-left">
+        <span className="inline-flex max-w-full items-center gap-1.5 rounded-lg bg-primary-soft/70 px-2 py-1.5 text-xs font-medium text-primary">
+          <CategoryIconView
+            categoryName={entry.categoryName}
+            className="h-3.5 w-3.5 shrink-0"
+          />
+          <span className="truncate">{entry.categoryName}</span>
         </span>
       </td>
 
-      <td className="px-4 py-3">
-        {hasMsi ? (
-          <div>
-            <p className="text-sm font-medium text-primary">
-              {entry.monthlyPaymentNumber}/{entry.totalMonthlyPayments}
-            </p>
-
-          </div>
-        ) : (
-          <span className="text-sm text-text-muted">—</span>
-        )}
-      </td>
-
-      <td className="px-4 py-3 text-right tabular-nums">
-        <p className="whitespace-nowrap text-sm font-medium text-foreground">
-          {formatMoney(entry.amount)}
+      <td className="max-w-[320px] px-4 py-3 text-left">
+        <p className="truncate text-sm text-foreground">
+          {entry.description || 'Sin detalle'}
         </p>
-
       </td>
 
-      <td className="px-4 py-3">
-        {entry.paid ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-soft px-2.5 py-1 text-xs font-medium text-primary">
-            <Check className="h-3 w-3" aria-hidden="true" />
-            Pagado
+      <td className="max-w-[220px] px-4 py-3 text-center">
+        <p className="truncate text-sm text-foreground">
+          {entry.merchant || <span className="text-text-muted">-</span>}
+        </p>
+      </td>
+
+      <td className="max-w-[160px] px-4 py-3 text-center">
+        <p className="truncate text-sm text-foreground">{entry.debtor}</p>
+      </td>
+
+      <td className="whitespace-nowrap px-4 py-3 text-center text-xs tabular-nums text-text-muted">
+        {entry.isRecurring ? 'Recurrente' : <DateDisplayComponent value={entry.date} />}
+      </td>
+
+      <td className="px-4 py-3 text-center">
+        {entry.isRecurring ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary-soft px-2 py-1 text-[10px] font-medium text-primary">
+            <Repeat2 className="h-3 w-3" /> Sí
           </span>
         ) : (
-          <button
-            type="button"
-            onClick={() => onMarkPaid(entry.entryId)}
-            disabled={disablePaymentActions}
-            aria-label={`Marcar ${entry.categoryName} como pagado`}
-            title="Marcar como pagado"
-            className="inline-flex h-8 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border border-border bg-background px-2.5 text-xs font-medium text-text-muted transition hover:border-primary/30 hover:bg-primary-soft hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isMarkingPaid ? (
-              <LoaderCircle className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-            ) : (
-              <Clock3 className="h-3.5 w-3.5" aria-hidden="true" />
-            )}
-            {isMarkingPaid ? 'Marcando…' : 'Marcar pagado'}
-          </button>
+          <span className="text-xs text-text-muted">No</span>
         )}
       </td>
 
-      <td className="px-4 py-3">
-        <p className="max-w-56 truncate text-sm text-text-muted">
-          {entry.notes ?? '—'}
-        </p>
+      <td className="px-4 py-3 text-center">
+        {hasMsi ? (
+          <span className="rounded-full border border-border px-2 py-1 text-[10px] font-medium tabular-nums text-text-muted">
+            {entry.monthlyPaymentNumber}/{entry.totalMonthlyPayments}
+          </span>
+        ) : (
+          <span className="text-xs text-text-muted">—</span>
+        )}
       </td>
 
-      <td className="px-4 py-3">
-        <div className="flex justify-end gap-1">
-          <button
-            type="button"
-            onClick={() => onEdit(entry)}
-            aria-label="Editar movimiento"
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-surface hover:text-foreground"
-          >
-            <Pencil className="h-3.5 w-3.5" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onDelete(entry)}
-            aria-label="Eliminar movimiento"
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-text-muted transition-colors hover:bg-primary-soft hover:text-primary"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </button>
+      <td className="px-4 py-3 text-center">
+        <div
+          className="flex justify-center"
+          onClick={(event) => event.stopPropagation()}
+        >
+          {entry.paid ? (
+            <span className="inline-flex items-center gap-1 text-[10px] font-medium text-primary">
+              <Check className="h-3 w-3" aria-hidden="true" /> Pagado
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => onMarkPaid(entry.entryId)}
+              disabled={disablePaymentActions}
+              aria-label={`Marcar ${entry.categoryName} como pagado`}
+              className="inline-flex h-7 cursor-pointer items-center gap-1 rounded-full border border-border bg-background px-2 text-[10px] font-medium text-text-muted transition hover:border-primary/30 hover:bg-primary-soft hover:text-primary disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isMarkingPaid ? (
+                <LoaderCircle
+                  className="h-3 w-3 animate-spin"
+                  aria-hidden="true"
+                />
+              ) : (
+                <Clock3 className="h-3 w-3" aria-hidden="true" />
+              )}
+              {isMarkingPaid ? 'Marcando…' : 'Pagar'}
+            </button>
+          )}
         </div>
+      </td>
+
+      <td className="whitespace-nowrap px-4 py-3 text-right">
+        <p className="whitespace-nowrap text-sm font-semibold tabular-nums text-foreground">
+          {formatMoney(entry.amount)}
+        </p>
+      </td>
+      <td className="whitespace-nowrap px-4 py-3 text-center">
+        <div
+          className="flex justify-center"
+          onClick={(event) => event.stopPropagation()}
+          onKeyDown={(event) => event.stopPropagation()}
+        >
+          <RecordActionsComponent
+            notesLabel="Editar notas del movimiento"
+            notesDisabled={false}
+            onNotes={() => setNotesOpen(true)}
+            editLabel="Editar movimiento"
+            deleteLabel="Eliminar movimiento"
+            onEdit={() => onSelect(entry)}
+            onDelete={() => onDelete(entry)}
+            className="justify-center"
+          />
+        </div>
+        {notesOpen && (
+          <StatementEntryNotesModal
+            entry={entry}
+            onClose={() => setNotesOpen(false)}
+          />
+        )}
       </td>
     </tr>
   )
 }
 
-// ===================
-// MONEY
-// ===================
-
 function formatMoney(value: number | null): string {
-  if (value === null) {
-    return '—'
-  }
+  if (value === null) return '—'
 
   return new Intl.NumberFormat('es-MX', {
     style: 'currency',

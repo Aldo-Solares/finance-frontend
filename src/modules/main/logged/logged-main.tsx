@@ -1,54 +1,58 @@
-// @/modules/main/logged/components/logged-main.tsx
+// @/modules/main/logged/logged-main.tsx
 
 import type { ReactNode } from 'react'
-import { ArrowUpRight, ChartNoAxesCombined } from 'lucide-react'
-import Link from 'next/link'
+import { CandlestickChart, ChartNoAxesCombined } from 'lucide-react'
 
 import type { DebtDashboard } from '@/modules/dashboard/debts/schemas/debt-dashboard.schema'
+import type { Card } from '@/modules/debts/card/schemas/card.schema'
 import { DebtDashboardOverview } from '@/modules/dashboard/debts/components/debt-dashboard-overview'
 import type { User } from '@/modules/user/schemas/user.schema'
+import type { Trade } from '@/modules/trading/trade/schemas/trade.schema'
 
-import { HeroMain } from '@/shared/hero/hero-main'
+import { HeroComponent } from '@/shared/components/hero-component'
 import { LoggedNavigation } from './logged-navigation'
 
 type LoggedMainProps = {
   user: User
   children?: ReactNode
   dashboard: DebtDashboard
+  cards: Card[]
+  trades: Trade[]
 }
 
-export function LoggedMain({ user, children, dashboard }: LoggedMainProps) {
+export function LoggedMain({
+  user,
+  children,
+  dashboard,
+  cards,
+  trades,
+}: LoggedMainProps) {
+  const activeTrades = trades.filter((trade) => trade.status !== 'CLOSED').length
+
   return (
     <section className="flex w-full flex-col gap-8">
-      <HeroMain
+      <HeroComponent
         eyebrow="Bienvenido de nuevo"
         title={user.name}
         description="Tu espacio para entender, organizar y hacer crecer tus finanzas desde un solo lugar."
-        action={
-          <Link
-            href="/dashboard"
-            className="group relative flex w-full items-center gap-4 overflow-hidden rounded-2xl border border-primary/25 bg-white/[0.04] px-4 py-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/[0.08] sm:w-auto"
-          >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface-strong-foreground text-surface-strong transition-colors duration-200 group-hover:bg-primary group-hover:text-primary-foreground">
-              <ChartNoAxesCombined className="h-4 w-4" />
-            </div>
-
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-surface-strong-foreground">
-                Dashboard
-              </p>
-
-              <p className="mt-0.5 whitespace-nowrap text-[11px] text-surface-strong-muted">
-                Consulta tu panorama financiero
-              </p>
-            </div>
-
-            <ArrowUpRight className="ml-2 h-4 w-4 shrink-0 text-surface-strong-muted transition-all duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" />
-          </Link>
-        }
+        rightContent={{
+          type: 'actions',
+          info: [{
+            label: 'Operaciones activas',
+            value: `${activeTrades} ${activeTrades === 1 ? 'operación' : 'operaciones'}`,
+            icon: CandlestickChart,
+          }],
+          items: [{
+            href: '/dashboard',
+            label: 'Dashboard',
+            icon: ChartNoAxesCombined,
+            variant: 'primary',
+          },
+          ],
+        }}
       />
 
-      <DebtDashboardOverview dashboard={dashboard} />
+      <DebtDashboardOverview dashboard={dashboard} cards={cards} />
 
       <LoggedNavigation />
 

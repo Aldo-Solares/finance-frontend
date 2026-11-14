@@ -1,7 +1,7 @@
 // @/app/(protected)/user/security/page.tsx
 
 import { UserPasswordForm } from '@/modules/user/components/user-password-form'
-import { HeroComponent } from '@/shared/hero/hero-component'
+import { HeroComponent } from '@/shared/components/hero-component'
 
 export default function Page() {
   return (

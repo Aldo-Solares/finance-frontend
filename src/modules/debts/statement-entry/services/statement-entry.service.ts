@@ -150,22 +150,37 @@ export async function updateStatementEntry(
   )
 }
 
-// ===================
-// PAY SELECTED
-// ===================
-
-export async function paySelectedStatementEntries(
-  entryIds: number[],
-): Promise<StatementEntry[]> {
-  const response = await fetchServer('/statement-entries/pay-selected', {
+export async function updateStatementEntryNotes(
+  entryId: number,
+  notes: string | null,
+): Promise<StatementEntry> {
+  const response = await fetchServer(`/statement-entries/${entryId}/notes`, {
     method: 'PATCH',
-    body: JSON.stringify({ entryIds }),
+    body: JSON.stringify({ notes }),
   })
 
   return parseApiResponse(
     response,
-    z.array(StatementEntrySchema),
-    'No fue posible marcar los movimientos como pagados',
+    StatementEntrySchema,
+    'No fue posible actualizar las notas del movimiento',
+  )
+}
+
+// ===================
+// MARK AS PAID
+// ===================
+
+export async function markStatementEntryPaid(
+  entryId: number,
+): Promise<StatementEntry> {
+  const response = await fetchServer(`/statement-entries/${entryId}/pay`, {
+    method: 'PATCH',
+  })
+
+  return parseApiResponse(
+    response,
+    StatementEntrySchema,
+    'No fue posible marcar el movimiento como pagado',
   )
 }
 

@@ -1,4 +1,4 @@
-/* @/modules/main/notlogged/components/notlogged-hero-visual.tsx */
+// @/modules/main/notlogged/components/NotLoggedHeroVisual.tsx
 import Image from 'next/image'
 import {
   ArrowRight,

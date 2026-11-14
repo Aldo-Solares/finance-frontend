@@ -11,7 +11,6 @@ import {
 } from '@/core/utils/action-state'
 import {
   CreateStatementRequestSchema,
-  UpdateStatementPaidRequestSchema,
   UpdateStatementRequestSchema,
   type Statement,
   type StatementDateSuggestion,
@@ -22,7 +21,7 @@ import {
   getStatementDateSuggestion,
   payAllStatements,
   updateStatement,
-  updateStatementPaid,
+  updateStatementNotes,
 } from '@/modules/debts/statement/services/statement.service'
 import {
   normalizeNullableString,
@@ -97,42 +96,27 @@ export async function updateStatementAction(
   }, 'No fue posible actualizar el estado de cuenta')
 }
 
-// ===================
-// PAID
-// ===================
-
-export async function updateStatementPaidAction(
+export async function updateStatementNotesAction(
   _previousState: ActionState<Statement>,
   formData: FormData,
 ): Promise<ActionState<Statement>> {
   const statementId = Number(formData.get('statementId'))
-  const paidValue = formData.get('paid')
 
   if (!Number.isInteger(statementId) || statementId <= 0) {
     return actionError('El estado de cuenta no es válido')
   }
 
-  if (paidValue !== 'true' && paidValue !== 'false') {
-    return actionError('El estado de pago no es válido')
-  }
-
-  const parsed = UpdateStatementPaidRequestSchema.safeParse({
-    paid: paidValue === 'true',
-  })
-
-  if (!parsed.success) {
-    return actionError(
-      parsed.error.issues[0]?.message ?? 'El estado de pago no es válido',
-    )
-  }
-
   return withActionState(async () => {
-    const statement = await updateStatementPaid(statementId, parsed.data)
+    const statement = await updateStatementNotes(
+      statementId,
+      normalizeNullableString(formData.get('notes')),
+    )
 
     revalidatePath('/debts/statement')
+    revalidatePath(`/debts/statement/${statementId}`)
 
     return statement
-  }, 'No fue posible actualizar el pago')
+  }, 'No fue posible actualizar las notas del estado de cuenta')
 }
 
 // ===================

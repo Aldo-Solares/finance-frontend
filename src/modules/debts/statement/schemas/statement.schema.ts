@@ -71,13 +71,6 @@ export const UpdateStatementRequestSchema = z.object({
 })
 
 // ===================
-// UPDATE PAID
-// ===================
-
-export const UpdateStatementPaidRequestSchema = z.object({
-  paid: z.boolean(),
-})
-
 // ===================
 // DATE SUGGESTION
 // ===================
@@ -100,10 +93,6 @@ export type CreateStatementRequest = z.infer<
 
 export type UpdateStatementRequest = z.infer<
   typeof UpdateStatementRequestSchema
->
-
-export type UpdateStatementPaidRequest = z.infer<
-  typeof UpdateStatementPaidRequestSchema
 >
 
 export type StatementDateSuggestion = z.infer<

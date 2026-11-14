@@ -1,4 +1,4 @@
-// @/app/(protected)/admin/profile-image/page.tsx
+// @/app/(protected)/(admin)/admin/profile-image/page.tsx
 
 import { ProfileImageCatalogPage } from '@/modules/user/components/profile-image/profile-image-catalog-page'
 import { getAllProfileImages } from '@/modules/user/services/profile-image.service'

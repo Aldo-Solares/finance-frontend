@@ -2,6 +2,7 @@
 
 'use client'
 
+import Image from 'next/image'
 import { LogOut, X } from 'lucide-react'
 
 import { logoutAction } from '@/modules/auth/actions/auth.actions'
@@ -28,7 +29,7 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 select-scrollbar overflow-y-auto p-1">
+      <div className="fixed inset-0 z-50 select-scrollbar overflow-y-auto">
       {/* ===================
           OVERLAY
           =================== */}
@@ -37,26 +38,40 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
         type="button"
         aria-label="Cerrar navegación"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-black/45 backdrop-blur-[2px]"
+        className="absolute inset-0 cursor-default bg-black/50 backdrop-blur-[2px]"
       />
 
       {/* ===================
           DRAWER
           =================== */}
 
-      <aside className="absolute inset-y-0 left-0 flex w-full max-w-[390px] flex-col overflow-y-auto border-r border-white/10 bg-[#111111] px-6 py-6 text-white shadow-2xl shadow-black/30">
+      <aside className="absolute inset-y-0 left-0 flex w-full max-w-[370px] flex-col overflow-y-auto border-r border-white/[0.07] bg-[#111111] px-5 py-5 text-white shadow-2xl shadow-black/30">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <span
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--primary) 16%, transparent), transparent 68%)',
+            }}
+          />
+        </div>
+        <div className="relative z-10 flex min-h-full flex-col">
         {/* ===================
             TOP
             =================== */}
 
         <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <Image src="/icons/app/IshaS.svg" alt="" width={28} height={28} className="h-7 w-7 object-contain" />
+            <span className="text-sm font-semibold tracking-tight text-white/75">Navegación</span>
+          </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Cerrar"
             className={[
-              'flex h-11 w-11 items-center justify-center rounded-xl',
-              'border border-white/10 bg-white/[0.04] text-white/60',
+              'flex h-9 w-9 items-center justify-center rounded-lg',
+              'border border-white/[0.08] bg-white/[0.035] text-white/55',
               'transition-all duration-200',
               'hover:border-primary/30 hover:bg-primary/[0.08]',
               'hover:text-primary',
@@ -72,7 +87,7 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
             USER
             =================== */}
 
-        <div className="mt-10 flex items-center gap-4">
+        <div className="mt-6 flex items-center gap-3 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-3">
           <ProfileAvatar
             profileImage={user.profileImage}
             background={userSettings.profileImageBackground}
@@ -81,12 +96,12 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
           />
 
           <div className="min-w-0">
-            <p className="truncate text-xl font-semibold tracking-tight text-white">
+            <p className="truncate text-base font-semibold tracking-tight text-white/90">
               {user.name}
               {user.lastName ? ` ${user.lastName}` : ''}
             </p>
 
-            <p className="mt-1 truncate text-sm text-white/55">{user.email}</p>
+            <p className="mt-0.5 truncate text-xs text-white/45">{user.email}</p>
           </div>
         </div>
 
@@ -100,13 +115,13 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
             LOGOUT
             =================== */}
 
-        <div className="mt-auto border-t border-white/10 pt-5">
+        <div className="mt-auto border-t border-white/[0.08] pt-4">
           <form action={logoutAction}>
             <button
               type="submit"
               className={[
-                'flex w-full cursor-pointer items-center gap-3 rounded-xl',
-                'px-4 py-3 text-sm font-medium text-white/60',
+                'flex w-full cursor-pointer items-center gap-3 rounded-lg',
+                'px-3 py-2.5 text-[13px] font-medium text-white/55',
                 'transition-all duration-200',
                 'hover:bg-primary/[0.08] hover:text-primary',
                 'focus-visible:outline-none focus-visible:ring-2',
@@ -117,6 +132,7 @@ export function AppNavDrawer({ user, open, onClose }: AppNavDrawerProps) {
               Cerrar sesión
             </button>
           </form>
+        </div>
         </div>
       </aside>
     </div>

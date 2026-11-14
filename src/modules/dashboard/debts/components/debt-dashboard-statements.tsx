@@ -4,6 +4,8 @@ import Link from 'next/link'
 
 import { ArrowUpRight, CalendarDays, CircleCheck, Clock3 } from 'lucide-react'
 
+import { CardArtwork } from '@/modules/debts/card/components/card-artwork'
+import type { Card } from '@/modules/debts/card/schemas/card.schema'
 import { formatDisplayDate } from '@/shared/utils/date-format'
 import { DebtDashboardPanelHeader } from '@/modules/dashboard/debts/components/debt-dashboard-panel-header'
 import type {
@@ -13,6 +15,7 @@ import type {
 
 type DebtDashboardStatementsProps = {
   statements: DebtDashboardStatement[]
+  cards: Card[]
 }
 
 const statusLabels: Record<DebtDashboardStatus, string> = {
@@ -40,9 +43,16 @@ function formatDate(value: string | null) {
 }
 
 function getStatusClassName(statement: DebtDashboardStatement) {
-  return statement.status === 'CLOSED'
-    ? 'border-primary/30 bg-primary-soft/50 text-primary'
-    : 'border-border bg-surface text-text-muted'
+  switch (statement.status) {
+    case 'CLOSED':
+      return 'border-primary/30 bg-primary-soft/50 text-primary'
+    case 'PAYMENT_PENDING':
+      return 'border-primary/15 bg-primary-soft text-primary'
+    case 'UPCOMING':
+      return 'border-primary/10 bg-primary-soft/40 text-primary'
+    default:
+      return 'border-border bg-surface text-text-muted'
+  }
 }
 
 function getStatusIcon(statement: DebtDashboardStatement) {
@@ -51,7 +61,9 @@ function getStatusIcon(statement: DebtDashboardStatement) {
 
 export function DebtDashboardStatements({
   statements,
+  cards,
 }: DebtDashboardStatementsProps) {
+  const imageByCardId = new Map(cards.map((card) => [card.cardId, card.imagePath]))
   return (
     <section>
       <div className="mb-4">
@@ -80,13 +92,19 @@ export function DebtDashboardStatements({
                 href={`/debts/statement/${statement.statementId}`}
                 className={[
                   'group relative flex h-full flex-col overflow-hidden rounded-2xl',
-                  'border border-border bg-background p-5',
+                  'border border-border/70 bg-background p-5 shadow-sm shadow-black/[0.025]',
                   'transition-all duration-200',
                   'hover:-translate-y-0.5 hover:border-primary/25',
                   'hover:shadow-sm',
                 ].join(' ')}
               >
-                <div className="grid min-h-11 grid-cols-[minmax(0,1fr)_1rem] items-start gap-4">
+                <div className="grid min-h-14 grid-cols-[4.5rem_minmax(0,1fr)_1rem] items-center gap-3">
+                  <CardArtwork
+                    bank={statement.bank}
+                    cardName={statement.cardName}
+                    imagePath={imageByCardId.get(statement.cardId)}
+                    className="!w-[4.5rem] rounded-md shadow-none"
+                  />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-foreground">
                       {statement.cardName}

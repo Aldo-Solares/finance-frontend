@@ -1,4 +1,4 @@
-// @/shared/modal/delete-modal.tsx
+// @/shared/modals/delete-modal.tsx
 
 'use client'
 

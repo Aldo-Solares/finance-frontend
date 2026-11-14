@@ -30,7 +30,7 @@ export async function createProfileImageAction(
 ): Promise<ActionState<ProfileImage>> {
   const parsed = CreateProfileImageRequestSchema.safeParse({
     name: formData.get('name'),
-    file: formData.get('file'),
+    fileName: formData.get('fileName'),
   })
 
   if (!parsed.success) {
@@ -40,7 +40,7 @@ export async function createProfileImageAction(
   }
 
   return withActionState(async () => {
-    const result = await createProfileImage(parsed.data.name, parsed.data.file)
+    const result = await createProfileImage(parsed.data.name, parsed.data.fileName)
 
     revalidatePath('/', 'layout')
 
@@ -65,6 +65,7 @@ export async function updateProfileImageAction(
 
   const parsed = UpdateProfileImageRequestSchema.safeParse({
     name,
+    fileName: formData.get('fileName'),
   })
 
   if (!parsed.success) {

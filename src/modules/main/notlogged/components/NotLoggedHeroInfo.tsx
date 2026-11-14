@@ -1,4 +1,4 @@
-// @/modules/main/notlogged/components/notlogged-hero-info.tsx
+// @/modules/main/notlogged/components/NotLoggedHeroInfo.tsx
 
 import Link from 'next/link'
 

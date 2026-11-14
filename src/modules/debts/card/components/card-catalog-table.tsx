@@ -1,3 +1,4 @@
+// @/modules/debts/card/components/card-catalog-table.tsx
 'use client'
 
 import { CreditCard } from 'lucide-react'
@@ -23,6 +24,7 @@ export function CardCatalogTable({
         <AdminCatalogItem
           key={card.cardId}
           icon={CreditCard}
+          image={card.imagePath ? { src: card.imagePath, alt: card.cardName, variant: 'card' } : undefined}
           title={card.cardName}
           subtitle={
             card.defaultMerchant
